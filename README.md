@@ -2,6 +2,6 @@
 Extension Admin Backend Laravel Project
 
 Lee Ming - Senior Web App Developer
-Jae Su - Junior Laravel Developer
+Sirius - Junior Laravel Developer
 
 kkk
