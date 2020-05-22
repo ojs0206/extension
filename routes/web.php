@@ -70,7 +70,12 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/billing_rate_setting',             'PaymentsController@billingRateSetting');
     Route::post('/payment/settings',                        'PaymentsController@updateSettings');
     Route::post('/payment/updateMembership',               'PaymentsController@processPayment');
-
+    Route::get('/payment/view',                             'BillController@view');
+    Route::post('/payment/creditcard',                        'BillController@creditcard');
+    Route::get('/payment/autopay',                          'BillController@autopay');
+    Route::post('/payment/paypal',                        'BillController@paypal');
+    Route::post('/payment/back',                        'BillController@back');
+    Route::post('/payment/cancel',                        'BillController@cancel');
 
     Route::get('/count',                                     'Auth\LoginController@showCount');
     Route::get('/count/detail',                              'Auth\LoginController@showDetailClickInfo');
