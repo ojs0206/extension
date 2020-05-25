@@ -239,6 +239,15 @@ class BillController extends Controller
             $response = $this->client->execute($request);
             $redirect_url = $response->result->links[1]->href;
 
+            $item = new \App\Transaction();
+            $item->user_id = $user_id;
+            $item->transaction_name = "membership payment";
+            $item->transaction_type = "paypal";
+            $item->orderid = $response->result->id;
+            $item->status = 'pending';
+            $item->amount = $price;
+            $item->currency = $currency[$currencyid];
+            $item->save();
             return redirect()->to($redirect_url);
         } catch (HttpException $ex) {
             echo $ex->statusCode;
@@ -254,9 +263,13 @@ class BillController extends Controller
             $transactionid = $response->result->purchase_units[0]->payments->captures[0]->id;
             $status = $response->result->purchase_units[0]->payments->captures[0]->status;
 
-            $response_accept = $this->update_transaction_payment("transaction", $status);
-            if ($response_accept){
-                return redirect()->to('/');
+            if ($status=="COMPLETED"){
+                $item = \App\Transaction::where('orderid', $response->result->id)->first();
+                $item->paypal_transactionid = $transactionid;
+                $item->status = $status;
+                $item->paypal_description = json_encode($response);
+                $item->save();
+                return redirect()->to('/payment/view');
             }
             else{
                 abort(500,'Wrong to payment!');

@@ -74,8 +74,8 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/payment/creditcard',                        'BillController@creditcard');
     Route::get('/payment/autopay',                          'BillController@autopay');
     Route::post('/payment/paypal',                        'BillController@paypal');
-    Route::post('/payment/back',                        'BillController@back');
-    Route::post('/payment/cancel',                        'BillController@cancel');
+    Route::get('/payment/back',                        'BillController@back');
+    Route::get('/payment/cancel',                        'BillController@cancel');
 
     Route::get('/count',                                     'Auth\LoginController@showCount');
     Route::get('/count/detail',                              'Auth\LoginController@showDetailClickInfo');
