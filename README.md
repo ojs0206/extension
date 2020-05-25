@@ -2,6 +2,10 @@
 Extension Admin Backend Laravel Project
 
 Lee Ming - Senior Web App Developer
-Sirius - Project Manager
+  -- A Master in Computer Science and Engineering
+  -- Applied Mathematics Expert
+  -- AI software Engineer
 
-kkk
+Sirius - Interior Laravel Developer
+  -- 1 year experience in Laravel
+  -- Hourly rate is under 10$

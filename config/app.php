@@ -51,9 +51,6 @@ return [
     |
     */
 
-    'CLIENT_ID' => env('CLIENT_ID', 'PayPal ID'),
-    'CLIENT_SECRET' => env('CLIENT_SECRET', 'PayPal Secret'),
-
     'url' => env('APP_URL', 'http://localhost'),
 
     /*
