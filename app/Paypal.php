@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PayPal extends Model
+class Paypal extends Model
 {
     use SoftDeletes;
     protected $table = 't_paypal';

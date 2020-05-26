@@ -24,8 +24,8 @@ class BillController extends Controller
 
     public function __construct(){
         // Creating an environment
-        $clientId = config('app.CLIENT_ID', 'true');// ?: "PAYPAL-SANDBOX-CLIENT-ID";
-        $clientSecret = config('app.CLIENT_SECRET', 'true');// ?: "PAYPAL-SANDBOX-CLIENT-SECRET";
+        $clientId = env('CLIENT_ID');// ?: "PAYPAL-SANDBOX-CLIENT-ID";
+        $clientSecret = env('CLIENT_SECRET');// ?: "PAYPAL-SANDBOX-CLIENT-SECRET";
 
         $environment = new SandboxEnvironment($clientId, $clientSecret);
         $this->client = new PayPalHttpClient($environment);
@@ -255,7 +255,7 @@ class BillController extends Controller
             $response = $this->client->execute($request);
             $redirect_url = $response->result->links[1]->href;
 
-            $item = new \App\PayPal();
+            $item = new \App\Paypal();
             $item->user_id = $user_id;
             $item->transaction_type = "paypal";
             $item->orderid = $response->result->id;
@@ -279,7 +279,7 @@ class BillController extends Controller
             $status = $response->result->purchase_units[0]->payments->captures[0]->status;
 
             if ($status=="COMPLETED"){
-                $item = \App\PayPal::where('orderid', $response->result->id)->first();
+                $item = \App\Paypal::where('orderid', $response->result->id)->first();
                 $item->paypal_transactionid = $transactionid;
                 $item->status = $status;
                 $item->paypal_description = json_encode($response);
