@@ -7,5 +7,5 @@ Lee Ming - Senior Web App Developer
   -- AI software Engineer
 
 Sirius - Interior Laravel Developer
-  -- 1 year experience in Laravel
-  -- Hourly rate is under 10$
+  -- 10 year experience in Laravel
+  -- Hourly rate is 30$

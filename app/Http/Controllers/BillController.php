@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CardPayment;
 use App\Model\RegistrationModel;
 use App\Card;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class BillController extends Controller
             abort(401,'Check you login status');
         $currencyid = $request->currency;
         $currency = ["AUD","USD","EUR","NZD","CNY","CAD","GBP","JPY"];
-        $price = 100;
+        $price = 1;
         $cardEmail = $request->email;
 
         $stripe_token = $request->card_token;
@@ -98,7 +99,7 @@ class BillController extends Controller
 
         try{
             $charge = Charge::create([
-                "amount" => $price,
+                "amount" => $price*100,
                 "currency" => $currency[$currencyid],
                 "customer" => $cus_id,
                 "capture" => false,
@@ -146,10 +147,18 @@ class BillController extends Controller
         $cardInfo = [
             'user_id' => $user_id,
             'stripe_cus_id' => $cus_id,
-            'email' => $cardEmail,
-            'currency' => $currency[$currencyid]
+            'email' => $cardEmail
         ];
+
+        //save card information
         Card::updateOrCreate(['id' => $user_id],$cardInfo);
+
+        //save card payment history
+        $card_payment = new CardPayment();
+        $card_payment->user_id = $user_id;
+        $card_payment->amount = $price;
+        $card_payment->currency = $currency[$currencyid];
+        $card_payment->save();
 
         return redirect("/payment/view");
     }
@@ -169,7 +178,7 @@ class BillController extends Controller
             try {
                 $charge = Charge::create([
                     "amount" => $price,
-                    "currency" => $cardInfo->currency,
+                    "currency" => $plan->currency,
                     "customer" => $cardInfo->stripe_cus_id,
                     "capture" => false,
                     'description' => "Membership fee"
@@ -204,6 +213,13 @@ class BillController extends Controller
             if($error != null) {
                 abort(500,"Payment failed");
             }
+
+            //save payment history
+            $card_payment = new CardPayment();
+            $card_payment->user_id = $id;
+            $card_payment->amount = $plan->price;
+            $card_payment->currency = $plan->currency;
+            $card_payment->save();
         }
         return 1;
     }
@@ -239,9 +255,8 @@ class BillController extends Controller
             $response = $this->client->execute($request);
             $redirect_url = $response->result->links[1]->href;
 
-            $item = new \App\Transaction();
+            $item = new \App\PayPal();
             $item->user_id = $user_id;
-            $item->transaction_name = "membership payment";
             $item->transaction_type = "paypal";
             $item->orderid = $response->result->id;
             $item->status = 'pending';
@@ -264,7 +279,7 @@ class BillController extends Controller
             $status = $response->result->purchase_units[0]->payments->captures[0]->status;
 
             if ($status=="COMPLETED"){
-                $item = \App\Transaction::where('orderid', $response->result->id)->first();
+                $item = \App\PayPal::where('orderid', $response->result->id)->first();
                 $item->paypal_transactionid = $transactionid;
                 $item->status = $status;
                 $item->paypal_description = json_encode($response);
