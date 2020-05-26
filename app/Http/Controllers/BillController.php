@@ -164,7 +164,7 @@ class BillController extends Controller
     }
 
     public function autopay(){
-        $plans = DB::table('plan')->get();
+        $plans = DB::table('t_plan')->get();
         Stripe::setApiKey(env('STRIPE_SECRET'));
         foreach ($plans as $plan){
             $id = $plan->user_id;
