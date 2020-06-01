@@ -522,6 +522,12 @@ class RegistrationModel extends BaseModel
         );
     }
 
+    public function activeBilling($store_id, $active) {
+        DB::select(
+            "UPDATE `t_billing` SET `active` = '$active' WHERE id = '$store_id'"
+        );
+    }
+
 
 
     public function captureImage($user_id) {

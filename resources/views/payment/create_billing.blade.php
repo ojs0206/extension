@@ -450,51 +450,24 @@
         s_a[252]="Bulawayo|Harare|ManicalandMashonaland Central|Mashonaland East|Mashonaland West|Masvingo|Matabeleland North|Matabeleland South|Midlands";
 
         function get_country_index(str) {
-            var i = 1;
-            for (country in country_arr){
-                if (country == str) {
+            for (var i = 0; i < country_arr.length; i ++){
+                if (country_arr[i] == str) {
                     break;
-                }
-                else {
-                    i++;
                 }
             }
             return i;
         }
 
         function get_state_index(country, str){
-            var i = 0;
-            for (state in s_a[country]){
-                if (state == str) {
+            for (var i = 0; i < s_a[country + 1].split('|').length; i ++){
+                if (s_a[country + 1].split('|')[i] == str) {
                     break;
-                }
-                else {
-                    i++;
                 }
             }
             return i;
         }
 
-        @if ($info != NULL)
-            @foreach($info as $infos)
-                var username = document.getElementById('username');
-                username.value = "{{$infos->profile_name}}";
-                var primary_email_address = document.getElementById('primary_email_address');
-                primary_email_address.value = "{{$infos->email}}";
-                var payment_method = document.getElementById('payment_method');
-                payment_method.value = "{{$infos->payment_method}}";
-                var country = document.getElementById('country');
-                country.value = get_country_index("{{$infos->country}}");
-                var state = document.getElementById('state');
-                state.value = get_state_index(country.value, "{{$infos->state}}");
-                var phone = document.getElementById('phone');
-                phone.value = "{{$infos->phone}}";
-                var bp_id = document.getElementById('bp_id');
-                bp_id.value = "{{$infos->billing_profile_id}}";
-                var billing_frequency = document.getElementById('billing_frequency');
-                billing_frequency.value = "{{$infos->frequency}}";
-            @endforeach
-        @endif
+
 
 
         function populateStates( countryElementId, stateElementId ){
@@ -544,6 +517,33 @@
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         ga('create', 'UA-85394876-1', 'auto');
         ga('send', 'pageview');
+
+
+
+        @if ($info != NULL)
+            @foreach($info as $infos)
+                var username = document.getElementById('username');
+                username.value = "{{$infos->profile_name}}";
+                var primary_email_address = document.getElementById('primary_email_address');
+                primary_email_address.value = "{{$infos->email}}";
+                var payment_method = document.getElementById('payment_method');
+                payment_method.value = "{{$infos->payment_method}}";
+                var country = document.getElementById('country');
+                var country_index = get_country_index("{{$infos->country}}")
+                console.log(country_index)
+                country.value = '{{$infos->country}}';
+                populateStates("country", "state");
+                var state = document.getElementById('state');
+                var state_index = get_state_index(country_index, "{{$infos->state}}");
+                state.value = '{{$infos->state}}';
+                var phone = document.getElementById('phone');
+                phone.value = "{{$infos->phone}}";
+                var bp_id = document.getElementById('bp_id');
+                bp_id.value = "{{$infos->billing_profile_id}}";
+                var billing_frequency = document.getElementById('billing_frequency');
+                billing_frequency.value = "{{$infos->frequency}}";
+            @endforeach
+        @endif
     </script>
 @endsection
 

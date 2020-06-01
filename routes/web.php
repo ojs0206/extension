@@ -94,6 +94,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/child',                                    'Auth\LoginController@showChild');
     Route::post('/child/update',                            'Auth\LoginController@updateChild');
     Route::post('/child/add',                               'Auth\LoginController@addChild');
+    Route::post('/billing/active',                          'PaymentsController@activeBill');
 
 
 });

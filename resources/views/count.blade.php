@@ -155,7 +155,7 @@
                     { name:"source", 	            data: "source",	 	                defaultContent:"",      render: dtRender_img, "className" : "center"},
                     { name:"redirect_url", 	        data: "redirect_url",	 	        defaultContent:"",      render: dtRender_redirect},
                     { name:"hint", 	                data: "hint",	 	                defaultContent:""},
-                    { name:"item_id", 	            data: "item_id",	 	            defaultContent:""},
+                    { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
                     { name:"create_date", 	        data: "create_date",	 	        defaultContent:""},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_count,  "className" : "editCell center"}
                 ],
@@ -232,8 +232,6 @@
                 $("a[type=more-url]").off("click").on("click", function() {
                     var url_id = $(this).attr('url-id');
                     window.location.href = "<?=url('/count/detail?store_id=')?>" + '' + url_id;
-
-
                 });
 
                 $("a[type=active-url]").off("click").on("click", function() {

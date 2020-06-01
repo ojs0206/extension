@@ -687,19 +687,16 @@
 
                 $("a[type=deactive-url]").off("click").on("click", function() {
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Deactive Redirect Url", "Are you sure you want to deactive current redirect url", null, null, function() {
-                        console.log(url_id);
+                    showConfirmMessage(null, "Deactive Redirect Url", "Are you sure you want to deactive current billing profile", null, null, function() {
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/redirect/active')?>',
+                            url: '<?=url('/billing/active')?>',
                             data: {
                                 store_id: url_id,
                                 active: 'DeActive'
                             },
                             dataType: "json",
                             success: function (response) {
-                                console.log(response);
-
                                 if(response.status == "ok") {
                                     usertable.draw();
                                 } else if(response.status == "fail") {
@@ -730,19 +727,16 @@
                 $("a[type=active-url]").off("click").on("click", function() {
                     event.preventDefault();
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Active Redirect Url", "Are you sure you want to Active current redirect url", null, null, function() {
-                        console.log(url_id);
+                    showConfirmMessage(null, "Active Redirect Url", "Are you sure you want to Active current billing profile", null, null, function() {
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/redirect/active')?>',
+                            url: '<?=url('/billing/active')?>',
                             data: {
                                 store_id: url_id,
                                 active: 'Active'
                             },
                             dataType: "json",
                             success: function (response) {
-                                console.log(response);
-
                                 if(response.status == "ok") {
                                     usertable.draw();
                                 } else if(response.status == "fail") {

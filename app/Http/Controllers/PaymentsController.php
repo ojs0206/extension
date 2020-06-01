@@ -447,4 +447,14 @@ class PaymentsController extends Controller
             'status' => 'ok'
         ]);
     }
+
+    public function activeBill() {
+        $store_id = request('store_id');
+        $active = request('active');
+        $registrationModel = new RegistrationModel();
+        $registrationModel -> activeBilling($store_id, $active);
+        return response()->json([
+            'status' => 'ok'
+        ]);
+    }
 }

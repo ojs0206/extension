@@ -264,6 +264,11 @@ function dtRender_count(data, type, row, meta)
     return str;
 }
 
+function dtRender_item(data, type, row, meta)
+{
+    return '<a>' + data + '</a>'
+}
+
 function dt_Render_billing(data, type, row, meta)
 {
     field_id = row.id;
