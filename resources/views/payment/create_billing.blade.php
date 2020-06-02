@@ -86,6 +86,134 @@
             opacity: 1; /* Firefox */
         }
 
+        .panel-body{
+            background-color: white;
+        }
+        .field{
+            background-color: white;
+            border: 1px solid darkgrey;
+            padding-left: 10px;
+        }
+        .b-t-l-r-5{
+            border-top-left-radius: 5px;
+        }
+        .b-t-r-5{
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 0px;
+        }
+        .b-b-r-r-5{
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 0px;
+        }
+        .b-b-l-r-5{
+            border-bottom-left-radius: 5px;
+        }
+        .div_canrdInfo span{
+            background-color: white;
+            border: 1px solid darkgrey;
+            padding: 5px;
+        }
+        .div_canrdInfo span img{
+            width: 75px;
+            height: 20px;
+        }
+        .d-flex{
+            display: flex;
+        }
+        .w-50{
+            width: 50%;
+        }
+        .error {
+            display: none;
+            color: #E4584C;
+            margin-top: 5px;
+        }
+        .error.visible {
+            display: inline;
+        }
+        .pf{
+            line-height: 30px;
+            color: grey;
+            font-size: 16px;
+        }
+        .pf-mastercard-alt{
+            color: #0a3a82;
+        }
+        .pf-american-express{
+            color: #007bc1;
+        }
+        .pf-discover{
+            color: #f68121;
+        }
+        .pf-diners{
+            color: #004A97;
+        }
+        .pf-jcb{
+            color: #c3000d;
+        }
+        .pf-visa{
+            color: #0157a2;
+        }
+        .form-group{
+            margin-bottom: 5px;
+        }
+        .custom-select{
+            border-radius: 5px !important;
+            height: 42px;
+        }
+        .btn-pay{
+            width: 60%;
+            font-size: 20px;
+            height: 42px;
+            border-radius: 5px;
+        }
+        .form-control{
+            height: 42px;
+        }
+        input.form-control{
+            padding-left: 10px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
     </style>
 @endsection
 
@@ -156,7 +284,7 @@
                         <img src="<?=asset('/assets/icon/visa.png');?>" style="width: 20px; height: 100%;">
                         <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
                     </div>
-                    <select name="payment_method" required>
+                    <select name="payment_method" id="payment_method" required>
                         <option>Select Payment method</option>
                         <option value="paypal">Paypal</option>
                         <option value="visa">VISA</option>
@@ -183,6 +311,96 @@
             </form>
         @endif
 
+    </div>
+    <div class="modal" id="paypal_payment">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="panel-body">
+                <form action="/payment/paypal" method="post" id="frm-paypal" name="frm-paypal">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <div class="col-xs-12 margin-top-20">
+                            <div class="form-group">
+                                <label for="currency">Currency</label>
+                            </div>
+                            <div>
+                                <select class="form-control custom-select" name="currency">
+                                    <option value="0">AUD</option>
+                                    <option value="1">USD</option>
+                                    <option value="2">EUR</option>
+                                    <option value="3">NZD</option>
+                                    <option value="4">CNY</option>
+                                    <option value="5">CAD</option>
+                                    <option value="6">GBP</option>
+                                    <option value="7">JPY</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 margin-top-40 text-center">
+                            <button type="submit" class="btn btn-dark-orange btn-pay">PayPal</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="card_payment">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="panel-body">
+                <form action="/payment/creditcard" method="post" id="frm-award" name="frm-award">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <div class="col-xs-12 margin-top-10">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                            </div>
+                            <input type="email" class="form-control" id="email" name="email"/>
+                        </div>
+                        <div class="col-xs-12 div_canrdInfo margin-top-20">
+                            <div class="form-group">
+                                <label for="cardNumber">Card details</label>
+                            </div>
+                            <div class="input-group">
+                                <div id="card-number-element" class="field b-t-l-r-5"></div>
+                                <span class="input-group-addon b-t-r-5"><img src="{{asset('/images/credit.png')}}" alt="img"></span>
+                            </div>
+                            <div class="d-flex">
+                                <div class="w-50">
+                                    <div id="card-expiry-element" class="field b-b-l-r-5"></div>
+                                </div>
+                                <div class="d-flex w-50">
+                                    <div id="card-cvc-element" class="field" style="width: 75%"></div>
+                                    <span class="brand input-group-addon b-b-r-r-5 text-center" style="width: 25%"><i class="pf pf-credit-card" id="brand-icon"></i></span>
+                                </div>
+                            </div>
+                            <div class="error"></div>
+                        </div>
+                        <div class="col-xs-12 margin-top-20">
+                            <div class="form-group">
+                                <label for="currency">Currency</label>
+                            </div>
+                            <div>
+                                <select class="form-control custom-select" name="currency">
+                                    <option value="0">AUD</option>
+                                    <option value="1">USD</option>
+                                    <option value="2">EUR</option>
+                                    <option value="3">NZD</option>
+                                    <option value="4">CNY</option>
+                                    <option value="5">CAD</option>
+                                    <option value="6">GBP</option>
+                                    <option value="7">JPY</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 margin-top-40 text-center">
+                            <button type="button" class="btn btn-dark-orange btn-pay" id="btn_submit" onclick="checkValidStripe()">Pay</button>
+                        </div>
+                        <input type="hidden" name="card_token" id="card_token">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -467,9 +685,6 @@
             return i;
         }
 
-
-
-
         function populateStates( countryElementId, stateElementId ){
 
             var selectedCountryIndex = document.getElementById( countryElementId ).selectedIndex;
@@ -518,7 +733,31 @@
         ga('create', 'UA-85394876-1', 'auto');
         ga('send', 'pageview');
 
+        var span = document.getElementsByClassName("close")[0];
+        var modal = document.getElementsByClassName("modal")[0];
 
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        var span1 = document.getElementsByClassName("close")[1];
+        var modal1= document.getElementsByClassName("modal")[1];
+
+        span1.onclick = function() {
+            modal1.style.display = "none";
+        };
+
+        $('#payment_method').change( function () {
+            var payment_method = $('#payment_method option:selected').text();
+            if (payment_method == 'Paypal') {
+                var paypal_modal = $('#paypal_payment');
+                paypal_modal.css('display', 'block');
+            }
+            else if (payment_method == 'VISA' || payment_method == 'MasterCard') {
+                var card_modal = $('#card_payment');
+                card_modal.css('display', 'block');
+            }
+        });
 
         @if ($info != NULL)
             @foreach($info as $infos)
@@ -529,8 +768,8 @@
                 var payment_method = document.getElementById('payment_method');
                 payment_method.value = "{{$infos->payment_method}}";
                 var country = document.getElementById('country');
-                var country_index = get_country_index("{{$infos->country}}")
-                console.log(country_index)
+                var country_index = get_country_index("{{$infos->country}}");
+                console.log(country_index);
                 country.value = '{{$infos->country}}';
                 populateStates("country", "state");
                 var state = document.getElementById('state');
