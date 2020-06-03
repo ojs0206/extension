@@ -44,6 +44,7 @@ Route::group(['middleware' => ['authenticate']], function () {
 
     Route::get('/registration',                             'Auth\LoginController@showRegistrationPage');
     Route::get('/get/all-urls',                             'Auth\LoginController@getAllUrls');
+    Route::get('/get/all-rate',                             'Auth\LoginController@getAllRates');
     Route::get('/get/all-redirect',                          'Auth\LoginController@getAllRedirectURLInfo');
     Route::get('/get/all-billing',                          'Auth\LoginController@getAllBillingInfo');
     Route::get('/get/billing-rate-setting',                 'Auth\LoginController@getBillingRateSetting');
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/method',                           'PaymentsController@showMethod');
     Route::get('/payment/settings',                         'PaymentsController@showSettings');
     Route::get('/payment/billing_rate_setting',             'PaymentsController@billingRateSetting');
+    Route::get('/payment/default_rate',                     'PaymentsController@defaultRate');
     Route::post('/payment/settings',                        'PaymentsController@updateSettings');
     Route::post('/payment/updateMembership',               'PaymentsController@processPayment');
     Route::get('/payment/view',                             'BillController@view');
