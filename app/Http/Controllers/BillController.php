@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CardPayment;
 use App\Model\RegistrationModel;
 use App\Card;
+use App\Paypal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ use Stripe\Exception\CardException;
 use Stripe\Stripe;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Core\ProductionEnvironment;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 
@@ -27,7 +29,7 @@ class BillController extends Controller
         $clientId = env('CLIENT_ID');// ?: "PAYPAL-SANDBOX-CLIENT-ID";
         $clientSecret = env('CLIENT_SECRET');// ?: "PAYPAL-SANDBOX-CLIENT-SECRET";
 
-        $environment = new SandboxEnvironment($clientId, $clientSecret);
+        $environment = new ProductionEnvironment($clientId, $clientSecret);
         $this->client = new PayPalHttpClient($environment);
     }
 
@@ -43,6 +45,15 @@ class BillController extends Controller
             'users' => $user_list,
         ]);
     }
+
+    public function check_paypal($id){
+        $user_id = session()->get(SESS_UID);
+        if($user_id == null)
+            abort(401,'Check you login status');
+        $email = \App\Paypal::find($id)->email_address;
+        return view("payment/check_paypal",['email'=>$email]);
+    }
+
     public function creditcard(Request $request){
         $user_id = session()->get(SESS_UID);
         if($user_id == null)
@@ -228,7 +239,8 @@ class BillController extends Controller
         $user_id = session()->get(SESS_UID);
         if($user_id == null)
             abort(401,'Check you login status');
-        $price = $request->price;
+        //$price = $request->price;
+        $price = 1;
         $currencyid = $request->currency;
         $currency = ["AUD","USD","EUR","NZD","CNY","CAD","GBP","JPY"];
 
@@ -277,14 +289,18 @@ class BillController extends Controller
             $response = $this->client->execute($_request);
             $transactionid = $response->result->purchase_units[0]->payments->captures[0]->id;
             $status = $response->result->purchase_units[0]->payments->captures[0]->status;
+            $email = $response->result->payer->email_address;
 
-            if ($status=="COMPLETED"){
+            if ($status=="COMPLETED" || $status=="PENDING"){
                 $item = \App\Paypal::where('orderid', $response->result->id)->first();
                 $item->paypal_transactionid = $transactionid;
                 $item->status = $status;
+                $item->email_address = $email;
                 $item->paypal_description = json_encode($response);
                 $item->save();
-                return redirect()->to('/payment/view');
+
+                //return redirect()->to('payment/check_paypal');
+                return redirect()->to('/payment/check_paypal/'.$item->id);
             }
             else{
                 abort(500,'Wrong to payment!');
