@@ -884,7 +884,8 @@ class RegistrationModel extends BaseModel
                 'frequency'   => $billingFrequency,
                 'phone'   => $phone,
                 'billing_profile_id'   => $bpId,
-                'created_date'   => $date
+                'created_date'   => $date,
+                'active'  => 'Active'
             ]);
         $user_id = DB::table("t_user")
             ->select("id")

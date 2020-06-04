@@ -29,7 +29,7 @@ class BillController extends Controller
         $clientId = env('CLIENT_ID');// ?: "PAYPAL-SANDBOX-CLIENT-ID";
         $clientSecret = env('CLIENT_SECRET');// ?: "PAYPAL-SANDBOX-CLIENT-SECRET";
 
-        $environment = new ProductionEnvironment($clientId, $clientSecret);
+        $environment = new SandboxEnvironment($clientId, $clientSecret);
         $this->client = new PayPalHttpClient($environment);
     }
 

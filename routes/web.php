@@ -98,6 +98,9 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/child/update',                            'Auth\LoginController@updateChild');
     Route::post('/child/add',                               'Auth\LoginController@addChild');
     Route::post('/billing/active',                          'PaymentsController@activeBill');
+    Route::post('/rate/create',                          'PaymentsController@createDefaultRate');
+    Route::post('/rate/active',                          'PaymentsController@activeDefaultRate');
+    Route::post('/rate/delete',                          'PaymentsController@deleteDefaultRate');
 
 
 });

@@ -154,6 +154,48 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade in" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="Quiz" aria-hidden="true">
+            <form method="post" enctype="multipart/form-data" id="id-user-form" action="/create_rate">
+                {{csrf_field()}}
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">x</span>
+                            </button>
+                            <h4 class="modal-title" id="id-modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <label class="control-label" for="id-name"> Rate Type: </label>
+                                <input type="text" class="form-control" id="id-name" name="ratetype"  required="true">
+                                <label class="control-label" for="id-name"> Rate Name: </label>
+                                <input type="text" class="form-control" id="id-name" name="ratename"  required="true">
+                                <label class="control-label" for="id-name"> Description: </label>
+                                <input type="text" class="form-control" id="id-name" name="description"  required="true">
+                                <label class="control-label" for="id-name"> Country: </label>
+                                <input type="text" class="form-control" id="id-name" name="country"  required="true">
+                                <label class="control-label" for="id-name"> Rate Per Click: </label>
+                                <input type="text" class="form-control" id="id-name" name="rateperclick"  required="true">
+                                <label class="control-label" for="id-name"> Monthly Threshold: </label>
+                                <input type="text" class="form-control" id="id-name" name="monthlythreshold"  required="true">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-o" data-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="id-btn-submit">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
 @endsection
 
 @section('js4event')

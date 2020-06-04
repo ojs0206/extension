@@ -468,4 +468,18 @@ class PaymentsController extends Controller
             'status' => 'ok'
         ]);
     }
+
+    public function createDefaultRate() {
+        $name = session() -> get(SESS_USERNAME);
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+
+
+        $registrationModel = new RegistrationModel();
+
+        return view("payment/default_rate", [
+            'type' => $type,
+            'admin' => $name
+        ]);
+    }
 }
