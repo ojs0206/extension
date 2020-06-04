@@ -309,13 +309,13 @@
             <div id="sidenav" class="sidenav">
                 <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
                     <img src="<?=asset('/assets/icon/home.png');?>">
-                    <a href="">
+                    <a href="<?=url('/payment');?>">
                         <p>Billing Profiles</p>
                     </a>
                 </div>
                 <div class="row" style="padding-left: 5%; display: flex">
                     <img src="<?=asset('/assets/icon/payment.png');?>">
-                    <a href="">
+                    <a href="<?=url('/payment/default_rate');?>">
                         <p>Default Rates</p>
                     </a>
                 </div>
@@ -660,7 +660,7 @@
             usertable.on("draw.dt", function() {
                 $("a[type=delete-url]").off("click").on("click", function() {
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Delete Billing Profile", "Are you sure you want to remove current redirect url", null, null, function() {
+                    showConfirmMessage(null, "Delete Billing Profile", "Are you sure you want to remove current billing profile", null, null, function() {
                         console.log(url_id);
                         $.ajax({
                             type: 'post',
@@ -687,7 +687,7 @@
 
                 $("a[type=deactive-url]").off("click").on("click", function() {
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Deactive Redirect Url", "Are you sure you want to deactive current billing profile", null, null, function() {
+                    showConfirmMessage(null, "Deactive Billing Profile", "Are you sure you want to deactive current billing profile", null, null, function() {
                         $.ajax({
                             type: 'post',
                             url: '<?=url('/billing/active')?>',
@@ -727,7 +727,7 @@
                 $("a[type=active-url]").off("click").on("click", function() {
                     event.preventDefault();
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Active Redirect Url", "Are you sure you want to Active current billing profile", null, null, function() {
+                    showConfirmMessage(null, "Active Billing Profile", "Are you sure you want to Active current billing profile", null, null, function() {
                         $.ajax({
                             type: 'post',
                             url: '<?=url('/billing/active')?>',

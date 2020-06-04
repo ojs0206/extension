@@ -231,6 +231,85 @@ class RegistrationModel extends BaseModel
         return $urls[0]->total;
     }
 
+    public function getAllRateInfo($id, $type, $params) {
+        $clause1 = $this->clause('rate_type', $params);
+        $clause2 = $this->clause('username', $params);
+        $tmp = $this->prepareOr($clause1, $clause2);
+        $limit = $this->limit($params);
+        $orderby = $this->orderby($params);
+//        if($type == 'Admin') {
+//            $where = $this->where($tmp);
+//            $urls = DB::select(
+//                "SELECT
+//                    t_rate.*
+//                 FROM t_rate
+//                ".$where . $orderby . $limit
+//            );
+//
+//            return $urls;
+//        } else if($type == 'Manager') {
+//            $clause1 = "t_user.id = '$id'";
+//            $clause2 = "t_user.parent_id = '$id'";
+//            $tmp1 = $this->prepareOr($clause1, $clause2);
+//            $tmp2 = $this->prepareAnd($tmp, $tmp1);
+//            $where = $this->where($tmp2);
+//            $urls = DB::select(
+//                "SELECT
+//                    t_rate.*
+//                 FROM t_rate
+//                ".$where . $orderby . $limit
+//            );
+//            return $urls;
+//        }
+        $clause1 = "t_user.id = '$id'";
+        $tmp2 = $this->prepareAnd($tmp, $clause1);
+        $where = $this->where($tmp2);
+        $urls = DB::select(
+            "SELECT
+                t_rate.*
+             FROM t_rate
+            "
+        );
+        return $urls;
+    }
+
+    public function getAllRateInfoCount($id, $type, $params) {
+        $clause1 = $this->clause('url', $params);
+        $clause2 = $this->clause('username', $params);
+        $tmp = $this->prepareOr($clause1, $clause2);
+        if($type == 'Admin') {
+            $where = $this->where($tmp);
+            $urls = DB::select(
+                "SELECT COUNT(t_rate.id) AS total
+                 FROM t_rate
+                ".$where
+            );
+
+            return $urls[0]->total;
+        } else if($type == 'Manager') {
+            $clause1 = "t_user.id = '$id'";
+            $clause2 = "t_user.parent_id = '$id'";
+            $tmp1 = $this->prepareOr($clause1, $clause2);
+            $tmp2 = $this->prepareAnd($tmp, $tmp1);
+            $where = $this->where($tmp2);
+            $urls = DB::select(
+                "SELECT COUNT(t_rate.id) AS total
+                 FROM t_rate
+                ".$where
+            );
+            return $urls[0]->total;
+        }
+        $clause1 = "t_user.id = '$id'";
+        $tmp2 = $this->prepareAnd($tmp, $clause1);
+        $where = $this->where($tmp2);
+        $urls = DB::select(
+            "SELECT COUNT(t_rate.id) AS total
+             FROM t_rate             
+            "
+        );
+        return $urls[0]->total;
+    }
+
     public function getAllRedirectURLInfo($id, $type, $params) {
         $tmp = $this->clause('username', $params);
         $tmp_1 = $this->clause('redirect_url', $params);

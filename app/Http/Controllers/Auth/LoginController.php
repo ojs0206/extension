@@ -665,6 +665,17 @@ class LoginController extends Controller
         return response()->json($result);
     }
 
+    public function getAllRates(Request $request) {
+        $params = $this->getDataTableParams($request);
+        $type = session() -> get(SESS_USERTYPE);
+        $id = session() -> get(SESS_UID);
+        $registrationModel = new RegistrationModel();
+        $total = $registrationModel -> getAllRateInfoCount($id, $type, $params);
+        $urls = $registrationModel -> getAllRateInfo($id, $type, $params);
+        $result = $this->dataTableFormat($urls, $total);
+        return response()->json($result);
+    }
+
     public function exportURlCollection() {
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);

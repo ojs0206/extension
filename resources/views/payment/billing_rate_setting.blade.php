@@ -81,7 +81,7 @@
             </div>
             <div class="row" style="padding-left: 5%; display: flex">
                 <img src="<?=asset('/assets/icon/payment.png');?>">
-                <a href="">
+                <a href="<?=url('/payment/default_rate');?>">
                     <p>Default Rates</p>
                 </a>
             </div>

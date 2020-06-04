@@ -322,6 +322,17 @@ class PaymentsController extends Controller
         ]);
     }
 
+    public function defaultRate() {
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $registrationModel = new RegistrationModel();
+        return view('payment/default_rate', [
+            'type' => $type,
+            'admin' => $name,
+        ]);
+    }
+
     public function updateSettings() {
         $name = session() -> get(SESS_USERNAME);
         $id = session() -> get(SESS_UID);
