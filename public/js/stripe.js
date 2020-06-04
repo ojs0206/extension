@@ -38,7 +38,34 @@ function setOutcome(result) {
 
     if (result.token) {
         $('#card_token').val(result.token.id);
-        $('#frm-award').submit();
+        //$('#frm-award').submit();
+        var formdata = new FormData($("form[id='frm-award']")[0]);
+        $(document.body).css({'cursor' : 'wait'});
+        $.ajax({
+            url:"/payment/creditcard",
+            method:"POST",
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function( resp ) {
+                $(document.body).css({'cursor' : 'default'});
+                if(resp!=0){
+                    $('#card_payment').hide();
+                    if(resp=="Visa"){
+                        $('#payment_method').hide();
+                        $('#visa_status').show();
+                    }
+                    else if(resp=="MasterCard"){
+                        $('#payment_method').hide();
+                        $('#mastercard_status').show();
+                    }
+                    else
+                        swal("Notify", "Please connect visa or mastercard", "success");
+                }
+                else
+                    swal("Error", "Please input the correct card information", "error");
+            }
+        });
     } else if (result.error) {
         errorElement.textContent = result.error.message;
         errorElement.classList.add('visible');
