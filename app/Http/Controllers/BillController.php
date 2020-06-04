@@ -29,7 +29,8 @@ class BillController extends Controller
         $clientId = env('CLIENT_ID');// ?: "PAYPAL-SANDBOX-CLIENT-ID";
         $clientSecret = env('CLIENT_SECRET');// ?: "PAYPAL-SANDBOX-CLIENT-SECRET";
 
-        $environment = new ProductionEnvironment($clientId, $clientSecret);
+        //$environment = new ProductionEnvironment($clientId, $clientSecret);
+        $environment = new SandboxEnvironment($clientId, $clientSecret);
         $this->client = new PayPalHttpClient($environment);
     }
 
@@ -83,13 +84,14 @@ class BillController extends Controller
             $error = 'Stripe Api Issue :' . $e->getCode();
         }
         if($error != null){
-            //return back()->with('error', $error);
-            abort(500,'Wrong to payment!');
+            //abort(500,'Wrong to payment!');
+            return 0;
         }
 
         try{
             $customerInfo = Customer::retrieve($cus_id);
             $cardinfo = $customerInfo->sources->data;
+            $cardType = $cardinfo[0]->brand;
             $card_number = $cardinfo[0]->id;
             $countryCode = $cardinfo[0]->country;
             $card = $customerInfo->sources->retrieve($card_number);
@@ -105,7 +107,8 @@ class BillController extends Controller
         if($error != null){
             $cu = Customer::retrieve($cus_id);
             $cu->delete();
-            abort(500,'Wrong to payment!');
+            //abort(500,'Wrong to payment!');
+            return 0;
         }
 
         try{
@@ -137,7 +140,8 @@ class BillController extends Controller
             if($error != null){
                 $cu = Customer::retrieve($cus_id);
                 $cu->delete();
-                abort(500,'Wrong to payment!');
+                //abort(500,'Wrong to payment!');
+                return 0;
             }
         } catch (CardException $e){
             $body = $e->getJsonBody();
@@ -152,7 +156,8 @@ class BillController extends Controller
         if($error != null){
             $cu = Customer::retrieve($cus_id);
             $cu->delete();
-            abort(500,'Wrong to payment!');
+            //abort(500,'Wrong to payment!');
+            return 0;
         }
 
         $cardInfo = [
@@ -171,7 +176,7 @@ class BillController extends Controller
         $card_payment->currency = $currency[$currencyid];
         $card_payment->save();
 
-        return redirect("/payment/view");
+        return $cardType;
     }
 
     public function autopay(){

@@ -5,6 +5,7 @@
 @endsection
 
 @section('css4page')
+    <link rel="stylesheet" href="<?=asset('css/paymentfont.min.css')?>">
     <style>
         body {
             background: #dddddd !important;
@@ -293,6 +294,14 @@
                     <div id="paypal_status" class="d-flex" style="display: none; margin-bottom: 20px">
                         <img src="<?=asset('/assets/icon/paypal.png');?>" style="width: 20px; height: 100%;">
                         <p id="pp_success" class="billing-form-text" style="color: blue; margin-left: 10px"></p>
+                    </div>
+                    <div id="visa_status" class="d-flex" style="display: none; margin-bottom: 20px">
+                        <img src="<?=asset('/assets/icon/visa.png');?>" style="width: 20px; height: 100%;">
+                        <p class="billing-form-text" style="color: blue; margin-left: 10px">VISA card was connected.</p>
+                    </div>
+                    <div id="mastercard_status" class="d-flex" style="display: none; margin-bottom: 20px">
+                        <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
+                        <p id="pp_success" class="billing-form-text" style="color: blue; margin-left: 10px">MasterCard was connected</p>
                     </div>
 
                     <p class="billing-form-text">Country:</p>
@@ -804,4 +813,7 @@
     <script src="<?=asset('bower_components/sweetalert/dist/sweetalert.min.js');?>"></script>
     <script src="<?=asset('bower_components/DataTables/media/js/jquery.dataTables.min.js');?>"></script>
     <script src="<?=asset('bower_components/DataTables/media/js/dataTables.bootstrap.min.js');?>"></script>
+    <!-- stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{ asset('js/stripe.js') }}"></script>
 @endsection
