@@ -224,7 +224,7 @@ function dtRender_tools(data, type, row, meta)
 function dtRender_Edit_button(data, type, row, meta)
 {
     field_id = row.id;
-    str = ['<button name="btnEditField" type="submit" class="btn btn-primary edit-button" data-id="',field_id, '" data-no="', row.no, '">',
+    str = ['<button name="btnEditField" class="btn btn-primary edit-button" data-id="',field_id, '" data-no="', row.no, '">',
         'Edit',
         '</button>'].join('');
 
@@ -236,7 +236,7 @@ function dtRender_redirect(data, type, row, meta) {
 }
 
 function dtRender_click_rate(data, type, row, meta) {
-    return '<textarea>' + data + '</textarea>'
+    return '<textarea style="width: 50%; margin: auto;">' + data + '</textarea>';
 }
 
 function dtRender_count(data, type, row, meta)
@@ -267,6 +267,37 @@ function dtRender_count(data, type, row, meta)
 function dtRender_item(data, type, row, meta)
 {
     return '<a>' + data + '</a>'
+}
+
+function dtRender_rate_type(data, type, row, meta)
+{
+    // var dataset = getRate();
+    //
+    // var str = '<select id="rate_type" name ="rate_type" required>\n' +
+    //     '                        <option>Default Rate Type</option>'
+    // function getRate() {
+    //     $.ajax({
+    //         type: "POST",
+    //         url: '/get/all-rate-type',
+    //         dataType: "json",
+    //         success: function (resp) {
+    //             console.log(resp.length);
+    //             for (var i = 0; i < resp.length; i ++){
+    //                 str += "<option value='" + resp[i].id + "'>" + resp[i].rate_type + "</option>";
+    //             }
+    //         },
+    //         error: function () {
+    //             console.log('error---')
+    //         }
+    //     });
+    // }
+    // setTimeout(function () {
+    //     str += '</select>';
+    //     console.log(str)
+    //     return str;
+    // }, 3000)
+    return '<textarea style="margin: auto" class="ratetype">' + data + '</textarea>';
+
 }
 
 function dt_Render_billing(data, type, row, meta)

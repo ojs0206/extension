@@ -218,9 +218,8 @@
                             }
                         });
                     });
-
-
                 });
+
                 $("#id-refresh").off("click").on("click", function() {
                     usertable.draw();
                 });
@@ -261,8 +260,6 @@
                             }
                         });
                     });
-
-
                 });
             });
             $('#user-table tbody').on('click', 'tr', function () {

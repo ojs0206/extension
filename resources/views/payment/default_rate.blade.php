@@ -124,7 +124,7 @@
                         <h1>Default Rates </h1>
                     </div>
                     <div class="col-sm-1 text-right">
-                        <a class="btn btn-wide btn-primary" href="<?=url('/payment/createBilling');?>" id="id-create"><i class="fa fa-plus"></i> Create</a>
+                        <a class="btn btn-wide btn-primary" href="#" id="id-create"><i class="fa fa-plus"></i> Create</a>
                     </div>
                     <div class="col-sm-1 text-right">
                         <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
@@ -156,7 +156,7 @@
         </div>
 
         <div class="modal fade in" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="Quiz" aria-hidden="true">
-            <form method="post" enctype="multipart/form-data" id="id-user-form" action="/create_rate">
+            <form method="post" enctype="multipart/form-data" id="id-user-form" action="/rate/create">
                 {{csrf_field()}}
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -177,6 +177,17 @@
                                 <input type="text" class="form-control" id="id-name" name="description"  required="true">
                                 <label class="control-label" for="id-name"> Country: </label>
                                 <input type="text" class="form-control" id="id-name" name="country"  required="true">
+                                <label class="control-label" for="id-name"> Currency: </label>
+                                <select class="form-control custom-select" name="currency">
+                                    <option value="AUD">AUD</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="NZD">NZD</option>
+                                    <option value="CNY">CNY</option>
+                                    <option value="CAD">CAD</option>
+                                    <option value="GBP">GBP</option>
+                                    <option value="JPY">JPY</option>
+                                </select>
                                 <label class="control-label" for="id-name"> Rate Per Click: </label>
                                 <input type="text" class="form-control" id="id-name" name="rateperclick"  required="true">
                                 <label class="control-label" for="id-name"> Monthly Threshold: </label>
@@ -185,7 +196,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary btn-o" data-dismiss="modal">
+                            <button type="button" class="btn btn-primary btn-o" data-dismiss="modal" id="cancel-modal">
                                 Cancel
                             </button>
                             <button type="submit" class="btn btn-primary" id="id-btn-submit">
@@ -239,7 +250,7 @@
                         console.log(url_id);
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/payment/deleteRate')?>',
+                            url: '<?=url('/rate/delete')?>',
                             data: {
                                 store_id: url_id
                             },
@@ -281,20 +292,6 @@
                             }
                         });
                     });
-
-
-                });
-                $("#id-refresh").off("click").on("click", function () {
-                    usertable.draw();
-                });
-
-                $("#id-export").off("click").on("click", function () {
-                    window.location = "<?=url('/redirect/report')?>";
-                });
-
-                $("a[type=more-url]").off("click").on("click", function () {
-                    var url_id = $(this).attr('url-id');
-                    window.location.href = "<?=url('/payment/editBilling?url_id=')?>" + '' + url_id;
                 });
 
                 $("a[type=active-url]").off("click").on("click", function () {
@@ -303,7 +300,7 @@
                     showConfirmMessage(null, "Active Default Rate", "Are you sure you want to Active current billing profile", null, null, function () {
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/billing/active')?>',
+                            url: '<?=url('/rate/active')?>',
                             data: {
                                 store_id: url_id,
                                 active: 'Active'
@@ -322,6 +319,27 @@
                         });
                     });
                 });
+
+                $("#id-refresh").off("click").on("click", function() {
+                    usertable.draw();
+                });
+
+                // $("a[type=more-url]").off("click").on("click", function() {
+                //     var url_id = $(this).attr('url-id');
+                //
+                // });
+            });
+
+            $('#id-create').on("click", function (event) {
+                $('#create-modal').css('display', 'block');
+            });
+
+            $('#cancel-modal').on("click", function (event) {
+                $('#create-modal').css('display', 'none');
+            });
+
+            $('.close').on("click", function (event) {
+                $('#create-modal').css('display', 'none');
             });
         });
     </script>

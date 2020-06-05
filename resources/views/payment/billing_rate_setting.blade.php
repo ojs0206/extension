@@ -136,11 +136,13 @@
                         <tr>
                             <th class="">#</th>
                             <th class="">User Profile</th>
+                            <th class="">Billing Profile ID</th>
                             <th class="url-width">Source URL</th>
                             <th class="">Description</th>
                             <th class="">Item ID#</th>
                             <th class="">Billing Currency</th>
                             <th class="">Budget</th>
+                            <th class="">Default Rate Type</th>
                             <th class="">Default Rate per Clicks($)</th>
                             <th class="">Custom Rate per Clicks($)</th>
                             <th class="center">Modify</th>
@@ -184,12 +186,15 @@
                 columns: [
                     { name:"no", 				    data: "no",	 				        defaultContent:"",      orderable: false},
                     { name:"username", 	            data: "username",	 		        defaultContent:""},
+                    { name:"billing_profile_id", 	data: "billing_profile_id",	 		defaultContent:""},
                     { name:"source", 	            data: "source",	 	                defaultContent:"",      render: dtRender_redirect},
                     { name:"hint", 	                data: "hint",	 	                defaultContent:""},
-                    { name:"item_id", 	            data: "item_id",	 	            defaultContent:""},
+                    { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
                     { name:"currency", 	            data: "currency",	 	            defaultContent:""},
-                    { name:"budget", 	            data: "budget",	 	                defaultContent:""},
-                    { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
+                    { name:"monthly_threshold", 	data: "monthly_threshold",	 	    defaultContent:""},
+                    { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:"",      render: dtRender_rate_type},
+                    // { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:""},
+                    { name:"rate_per_click", 	    data: "rate_per_click",	 	        defaultContent:""},
                     { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button}
                 ],
@@ -252,20 +257,6 @@
                             }
                         });
                     });
-
-
-                });
-                $("#id-refresh").off("click").on("click", function() {
-                    usertable.draw();
-                });
-
-                $("#id-export").off("click").on("click", function() {
-                    window.location = "<?=url('/redirect/report')?>";
-                });
-
-                $("a[type=more-url]").off("click").on("click", function() {
-                    var url_id = $(this).attr('url-id');
-                    window.location.href = "<?=url('/count/detail?store_id=')?>" + '' + url_id;
                 });
 
                 $("a[type=active-url]").off("click").on("click", function() {
@@ -295,17 +286,12 @@
                             }
                         });
                     });
-
-
                 });
             });
             $('#user-table tbody').on('click', 'tr', function () {
                 var data = usertable.row( this ).data();
                 console.log(data);
             } );
-
-
-
 
         });
     </script>

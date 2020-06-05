@@ -40,6 +40,8 @@ Route::post('/click',                                    'Auth\LoginController@c
 Route::get('/get/cell-info',                           'Auth\LoginController@getCellInfo');
 Route::get('/get/check-url',                           'Auth\LoginController@checkURLRedirect');
 
+Route::post('/get/all-rate-type',                         'Auth\LoginController@getAllRateType');
+
 Route::group(['middleware' => ['authenticate']], function () {
 
     Route::get('/registration',                             'Auth\LoginController@showRegistrationPage');
@@ -86,6 +88,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/redirect/delete',                          'Auth\LoginController@deleteRedirectUrl');
     Route::get('/redirect/report',                          'Auth\LoginController@exportRedirectURL');
     Route::post('/redirect/active',                         'Auth\LoginController@activeRedirectUrl');
+    Route::post('/redirect/edit-setting',                    'Auth\LoginController@editRedirectSetting');
     Route::get('/setting',                                  'Auth\LoginController@showSetting');
     Route::get('/setting/report',                          'Auth\LoginController@exportURlCollection');
     Route::get('/sign-out',                                 'Auth\LoginController@singOut');

@@ -126,6 +126,17 @@ class RegistrationModel extends BaseModel
         return $url_info;
     }
 
+    public function getAllRateType() {
+        $rate_type = DB::select(
+            "SELECT
+                t_rate.*
+             FROM t_rate
+            "
+        );
+        return $rate_type;
+    }
+
+
     public function getClickInfo($store_id) {
         $url_info = DB::select(
             "SELECT
@@ -440,9 +451,10 @@ class RegistrationModel extends BaseModel
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT
-                t_billing.*
+                t_billing.*, t_rate.rate_type
                 FROM t_billing
                 LEFT JOIN t_user ON t_billing.profile_name = t_user.username
+                LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
             ".$where . $orderby . $limit
         );
         return $urls;
@@ -481,6 +493,7 @@ class RegistrationModel extends BaseModel
             "SELECT COUNT(t_billing.id) AS total
                 FROM t_billing
                 LEFT JOIN t_user ON t_billing.profile_name = t_user.username
+                LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
             ".$where
         );
         return $urls[0]->total;
@@ -488,15 +501,19 @@ class RegistrationModel extends BaseModel
 
     public function getBillingRateSetting($id, $type, $params) {
         $tmp = $this->clause('username', $params);
+        $clause = "t_user.username = t_billing.profile_name";
+        $tmp2 = $this->prepareAnd($tmp, $clause);
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT
-            t_store_.*, t_transaction.currency, t_user.username
+            t_store_.*, t_transaction.currency, t_user.username, t_billing.billing_profile_id, t_rate.*
             FROM t_store_
             LEFT JOIN t_transaction ON t_store_.user_id = t_transaction.user_id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
+            LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+            LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
         ".$where . $orderby . $limit
         );
         return $urls;
@@ -505,11 +522,16 @@ class RegistrationModel extends BaseModel
 
     public function getBillingRateSettingCount($id, $type, $params) {
         $tmp = $this->clause('username', $params);
+        $clause = "t_user.username = t_billing.profile_name";
+        $tmp2 = $this->prepareAnd($tmp, $clause);
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT COUNT(t_store_.id) AS total
             FROM t_store_
             LEFT JOIN t_transaction ON t_transaction.user_id = t_store_.user_id
+            LEFT JOIN t_user ON t_store_.user_id = t_user.id
+            LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+            LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
         ".$where
         );
         return $urls[0]->total;
@@ -595,6 +617,10 @@ class RegistrationModel extends BaseModel
         DB::table('t_billing')->where('id', '=', $store_id)->delete();
     }
 
+    public function deleteRate($store_id) {
+        DB::table('t_rate')->where('id', '=', $store_id)->delete();
+    }
+
     public function activeRedirectUrl($store_id, $active) {
         DB::select(
             "UPDATE `t_store_` SET `active` = '$active' WHERE id = '$store_id'"
@@ -607,7 +633,11 @@ class RegistrationModel extends BaseModel
         );
     }
 
-
+    public function activeRate($store_id, $active) {
+        DB::select(
+            "UPDATE `t_rate` SET `active` = '$active' WHERE id = '$store_id'"
+        );
+    }
 
     public function captureImage($user_id) {
         DB::select(
@@ -873,7 +903,7 @@ class RegistrationModel extends BaseModel
     }
 
     public function createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-                     $state, $phone, $bpId, $billingFrequency, $date){
+                     $state, $phone, $bpId, $billingFrequency, $date, $rate_type){
         DB::table("t_billing")
             ->insertGetID([
                 'profile_name' => $userProfileName,
@@ -885,6 +915,7 @@ class RegistrationModel extends BaseModel
                 'phone'   => $phone,
                 'billing_profile_id'   => $bpId,
                 'created_date'   => $date,
+                'rate_type'  => $rate_type,
                 'active'  => 'Active'
             ]);
         $user_id = DB::table("t_user")
@@ -912,7 +943,7 @@ class RegistrationModel extends BaseModel
     }
 
     public function updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-                                     $state, $phone, $bpId, $billingFrequency, $date){
+                                     $state, $phone, $bpId, $billingFrequency, $date, $rate_type){
         $user_list = DB::table("t_billing")
             ->select("profile_name")
             ->where("profile_name", $userProfileName)
@@ -920,7 +951,7 @@ class RegistrationModel extends BaseModel
 
         if (count($user_list) == 0) {
             $this -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-                $state, $phone, $bpId, $billingFrequency, $date);
+                $state, $phone, $bpId, $billingFrequency, $date, $rate_type);
         }
 
         else {
@@ -934,6 +965,7 @@ class RegistrationModel extends BaseModel
                     'phone'  => $phone,
                     'billing_profile_id'  => $bpId,
                     'frequency'  => $billingFrequency,
+                    'rate_type'  => $rate_type,
                     'created_date'  => $date
                 ]);
 
@@ -962,7 +994,7 @@ class RegistrationModel extends BaseModel
 
     public function getBillingInfo($id) {
         return DB::table("t_billing")
-            ->select("profile_name", "email", "payment_method", "country", "state", "frequency", "phone", "billing_profile_id")
+            ->select("profile_name", "email", "payment_method", "country", "state", "frequency", "phone", "billing_profile_id", "rate_type")
             ->where("id", $id)
             ->get();
     }
@@ -986,6 +1018,21 @@ class RegistrationModel extends BaseModel
         if ($this->check_item_ID($random_string))
             $random_string = $this->generateItemID();
         return $random_string;
+    }
+
+    public function createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold){
+        $country = strtoupper($country);
+        DB::table("t_rate")
+            ->insertGetID([
+                'rate_type' => $ratetype,
+                'rate_name'   => $ratename,
+                'description'   => $description,
+                'country'   => $country,
+                'currency'   => $currency,
+                'rate_per_click'   => $rateperclick,
+                'monthly_threshold'   => $monthlythreshold,
+                'active'  => 'Active'
+            ]);
     }
 
     public function check_item_ID($id) {

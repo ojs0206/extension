@@ -380,12 +380,13 @@ class PaymentsController extends Controller
         $phone = request('phone');
         $bpId = request('bp_id');
         $billingFrequency = request('billing_frequency');
+        $rateType = request('rate_type');
         $date = date("Y.m.d");
 
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-            $state, $phone, $bpId, $billingFrequency, $date);
+            $state, $phone, $bpId, $billingFrequency, $date, $rateType);
 
         $status = 0;
 
@@ -404,12 +405,13 @@ class PaymentsController extends Controller
         $phone = request('phone');
         $bpId = request('bp_id');
         $billingFrequency = request('billing_frequency');
+        $rateType = request('rate_type');
         $date = date("Y.m.d");
 
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-            $state, $phone, $bpId, $billingFrequency, $date);
+            $state, $phone, $bpId, $billingFrequency, $date, $rateType);
 
         $status = 0;
 
@@ -451,7 +453,6 @@ class PaymentsController extends Controller
 
     public function deleteBilling() {
         $store_id = request('store_id');
-        Log::debug($store_id);
         $registrationModel = new RegistrationModel();
         $registrationModel -> deleteBilling($store_id);
         return response()->json([
@@ -474,12 +475,36 @@ class PaymentsController extends Controller
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);
 
+        $ratetype = request('ratetype');
+        $ratename = request('ratename');
+        $description = request('description');
+        $country = request('country');
+        $currency = request('currency');
+        $rateperclick = request('rateperclick');
+        $monthlythreshold = request('monthlythreshold');
 
         $registrationModel = new RegistrationModel();
+        $registrationModel -> createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold);
 
-        return view("payment/default_rate", [
-            'type' => $type,
-            'admin' => $name
+        return redirect('payment/default_rate');
+    }
+
+    public function activeDefaultRate(){
+        $store_id = request('store_id');
+        $active = request('active');
+        $registrationModel = new RegistrationModel();
+        $registrationModel -> activeRate($store_id, $active);
+        return response()->json([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function deleteDefaultRate(){
+        $store_id = request('store_id');
+        $registrationModel = new RegistrationModel();
+        $registrationModel -> deleteRate($store_id);
+        return response()->json([
+            'status' => 'ok'
         ]);
     }
 }

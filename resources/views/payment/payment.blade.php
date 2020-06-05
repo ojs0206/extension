@@ -378,6 +378,7 @@
                             <th class="">Country</th>
                             <th class="">Phone Number</th>
                             <th class="">Payment Method</th>
+                            <th class="">Default Rate Type</th>
                             <th class="">Edit/Detail</th>
                         </tr>
                         </thead>
@@ -652,6 +653,7 @@
                     { name:"country", 	            data: "country",	 	            defaultContent:""},
                     { name:"phone", 	            data: "phone",	 	                defaultContent:""},
                     { name:"payment_method", 	    data: "payment_method",	 	        defaultContent:""},
+                    { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:""},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dt_Render_billing,  "className" : "editCell center"}
                 ],
                 order: [[1, 'asc']]
@@ -708,15 +710,9 @@
                             }
                         });
                     });
-
-
                 });
                 $("#id-refresh").off("click").on("click", function() {
                     usertable.draw();
-                });
-
-                $("#id-export").off("click").on("click", function() {
-                    window.location = "<?=url('/redirect/report')?>";
                 });
 
                 $("a[type=more-url]").off("click").on("click", function() {

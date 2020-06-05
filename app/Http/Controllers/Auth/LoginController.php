@@ -299,7 +299,6 @@ class LoginController extends Controller
     }
 
     public function saveRedirect() {
-        Log::info("Save Redirect");
         $source = request('source');
         $hint = request('hint');
         $points = request('points');
@@ -308,25 +307,22 @@ class LoginController extends Controller
         $registrationModel = new RegistrationModel();
 
         $url = request('url');
-        Log::info($url);
         $url_info = $registrationModel -> getURL($url);
         if($url_info == null) {
             return ;
         }
 
-        Log::info($url_info);
         $url_info = $url_info[0];
         $url_id = $url_info -> id;
         $redirect_url = request('redirect_url');
         $cur = date('Y-m-d H:i:s');
-        Log::info("Call Finished");
 
         //$id = $registrationModel -> createUrl($url_id, $redirect);
         $registrationModel -> saveRedirect($points, $source, $hint, $url_id, $redirect_url, $cur, $user_id);
-        return json_encode([[
+        return json_encode([
             'status' => true,
             'msg' => "Success save"
-        ]]);
+        ]);
     }
 
     public function saveCells() {
@@ -676,6 +672,13 @@ class LoginController extends Controller
         return response()->json($result);
     }
 
+    public function getAllRateType(){
+        $registrationModel = new RegistrationModel();
+        $rate_type = $registrationModel -> getAllRateType();
+
+        return $rate_type;
+    }
+
     public function exportURlCollection() {
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);
@@ -896,7 +899,13 @@ class LoginController extends Controller
         ]);
     }
 
+    public function editRedirectSetting(){
+        $name = session() -> get(SESS_USERNAME);
+        $type = session() -> get(SESS_USERTYPE);
+        $id = session() -> get(SESS_UID);
 
+        Log::debug(request('click_cut'));
+    }
 }
 
 

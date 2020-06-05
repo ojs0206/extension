@@ -9,6 +9,7 @@
     <style>
         body {
             background: #dddddd !important;
+            height: 120vh !important;
         }
 
         .info {
@@ -257,8 +258,12 @@
 
                     <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
                     <input type="email" id="bp_id" name="bp_id" class="billing-form" placeholder="" required>
-                    <p class="billing-form-text">Billing Frequency:</p>
+                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
                     <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
+                    <p class="billing-form-text">Default Rate Type:</p>
+                    <select id="rate_type" name ="rate_type" required>
+                        <option>Select Default Rate Type</option>
+                    </select>
 
                     <div style="margin-top: 40px;">
                         <button onclick="window.history.back();">Back</button>
@@ -313,8 +318,12 @@
 
                     <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
                     <input type="email" id="bp_id" name="bp_id" class="billing-form" placeholder="" required>
-                    <p class="billing-form-text">Billing Frequency:</p>
+                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
                     <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
+                    <p class="billing-form-text">Default Rate Type:</p>
+                    <select id="rate_type" name ="rate_type" required>
+                        <option>Select Default Rate Type</option>
+                    </select>
 
                     <div style="margin-top: 40px;">
                         <button onclick="window.history.back();">Back</button>
@@ -424,6 +433,24 @@
             document.getElementById('frm-paypal').submit();
         }
 
+        var data = getRate();
+
+        function getRate() {
+            $.ajax({
+                type: "POST",
+                url: '<?=url('/get/all-rate-type')?>',
+                dataType: "json",
+                success: function (resp) {
+                    console.log(resp.length);
+                    for (var i = 0; i < resp.length; i ++){
+                        $('#rate_type').append("<option value='" + resp[i].id + "'>" + resp[i].rate_type + "</option>");
+                    }
+                },
+                error: function () {
+                    console.log('error---')
+                }
+            });
+        }
     </script>
     <script>
         // country -- state
@@ -801,6 +828,11 @@
                 bp_id.value = "{{$infos->billing_profile_id}}";
                 var billing_frequency = document.getElementById('billing_frequency');
                 billing_frequency.value = "{{$infos->frequency}}";
+                console.log("{{$infos->rate_type}}");
+                setTimeout(function () {
+                    var rate_type = document.getElementById('rate_type');
+                    rate_type.value = "{{$infos->rate_type}}";
+                }, 2000)
             @endforeach
         @endif
     </script>
