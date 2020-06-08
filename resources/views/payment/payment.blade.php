@@ -333,7 +333,7 @@
                 </div>
                 <div class="row" style="padding-left: 5%; display: flex">
                     <img src="<?=asset('/assets/icon/redirect.png');?>">
-                    <a href="">
+                    <a href="<?=url('/payment/invoice');?>">
                         <p>Invoice & Payments</p>
                     </a>
                 </div>

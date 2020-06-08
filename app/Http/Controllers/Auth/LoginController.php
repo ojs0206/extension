@@ -737,6 +737,17 @@ class LoginController extends Controller
         return response()->json($result);
     }
 
+    public function getAllInvoice(Request $request) {
+        $params = $this->getDataTableParams($request);
+        $type = session() -> get(SESS_USERTYPE);
+        $id = session() -> get(SESS_UID);
+        $registrationModel = new RegistrationModel();
+        $total = $registrationModel -> getAllInvoiceCount($id, $type, $params);
+        $urls = $registrationModel -> getAllInvoice($id, $type, $params);
+        $result = $this->dataTableFormat($urls, $total);
+        return response()->json($result);
+    }
+
     public function getBillingRateSetting(Request $request) {
         $params = $this->getDataTableParams($request);
         $type = session() -> get(SESS_USERTYPE);
