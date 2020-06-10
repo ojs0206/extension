@@ -198,6 +198,11 @@
                         </tbody>
                     </table>
                 </div>
+                <form action="/payment/paypal" method="post" id="frm-paypal" name="frm-paypal">
+                    {{csrf_field()}}
+                    <input type="hidden" name="price" id="price"/>
+                    <input type="hidden" name="currency" id="currency"/>
+                </form>
             </div>
         </div>
     </div>
@@ -294,21 +299,6 @@
                 language: {
                     "search": "Filter Search: "
                 },
-
-                columns: [
-                    {name: "no", data: "no", defaultContent: "", orderable: false},
-                    {name: "profile_name", data: "profile_name", defaultContent: ""},
-                    {name: "billing_profile_id", data: "billing_profile_id", defaultContent: ""},
-                    {name: "currency", data: "currency", defaultContent: ""},
-                    {name: "income_date", data: "income_date", defaultContent: "", render: dt_Render_rate,},
-                    {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
-                    {name: "payment_method", data: "payment_method", defaultContent: ""},
-                    {name: "income_date", data: "income_date", defaultContent: ""},
-                    {name: "income_date", data: "income_date", defaultContent: ""},
-                    {name: "invoice", data: "invoice", defaultContent: ""},
-                    {name: "income_date", data: "income_date", defaultContent: ""},
-                ],
-
                 order: [[1, 'asc']]
             });
 
@@ -376,23 +366,7 @@
         }
 
         function payInvoice(id) {
-            let formData = new FormData();
-            let _token = "{{ csrf_token() }}";
-            formData.append('_token',_token);
-            formData.append('transaction_id',id);
-            $.ajax({
-                type: "POST",
-                url: '<?=url('/pay_invoice')?>',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (resp) {
-                    console.log(resp);
-                },
-                error: function () {
-                    console.log('error---');
-                }
-            });
+
         }
     </script>
 @endsection
