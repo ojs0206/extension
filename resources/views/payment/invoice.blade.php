@@ -182,7 +182,7 @@
                     {name: "profile_name", data: "profile_name", defaultContent: ""},
                     {name: "billing_profile_id", data: "billing_profile_id", defaultContent: ""},
                     {name: "currency", data: "currency", defaultContent: ""},
-                    {name: "income_date", data: "income_date", defaultContent: ""},
+                    {name: "income_date", data: "income_date", defaultContent: "", render: dt_Render_rate,},
                     {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
                     {name: "payment_method", data: "payment_method", defaultContent: ""},
                     {name: "income_date", data: "income_date", defaultContent: ""},
