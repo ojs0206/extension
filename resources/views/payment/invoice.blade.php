@@ -220,6 +220,8 @@
                 buttonClasses: ['btn', 'btn-sm'],
                 applyClass: 'btn-danger',
                 cancelClass: 'btn-inverse',
+                startDate: moment('2015-01-01'),
+                endDate:moment(),
                 "locale": {
                     "format": "DD/MM/YYYY",
                     "separator": " - ",
@@ -254,12 +256,13 @@
                     "firstDay": 1
                 },
                 ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1,'months').startOf('month'), moment().subtract(1,'months').endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()]
+                    'Most recent':[moment('2015-01-01'),moment()],
+                    'Last 3 Months': [moment().subtract(3,'months'), moment()],
+                    'Last 6 Months': [moment().subtract(6,'months'), moment()],
+                    'Last 9 Months': [moment().subtract(9,'months'), moment()],
+                    'Last 12 Months': [moment().subtract(12,'months'), moment()],
+                    'This financial year': [moment().startOf('year'), moment()],
+                    'Last financial year': [moment().subtract(1,'years').startOf('year'), moment().subtract(1,'years').endOf('year')],
                 }
             });
 
@@ -300,6 +303,81 @@
         });
         function filterData() {
             usertable.ajax.reload();
+        }
+        function initializeData() {
+            $('#user_profile').val("");
+            $('#bill_id').val("");
+            $('#invoice_name').val("");
+            $('.date_ranger').daterangepicker({
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-danger',
+                cancelClass: 'btn-inverse',
+                startDate: moment('2015-01-01'),
+                endDate:moment(),
+                "locale": {
+                    "format": "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                    "fromLabel": "From",
+                    "toLabel": "To",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Su",
+                        "Mo",
+                        "Tu",
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December"
+                    ],
+                    "firstDay": 1
+                },
+                ranges: {
+                    'Most recent':[moment('2015-01-01'),moment()],
+                    'Last 3 Months': [moment().subtract(3,'months'), moment()],
+                    'Last 6 Months': [moment().subtract(6,'months'), moment()],
+                    'Last 9 Months': [moment().subtract(9,'months'), moment()],
+                    'Last 12 Months': [moment().subtract(12,'months'), moment()],
+                    'This financial year': [moment().startOf('year'), moment()],
+                    'Last financial year': [moment().subtract(1,'years').startOf('year'), moment().subtract(1,'years').endOf('year')],
+                }
+            });
+            usertable.ajax.reload();
+        }
+
+        function payInvoice(id) {
+            let formData = new FormData();
+            let _token = "{{ csrf_token() }}";
+            formData.append('_token',_token);
+            formData.append('transaction_id',id);
+            $.ajax({
+                type: "POST",
+                url: '<?=url('/pay_invoice')?>',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function () {
+                    console.log('error---');
+                }
+            });
         }
     </script>
 @endsection

@@ -804,6 +804,13 @@ class LoginController extends Controller
         $num = 1;
         foreach ($data as $one){
             foreach ($label as $index => $item){
+                //check payment status
+                $cal = new DateTime($one->income_date);
+                $interval = new DateInterval('P'.$one->frequency.'D');
+                $cal->add($interval);
+                $now = new DateTime();
+                $compare = $cal>$now?1:0;
+                //input data
                 if ($item == 'index')
                     $obj[$index] = $num;
                 elseif ($item == 'User Profile')
@@ -820,8 +827,12 @@ class LoginController extends Controller
                     $obj[$index] = $one->payment_method;
                 elseif ($item == 'Payment Date')
                     $obj[$index] = $one->income_date;
-                elseif ($item == 'Pay')
-                    $obj[$index] = 1;
+                elseif ($item == 'Pay'){
+                    if($compare==0)
+                        $obj[$index] = "<button class='btn btn-primary' onclick='payInvoice(".$one->ID.")'>PAY</button>";
+                    else
+                        $obj[$index] = "<button class='btn btn-primary'>PAID</button>";
+                }
                 elseif ($item == 'Receipt')
                     $obj[$index] = $one->invoice;
                 elseif ($item == 'Statement')
