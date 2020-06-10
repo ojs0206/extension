@@ -360,7 +360,7 @@ class BillController extends Controller
                 $item->orderid = $response->result->id;
                 $item->status = 'pending';
                 $item->amount = $price;
-                $item->currency = $currency[$currencyid];
+                $item->currency = $currency;
                 $item->save();
                 return redirect()->to($redirect_url);
             } catch (HttpException $ex) {
