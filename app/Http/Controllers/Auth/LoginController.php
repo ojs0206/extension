@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MailSender;
 use PhpParser\Node\Expr\Cast\Object_;
 use Maatwebsite\Excel\Facades\Excel;
+use DateInterval;
+use \DateTime;
+use DB;
 
 class LoginController extends Controller
 {
@@ -745,6 +748,98 @@ class LoginController extends Controller
         $total = $registrationModel -> getAllInvoiceCount($id, $type, $params);
         $urls = $registrationModel -> getAllInvoice($id, $type, $params);
         $result = $this->dataTableFormat($urls, $total);
+        return response()->json($result);
+    }
+
+    public function getInvoice(Request $request){
+        $user_profile = $request->user_profile;
+        $bill_id = $request->bill_id;
+        $invoice_name = $request->invoice_name;
+        $start = $request->start;
+        $end = $request->end;
+
+        $registerModel = new RegistrationModel();
+        $where = "";
+        if ($user_profile != null){
+            $where = "username like '%".$user_profile."%' ";
+        }
+        if($bill_id != null){
+            $clause = "billing_profile_id like '%".$bill_id."%' ";
+            $where = $registerModel->prepareAnd($where,$clause);
+        }
+        if($invoice_name != null){
+            $clause = "invoice like '%".$invoice_name."%' ";
+            $where = $registerModel->prepareAnd($where,$clause);
+        }
+        if($start != null){
+            $array = explode('/', $start);
+
+            $from_date = $array[2].'-'.trim($array[1]).'-'.trim($array[0]);
+            $array = explode('/', $end);
+            $to_date = $array[2].'-'.trim($array[1]).'-'.trim($array[0]);
+            $cal = new DateTime($to_date);
+            $interval = new DateInterval('P1D');
+            $cal->add($interval);
+            $to_date = $cal->format('Y-m-d');
+            $clause = "income_date BETWEEN '".$from_date."' AND '".$to_date."'";
+            $where = $registerModel->prepareAnd($where,$clause);
+        }
+        $where = $registerModel->where($where);
+        $data = DB::select(
+            "SELECT
+            t_transaction.*, t_billing.*, t_user.username, t_rate.*
+            FROM t_transaction
+            LEFT JOIN t_user ON t_transaction.user_id = t_user.id
+            LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+            LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
+        ".$where);
+
+        //make datatable data
+        $label = ['index','User Profile','Billing Profile ID','Billing Currency','Invoice Month','Invoice Value','Payment Method','Payment Date','Pay','Receipt','Statement'];
+        $result = array();
+        $result['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : 1;
+        $result['recordsTotal'] = count($data);
+        $result['recordsFiltered'] = count($data);
+        $result['data'] = array();
+        $num = 1;
+        foreach ($data as $one){
+            foreach ($label as $index => $item){
+                //check payment status
+                $cal = new DateTime($one->income_date);
+                $interval = new DateInterval('P'.$one->frequency.'D');
+                $cal->add($interval);
+                $now = new DateTime();
+                $compare = $cal>$now?1:0;
+                //input data
+                if ($item == 'index')
+                    $obj[$index] = $num;
+                elseif ($item == 'User Profile')
+                    $obj[$index] = $one->profile_name;
+                elseif ($item == 'Billing Profile ID')
+                    $obj[$index] = $one->billing_profile_id;
+                elseif ($item == 'Billing Currency')
+                    $obj[$index] = $one->currency;
+                elseif ($item == 'Invoice Month')
+                    $obj[$index] = date("F Y",strtotime($one->income_date));
+                elseif ($item == 'Invoice Value')
+                    $obj[$index] = $one->monthly_threshold;
+                elseif ($item == 'Payment Method')
+                    $obj[$index] = $one->payment_method;
+                elseif ($item == 'Payment Date')
+                    $obj[$index] = $one->income_date;
+                elseif ($item == 'Pay'){
+                    if($compare==0)
+                        $obj[$index] = "<button class='btn btn-primary' onclick='payInvoice(".$one->ID.")'>PAY</button>";
+                    else
+                        $obj[$index] = "<button class='btn btn-primary'>PAID</button>";
+                }
+                elseif ($item == 'Receipt')
+                    $obj[$index] = $one->invoice;
+                elseif ($item == 'Statement')
+                    $obj[$index] = "Download";
+            }
+            $result['data'][] = $obj;
+        }
         return response()->json($result);
     }
 

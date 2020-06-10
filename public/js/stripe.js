@@ -93,6 +93,7 @@ function setBrandIcon(brand) {
     }
     brandIconElement.classList.add('pf');
     brandIconElement.classList.add(pfClass);
+
 }
 
 cardNumberElement.on('change', function(event) {

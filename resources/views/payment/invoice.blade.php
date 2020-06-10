@@ -5,6 +5,7 @@
 @endsection
 
 @section('styles')
+    <link rel="stylesheet" href="<?=asset('bower_components/bootstrap-daterangepicker/daterangepicker.css')?>">
     <style>
         .url-width {
             width: 20% !important;
@@ -51,6 +52,9 @@
             font-size: 15px;
             margin: auto;
             font-weight: 400;
+        }
+        .search_title h5{
+            font-weight: bold;
         }
 
         @media screen and (max-height: 450px) {
@@ -130,6 +134,49 @@
                         <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
                     </div>
                 </div>
+                <div class="row" style="margin: 15px 0 0 0;">
+                    <div class="col-sm-12 col-md-9">
+                        <div class="row search_title">
+                            <div class="col-sm-2 col-sm-offset-1">
+                                <h5>User profile</h5>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Billing Profile ID</h5>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Invoice period</h5>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Invoice #</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin: 0 0 25px 0;">
+                    <div class="col-sm-12 col-md-9" style="background-color: #efeff0; padding-top: 5px; padding-bottom: 5px">
+                        <div class="row">
+                            <div class="col-sm-1" style="text-align: right">
+                                <h5 style="margin: 10px 0">Search</h5>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" id="user_profile" name="user_profile"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" id="bill_id" name="bill_id"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control date_ranger" type="text" id="period" name="period"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" id="invoice_name" name="invoice_name"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3" style="padding: 5px">
+                        <button type="button" class="btn btn-wide btn-primary" onclick="filterData()">SEARCH</button>
+                        <button type="button" class="btn btn-wide btn-primary" onclick="initializeData()">CLEAR</button>
+                    </div>
+                </div>
                 <div class="row" style="margin-left: 0; margin-right: 0;">
                     <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
                         <thead>
@@ -160,15 +207,85 @@
     <script src="<?=asset('bower_components/sweetalert/dist/sweetalert.min.js');?>"></script>
     <script src="<?=asset('bower_components/DataTables/media/js/jquery.dataTables.min.js');?>"></script>
     <script src="<?=asset('bower_components/DataTables/media/js/dataTables.bootstrap.min.js');?>"></script>
+    <script src="<?=asset('js/moment.js');?>"></script>
+    <script src="<?=asset('bower_components/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
 @endsection
 
 
 @section('js4event')
     <script>
+        let usertable = null;
         jQuery(document).ready(function() {
-            var usertable = $("#user-table").DataTable({
-                "ajax": {
-                    url: "<?=url('/get/all-invoice');?>"
+            $('.date_ranger').daterangepicker({
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-danger',
+                cancelClass: 'btn-inverse',
+                startDate: moment('2015-01-01'),
+                endDate:moment(),
+                "locale": {
+                    "format": "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                    "fromLabel": "From",
+                    "toLabel": "To",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Su",
+                        "Mo",
+                        "Tu",
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December"
+                    ],
+                    "firstDay": 1
+                },
+                ranges: {
+                    'Most recent':[moment('2015-01-01'),moment()],
+                    'Last 3 Months': [moment().subtract(3,'months'), moment()],
+                    'Last 6 Months': [moment().subtract(6,'months'), moment()],
+                    'Last 9 Months': [moment().subtract(9,'months'), moment()],
+                    'Last 12 Months': [moment().subtract(12,'months'), moment()],
+                    'This financial year': [moment().startOf('year'), moment()],
+                    'Last financial year': [moment().subtract(1,'years').startOf('year'), moment().subtract(1,'years').endOf('year')],
+                }
+            });
+
+            usertable = $("#user-table").DataTable({
+                ajax: {
+                    type: "POST",
+                    url: "<?=url('/get/invoice');?>",
+                    data: function (d) {
+                        let _val = "{{csrf_token()}}";
+                        let user_profile = $('#user_profile').val();
+                        let bill_id = $('#bill_id').val();
+                        let invoice_name = $('#invoice_name').val();
+                        let date = $("#period").val();
+                        let values = date.split('-');
+                        let start = values[0];
+                        let end = values[1];
+                        d.user_profile = user_profile;
+                        d.bill_id = bill_id;
+                        d.invoice_name = invoice_name;
+                        d.start =  start;
+                        d.end = end;
+                        d._token = _val;
+                    },
                 },
                 processing: true,
                 serverSide: true,
@@ -177,6 +294,7 @@
                 language: {
                     "search": "Filter Search: "
                 },
+
                 columns: [
                     {name: "no", data: "no", defaultContent: "", orderable: false},
                     {name: "profile_name", data: "profile_name", defaultContent: ""},
@@ -190,6 +308,7 @@
                     {name: "invoice", data: "invoice", defaultContent: ""},
                     {name: "income_date", data: "income_date", defaultContent: ""},
                 ],
+
                 order: [[1, 'asc']]
             });
 
@@ -197,5 +316,83 @@
 
             });
         });
+        function filterData() {
+            usertable.ajax.reload();
+        }
+        function initializeData() {
+            $('#user_profile').val("");
+            $('#bill_id').val("");
+            $('#invoice_name').val("");
+            $('.date_ranger').daterangepicker({
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-danger',
+                cancelClass: 'btn-inverse',
+                startDate: moment('2015-01-01'),
+                endDate:moment(),
+                "locale": {
+                    "format": "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                    "fromLabel": "From",
+                    "toLabel": "To",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Su",
+                        "Mo",
+                        "Tu",
+                        "We",
+                        "Th",
+                        "Fr",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December"
+                    ],
+                    "firstDay": 1
+                },
+                ranges: {
+                    'Most recent':[moment('2015-01-01'),moment()],
+                    'Last 3 Months': [moment().subtract(3,'months'), moment()],
+                    'Last 6 Months': [moment().subtract(6,'months'), moment()],
+                    'Last 9 Months': [moment().subtract(9,'months'), moment()],
+                    'Last 12 Months': [moment().subtract(12,'months'), moment()],
+                    'This financial year': [moment().startOf('year'), moment()],
+                    'Last financial year': [moment().subtract(1,'years').startOf('year'), moment().subtract(1,'years').endOf('year')],
+                }
+            });
+            usertable.ajax.reload();
+        }
+
+        function payInvoice(id) {
+            let formData = new FormData();
+            let _token = "{{ csrf_token() }}";
+            formData.append('_token',_token);
+            formData.append('transaction_id',id);
+            $.ajax({
+                type: "POST",
+                url: '<?=url('/pay_invoice')?>',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function () {
+                    console.log('error---');
+                }
+            });
+        }
     </script>
 @endsection

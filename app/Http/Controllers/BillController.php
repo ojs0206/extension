@@ -318,4 +318,55 @@ class BillController extends Controller
     public function cancel(){
         dd('Cancel');
     }
+
+    public function pay_invoice(Request $request){
+        $transactoin_id = $request->transaction_id;
+        $transaction = DB::table('t_transaction')->find($transactoin_id);
+        $user = DB::table('t_user')->find($transaction->user_id);
+        $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
+        $rate = DB::table('t_rate')->find($billing->rate_type);
+        if($billing->payment_method=="paypal"){
+            $user_id = $user->id;
+
+            $price = $rate->monthly_threshold/$billing->frequency;
+            $currency = $rate->currency;
+
+            $request = new OrdersCreateRequest();
+            $request->prefer('return=representation');
+            $request->body = array(
+                "intent" => "CAPTURE",
+                "purchase_units" => array(
+                    array(
+                        "reference_id" => $user_id . '_' . time(),
+                        "amount" => array(
+                            "value" => $price,
+                            "currency_code" => $currency
+                        )
+                    ),
+                ),
+                "application_context" => array(
+                    "cancel_url" => url('/payment/cancel'),
+                    "return_url" => url('/payment/back')
+                )
+            );
+
+            try{
+                $response = $this->client->execute($request);
+                $redirect_url = $response->result->links[1]->href;
+
+                $item = new \App\Paypal();
+                $item->user_id = $user_id;
+                $item->transaction_type = "paypal";
+                $item->orderid = $response->result->id;
+                $item->status = 'pending';
+                $item->amount = $price;
+                $item->currency = $currency;
+                $item->save();
+                return redirect()->to($redirect_url);
+            } catch (HttpException $ex) {
+                echo $ex->statusCode;
+                dd($ex->getMessage());
+            }
+        }
+    }
 }
