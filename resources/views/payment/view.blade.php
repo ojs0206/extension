@@ -103,7 +103,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-md-offset-2">
+            <div class="col-md-4 col-md-offset-4">
                 <div class="panel panel-default">
                     <div class="panel-heading text-center">
                         <h3 class="panel-title">Credit Card Payment</h3>
@@ -158,46 +158,6 @@
                                     <button type="button" class="btn btn-dark-orange btn-pay" id="btn_submit" onclick="checkValidStripe()">Pay</button>
                                 </div>
                                 <input type="hidden" name="card_token" id="card_token">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading text-center">
-                        <h3 class="panel-title">PayPal Payment</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form action="/payment/paypal" method="post" id="frm-paypal" name="frm-paypal">
-                            {{ csrf_field() }}
-                            <div class="row">
-                                <div class="col-xs-12 margin-top-10">
-                                    <div class="form-group">
-                                        <label for="price">Price</label>
-                                    </div>
-                                    <input type="number" class="form-control" id="price" name="price" value="1" readonly/>
-                                </div>
-                                <div class="col-xs-12 margin-top-20">
-                                    <div class="form-group">
-                                        <label for="currency">Currency</label>
-                                    </div>
-                                    <div>
-                                        <select class="form-control custom-select" name="currency">
-                                            <option value="0">AUD</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">EUR</option>
-                                            <option value="3">NZD</option>
-                                            <option value="4">CNY</option>
-                                            <option value="5">CAD</option>
-                                            <option value="6">GBP</option>
-                                            <option value="7">JPY</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 margin-top-40 text-center">
-                                    <button type="submit" class="btn btn-dark-orange btn-pay">PayPal</button>
-                                </div>
                             </div>
                         </form>
                     </div>

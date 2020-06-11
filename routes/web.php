@@ -85,6 +85,8 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/back',                        'BillController@back');
     Route::get('/payment/cancel',                        'BillController@cancel');
     Route::post('/pay_invoice',                        'BillController@pay_invoice');
+    Route::get('/payment/success',                        'BillController@success');
+    Route::get('/payment/check_success',                          'BillController@check_success');
 
     Route::get('/count',                                     'Auth\LoginController@showCount');
     Route::get('/count/detail',                              'Auth\LoginController@showDetailClickInfo');

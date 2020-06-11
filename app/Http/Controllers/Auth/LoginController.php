@@ -794,6 +794,21 @@ class LoginController extends Controller
             LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
         ".$where);
 
+        //get latest records for each user
+        $recent_records = DB::select(
+            "SELECT tt.ID
+            FROM t_transaction tt
+            INNER JOIN
+                (SELECT user_id, MAX(income_date) AS MaxDateTime
+                FROM t_transaction
+                GROUP BY user_id) groupedtt 
+            ON tt.user_id = groupedtt.user_id 
+            AND tt.income_date = groupedtt.MaxDateTime"
+        );
+        $pay_list = array();
+        foreach ($recent_records as $one)
+            array_push($pay_list, $one->ID);
+
         //make datatable data
         $label = ['index','User Profile','Billing Profile ID','Billing Currency','Invoice Month','Invoice Value','Payment Method','Payment Date','Pay','Receipt','Statement'];
         $result = array();
@@ -805,11 +820,21 @@ class LoginController extends Controller
         foreach ($data as $one){
             foreach ($label as $index => $item){
                 //check payment status
-                $cal = new DateTime($one->income_date);
-                $interval = new DateInterval('P'.$one->frequency.'D');
-                $cal->add($interval);
-                $now = new DateTime();
-                $compare = $cal>$now?1:0;
+                $compare = 1;
+                if(in_array($one->ID,$pay_list)){
+                    $cal = new DateTime($one->income_date);
+                    $interval = new DateInterval('P'.$one->frequency.'D');
+                    $cal->add($interval);
+                    $now = new DateTime();
+                    $compare = $cal>$now?1:0;
+                }
+                //check payment method
+                if($one->payment_method == "PayPal"){
+                    $pp = 1;
+                }
+                else{
+                    $pp = 0;
+                }
                 //input data
                 if ($item == 'index')
                     $obj[$index] = $num;
@@ -826,19 +851,20 @@ class LoginController extends Controller
                 elseif ($item == 'Payment Method')
                     $obj[$index] = $one->payment_method;
                 elseif ($item == 'Payment Date')
-                    $obj[$index] = $one->income_date;
+                    $obj[$index] = date("d.m.Y",strtotime($one->income_date));
                 elseif ($item == 'Pay'){
                     if($compare==0)
-                        $obj[$index] = "<button class='btn btn-primary' onclick='payInvoice(".$one->ID.")'>PAY</button>";
+                        $obj[$index] = "<button type='button' class='btn btn-primary' onclick='payInvoice(".$one->ID.",".$pp.")'>PAY</button>";
                     else
-                        $obj[$index] = "<button class='btn btn-primary'>PAID</button>";
+                        $obj[$index] = "<button type='button' class='btn btn-primary'>PAID</button>";
                 }
                 elseif ($item == 'Receipt')
                     $obj[$index] = $one->invoice;
                 elseif ($item == 'Statement')
-                    $obj[$index] = "Download";
+                    $obj[$index] = "<a href='#' style='text-decoration: underline !important;'>".date("F Y",strtotime($one->income_date))."</a>";
             }
             $result['data'][] = $obj;
+            $num++;
         }
         return response()->json($result);
     }

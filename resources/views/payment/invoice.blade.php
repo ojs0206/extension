@@ -177,7 +177,7 @@
                         <button type="button" class="btn btn-wide btn-primary" onclick="initializeData()">CLEAR</button>
                     </div>
                 </div>
-                <div class="row" style="margin-left: 0; margin-right: 0;">
+                <div class="row" style="margin-left: 0; margin-right: 0;position: relative">
                     <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
                         <thead>
                         <tr>
@@ -197,7 +197,15 @@
                         <tbody>
                         </tbody>
                     </table>
+                    <div class="" style="position: absolute;top:-16px;right: 0.5rem;width: 8rem;text-align: center">
+                        <p style="font-size: 10px;margin-bottom: 0">Adobe Reader is required to view these statements.</p>
+                        <img src="{{asset('/images/Adobe-reader.png')}}" style="width: 80px; height: 30px">
+                    </div>
                 </div>
+                <form action="/pay_invoice" method="post" id="frm-invoice" name="frm-invoice" target="TheWindow">
+                    {{csrf_field()}}
+                    <input type="hidden" name="transaction_id" id="transaction_id"/>
+                </form>
             </div>
         </div>
     </div>
@@ -360,24 +368,48 @@
             usertable.ajax.reload();
         }
 
-        function payInvoice(id) {
-            let formData = new FormData();
-            let _token = "{{ csrf_token() }}";
-            formData.append('_token',_token);
-            formData.append('transaction_id',id);
-            $.ajax({
-                type: "POST",
-                url: '<?=url('/pay_invoice')?>',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (resp) {
-                    console.log(resp);
-                },
-                error: function () {
-                    console.log('error---');
-                }
-            });
+        function payInvoice(id,pp) {
+            if(pp==1){
+                console.log(id);
+                $('#transaction_id').val(id);
+                window.open('/pay_invoice', 'TheWindow', 'width=900,height=900');
+                document.getElementById('frm-invoice').submit();
+            }
+            else{
+                let formData = new FormData();
+                let _token = "{{ csrf_token() }}";
+                formData.append('_token',_token);
+                formData.append('transaction_id',id);
+                $.ajax({
+                    type: "POST",
+                    url: '<?=url('/pay_invoice')?>',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (resp) {
+                        if(resp!=1)
+                            window.location.href = resp;
+                        else
+                            swal("Done", "You paid the invoice.", "success");
+                        swal({
+                            title: "Done",
+                            text: "You paid the invoice.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#00dd57",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        }, function(isConfirm) {
+                            if(isConfirm) {
+                                window.location.reload();
+                            }
+                        });
+                    },
+                    error: function () {
+                        console.log('error---');
+                    }
+                });
+            }
         }
     </script>
 @endsection

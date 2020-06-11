@@ -6,10 +6,13 @@ use App\CardPayment;
 use App\Model\RegistrationModel;
 use App\Card;
 use App\Paypal;
+use App\Transaction;
+use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Charge;
 use Stripe\Customer;
 use Stripe\Exception\CardException;
@@ -322,15 +325,17 @@ class BillController extends Controller
     public function pay_invoice(Request $request){
         $transactoin_id = $request->transaction_id;
         $transaction = DB::table('t_transaction')->find($transactoin_id);
-        $user = DB::table('t_user')->find($transaction->user_id);
+        $user_id = $transaction->user_id;
+        $user = DB::table('t_user')->find($user_id);
         $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
         $rate = DB::table('t_rate')->find($billing->rate_type);
-        if($billing->payment_method=="paypal"){
-            $user_id = $user->id;
 
-            $price = $rate->monthly_threshold/$billing->frequency;
-            $currency = $rate->currency;
+        $price = intval($rate->monthly_threshold/$billing->frequency);
+        $currency = $rate->currency;
+        $email = $billing->billing_profile_id;
+        $profile_name = $billing->profile_name;
 
+        if($billing->payment_method=="PayPal"){
             $request = new OrdersCreateRequest();
             $request->prefer('return=representation');
             $request->body = array(
@@ -346,7 +351,7 @@ class BillController extends Controller
                 ),
                 "application_context" => array(
                     "cancel_url" => url('/payment/cancel'),
-                    "return_url" => url('/payment/back')
+                    "return_url" => url('/payment/success')
                 )
             );
 
@@ -354,19 +359,157 @@ class BillController extends Controller
                 $response = $this->client->execute($request);
                 $redirect_url = $response->result->links[1]->href;
 
-                $item = new \App\Paypal();
-                $item->user_id = $user_id;
-                $item->transaction_type = "paypal";
-                $item->orderid = $response->result->id;
-                $item->status = 'pending';
-                $item->amount = $price;
-                $item->currency = $currency;
-                $item->save();
                 return redirect()->to($redirect_url);
             } catch (HttpException $ex) {
                 echo $ex->statusCode;
                 dd($ex->getMessage());
             }
         }
+        else{
+            $cardInfo = DB::table('t_card_info')->where('user_id',$user_id)->first();
+            if($cardInfo==null)
+                return url('payment/view');
+            else{
+                Stripe::setApiKey(env('STRIPE_SECRET'));
+                $error = null;
+
+                //pay with card
+                try {
+                    $charge = Charge::create([
+                        "amount" => intval($price*100),
+                        "currency" => $currency,
+                        "customer" => $cardInfo->stripe_cus_id,
+                        "capture" => false,
+                        'description' => "Membership fee"
+                    ]);
+                    $source = $charge->source;
+                    $ch_id = $charge->id;
+                    $out = $charge->outcome;
+                    if ($out->reason == 'elevated_risk_level') {
+                        $error = 'Your card was declined. Please try with another card';
+                    } else if ($out->reason == 'highest_risk_level') {
+                        $error = 'Your card was declined. Please try with another card';
+                    } else if ($out->reason == 'merchant_blacklis') {
+                        $error = 'Your card was declined. Please try with another card';
+                    } else if ($source->funding == 'prepaid') {
+                        $error = 'Sorry, but we dont allow prepaid Cards. Please use a credit / debit valid card';
+                    }
+                    if (strpos($ch_id, 'ch_') === false || $charge->failure_message != null) {
+                        $error = $charge->failure_message;
+                    }
+
+                } catch (CardException $e) {
+                    $body = $e->getJsonBody();
+                    $err = $body['error'];
+                    if ($err['decline_code'] == 'do_not_honor') {
+                        $error = 'Your card don\'t have funds or isn\'t active';
+                    }
+                } catch (\Exception $e) {
+                    //$error = $e->getMessage();
+                    Log::info($e->getMessage());
+                    $error = 'The card validation cant be executed at this moment. Please retry later';
+                }
+                if($error != null) {
+                    abort(500,"Payment failed");
+                }
+
+                //save transaction history
+                $transaction = new Transaction();
+                $transaction->user_id = $user_id;
+                $transaction->income = $price;
+                $transaction->income_date = date('Y-m-d H:i:s');
+                $transaction->current = $price;
+                $transaction->currency = $currency;
+                $transaction->invoice = $this->createReceipt($user_id);
+                $transaction->save();
+
+                //send mail
+                $data = array('price'=>$price,'currency'=>$currency);
+                Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name,$email){
+                    $message->to($email, $profile_name)
+                        ->subject('Invoice paid');
+                    $message->from('dvpgridtest@gmail.com','Admin');
+                });
+
+                return 1;
+            }
+        }
     }
+
+    public function success(Request $request){
+        $_request = new OrdersCaptureRequest($request->token);
+        $_request->prefer('return=representation');
+        try{
+            $response = $this->client->execute($_request);
+            $refer_id = $response->result->purchase_units[0]->reference_id;
+            $user_id = substr($refer_id,0,strpos($refer_id,"_"));
+            $price = $response->result->purchase_units[0]->payments->captures[0]->amount->value;
+            $currency = $response->result->purchase_units[0]->payments->captures[0]->amount->currency_code;
+            $status = $response->result->purchase_units[0]->payments->captures[0]->status;
+
+            if ($status=="COMPLETED" || $status=="PENDING"){
+
+                $transaction = new Transaction();
+                $transaction->user_id = $user_id;
+                $transaction->income = $price;
+                $transaction->income_date = date('Y-m-d H:i:s');
+                $transaction->current = $price;
+                $transaction->currency = $currency;
+                $transaction->invoice = $this->createReceipt($user_id);
+                $transaction->save();
+
+                //send mail
+                $user = DB::table('t_user')->find($user_id);
+                $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
+                $email = $billing->billing_profile_id;
+                $profile_name = $billing->profile_name;
+                $data = array('price'=>$price,'currency'=>$currency);
+                Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name,$email){
+                    $message->to($email, $profile_name)
+                        ->subject('Invoice paid');
+                    $message->from('dvpgridtest@gmail.com','Admin');
+                });
+
+                return redirect()->to('/payment/check_success');
+            }
+            else{
+                abort(500,'Wrong to payment!');
+            }
+        } catch (HttpException $ex) {
+            echo $ex->statusCode;
+            dd($ex->getMessage());
+        }
+    }
+
+    public function check_success(){
+        return view("payment/check_success");
+    }
+
+    public function createReceipt($user_id){
+        $user = DB::table('t_user')->find($user_id);
+        $profile_name = $user->username;
+        $txt = strtoupper(substr($profile_name,0,3));
+        $txt = str_pad($txt,3,0,STR_PAD_RIGHT);
+        $transaction_record = Transaction::where('user_id',$user_id)->orderBy('income_date','DESC')->first();
+        if($transaction_record != null){
+            $invoice = $transaction_record->invoice;
+            $record = substr($invoice,0, 6);
+            $last_index = intval(substr($invoice,-2));
+            $last_index = str_pad($last_index+1, 2, '0', STR_PAD_LEFT);
+            return $record.date('dmY').$last_index;
+        }
+        else{
+            $history = Transaction::where('invoice','like','%'.$txt.'%')->orderBy('invoice','DESC')->orderBy('income_date','DESC')->first();
+            if($history == null){
+                $txt = $txt."001".date('dmY')."01";
+            }
+            else{
+                $se_txt = intval(substr($history->invoice, 3, 3));
+                $se_txt = str_pad($se_txt+1, 3, '0', STR_PAD_LEFT);
+                $txt = $txt.$se_txt.date('dmY')."01";
+            }
+            return $txt;
+        }
+    }
+
 }
