@@ -127,10 +127,13 @@
                     <div class="col-sm-8">
                         <h1>Redirect Settings and Statistics </h1>
                     </div>
-                    <div class="col-sm-2 text-right">
+                    <div class="col-sm-1 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>
+                    </div>
+                    <div class="col-sm-1 text-right">
                         <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
                     </div>
-                    <div class="col-sm-2 text-right">
+                    <div class="col-sm-1 text-right">
                         <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
                     </div>
                 </div>
