@@ -292,9 +292,9 @@
                     </div>
                     <select name="payment_method" id="payment_method" required>
                         <option>Select Payment method</option>
-                        <option value="paypal">Paypal</option>
-                        <option value="visa">VISA</option>
-                        <option value="mastercard">MasterCard</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="VISA">VISA</option>
+                        <option value="MasterCard">MasterCard</option>
                     </select>
                     <div id="paypal_status" class="d-flex" style="display: none; margin-bottom: 20px">
                         <img src="<?=asset('/assets/icon/paypal.png');?>" style="width: 20px; height: 100%;">
@@ -796,7 +796,7 @@
 
         $('#payment_method').change( function () {
             var payment_method = $('#payment_method option:selected').text();
-            if (payment_method == 'Paypal') {
+            if (payment_method == 'PayPal') {
                 var paypal_modal = $('#paypal_payment');
                 paypal_modal.css('display', 'block');
             }

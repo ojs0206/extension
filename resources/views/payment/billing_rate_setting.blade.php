@@ -57,6 +57,69 @@
             .sidenav {padding-top: 15px;}
             .sidenav a {font-size: 18px;}
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .cancelModal {
+            color: dimgrey;
+            font-size: 1vw;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .cancelModal:hover,
+        .cancelModal:focus {
+            color: blue;
+        }
+
+        .saveModal {
+            color: dimgrey;
+            font-size: 1vw;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .saveModal:hover,
+        .saveModal:focus {
+            color: blue;
+        }
     </style>
 
     <script>
@@ -156,7 +219,28 @@
     </div>
 </div>
 
-
+<div id="editModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" id="close_button">&times;</span>
+        <div class="panel-body" style="margin: auto; width: 60%; padding-top: 45px;">
+            <select id="rate_type" >
+                @foreach ($rate as $rate_type)
+                    <option value="'{{$rate_type->rate_type}}'">{{$rate_type->rate_type}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <p class="cancelModal" id="cancel_button">Cancel</p>
+            </div>
+            <div class="col-sm-3">
+                <p class="saveModal" id="ok_button">Ok</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -288,12 +372,59 @@
                     });
                 });
             });
-            $('#user-table tbody').on('click', 'tr', function () {
-                var data = usertable.row( this ).data();
+            // $('#user-table tbody').on('click', 'tr', function () {
+            //     let data = usertable.row( this ).data();
+            //     console.log(data);
+            // } );
+
+            $('#user-table tbody').on('click', 'tr', function (){
+                let data = usertable.row( this ).data();
                 console.log(data);
-            } );
+                let textarea_id = data.no;
+                if($(".ratetype").is(":focus")){
+                    $('#editModal').css('display', 'block');
+                    $('#close_button').on('click', function(){
+                        $('#editModal').css('display', 'none');
+                    });
+
+                    $('#cancel_button').on('click', function(){
+                        $('#editModal').css('display', 'none');
+                    });
+
+                    let changed_value;
+                    $('#ok_button').on('click', function(){
+                        $('#editModal').css('display', 'none');
+                        changed_value = $('#rate_type').val();
+                        console.log(changed_value);
+                        $('.ratetype').eq(textarea_id - 1).val(changed_value.substr(1, changed_value.length - 2));
+                    });
+                }
+                // console.log(this.$('button'));
+
+                $('button', $(this)).on('click', function(){
+                    let rate_type = $('.ratetype').eq(textarea_id - 1).val();
+                    let click_cut = $('.click_cut').eq(textarea_id - 1).val();
+                    data.rate_type = rate_type;
+                    data.click_cut = click_cut;
+                    $.ajax({
+                        type: 'post',
+                        url: '/billing_rate_setting/edit',
+                        data: {
+                            data: data,
+                        },
+                        dataType: "json",
+                        success: function (response) {
+
+                        },
+                        error: function () {
+                            toastr.error('Server connection error');
+                        }
+                    });
+                });
+            });
 
         });
+
     </script>
 
 @endsection

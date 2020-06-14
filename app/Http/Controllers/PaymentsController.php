@@ -316,10 +316,23 @@ class PaymentsController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $name = session() -> get(SESS_USERNAME);
         $registrationModel = new RegistrationModel();
+        $rate = $registrationModel -> getAllRateType();
         return view('payment/billing_rate_setting', [
             'type' => $type,
             'admin' => $name,
+            'rate' => $rate
         ]);
+    }
+
+    public function editBillingRateSetting() {
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $data = request('data');
+        Log::info($data);
+        $registrationModel = new RegistrationModel();
+//        $rate = $registrationModel -> getAllRateType();
+
     }
 
     public function budgetSetting() {

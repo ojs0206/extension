@@ -236,7 +236,7 @@ function dtRender_redirect(data, type, row, meta) {
 }
 
 function dtRender_click_rate(data, type, row, meta) {
-    return '<textarea style="width: 50%; margin: auto;">' + data + '</textarea>';
+    return '<textarea style="width: 50%; margin: auto;" class = "click_cut">' + data + '</textarea>';
 }
 
 function dtRender_count(data, type, row, meta)

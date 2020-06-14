@@ -73,6 +73,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/method',                           'PaymentsController@showMethod');
     Route::get('/payment/settings',                         'PaymentsController@showSettings');
     Route::get('/payment/billing_rate_setting',             'PaymentsController@billingRateSetting');
+    Route::post('/billing_rate_setting/edit',             'PaymentsController@editBillingRateSetting');
     Route::get('/payment/budget_setting',                   'PaymentsController@budgetSetting');
     Route::get('/payment/default_rate',                     'PaymentsController@defaultRate');
     Route::get('/payment/invoice',                          'PaymentsController@invoice');
