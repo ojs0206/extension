@@ -26,10 +26,9 @@
                             <a href="<?=url('/payment/transaction');?>">Transaction</a><br>
                             <a href="<?=url('/payment/settings');?>">Settings</a>
                         @else
-                            <a href="<?=url('/payment/graph');?>">Graphical Interface</a><br>
+
                         @endif
                     </div>
-
                 </li>
                 @if($type != 'User')
                     <li><a href="<?=url('/child');?>"><span class="glyphicon glyphicon-pencil"></span> Settings</a></li>

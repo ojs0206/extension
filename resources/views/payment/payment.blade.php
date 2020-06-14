@@ -327,7 +327,7 @@
                 </div>
                 <div class="row" style="padding-left: 5%; display: flex">
                     <img src="<?=asset('/assets/icon/card.png');?>">
-                    <a href="">
+                    <a href="<?=url('/payment/budget_setting');?>">
                         <p>Budget Setting</p>
                     </a>
                 </div>
