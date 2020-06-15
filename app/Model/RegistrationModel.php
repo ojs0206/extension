@@ -507,17 +507,17 @@ class RegistrationModel extends BaseModel
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
         $tmp = $this->clause('username', $params);;
-//        if ($user_profile != null){
-//            $where = "t_user.username = '$user_profile'";
-//        }
-//        if($bill_id != null){
-//            $clause = "t_billing.billing_profile_id = '$bill_id'";
-//            $where = $this->prepareAnd($where,$clause);
-//        }
-//        if($item_id != null){
-//            $clause = "t_store_.item_id = '$item_id'";
-//            $where = $this->prepareAnd($where,$clause);
-//        }
+        if ($user_profile != null){
+            $tmp = "t_user.username = '$user_profile'";
+        }
+        if($bill_id != null){
+            $clause = "t_billing.billing_profile_id = '$bill_id'";
+            $tmp = $this->prepareAnd($tmp,$clause);
+        }
+        if($item_id != null){
+            $clause = "t_store_.item_id = '$item_id'";
+            $tmp = $this->prepareAnd($tmp, $clause);
+        }
 
         $where = $this->where($tmp);
         $data = DB::select(
@@ -528,23 +528,23 @@ class RegistrationModel extends BaseModel
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
-        ".$where . $orderby . $limit);
+        ".$where);
         return $data;
     }
 
     public function getBudgetSettingCount($id, $type, $params, $user_profile, $bill_id, $item_id){
         $tmp = $this->clause('username', $params);;
-//        if ($user_profile != null){
-//            $where = "t_user.username = '$user_profile'";
-//        }
-//        if($bill_id != null){
-//            $clause = "t_billing.billing_profile_id = '$bill_id'";
-//            $where = $this->prepareAnd($where,$clause);
-//        }
-//        if($item_id != null){
-//            $clause = "t_store_.item_id = '$item_id'";
-//            $where = $this->prepareAnd($where,$clause);
-//        }
+        if ($user_profile != null){
+            $tmp = "t_user.username = '$user_profile'";
+        }
+        if($bill_id != null){
+            $clause = "t_billing.billing_profile_id = '$bill_id'";
+            $tmp = $this->prepareAnd($tmp,$clause);
+        }
+        if($item_id != null){
+            $clause = "t_store_.item_id = '$item_id'";
+            $tmp = $this->prepareAnd($tmp, $clause);
+        }
 
         $where = $this->where($tmp);
         $data = DB::select(

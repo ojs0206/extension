@@ -239,6 +239,7 @@
                     {name: "billing_profile_id", data: "billing_profile_id", defaultContent: ""},
                     {name: "hint", data: "hint", defaultContent: ""},
                     {name: "item_id", data: "item_id", defaultContent: ""},
+                    {name: "currency", data: "currency", defaultContent: ""},
                     {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
                     {name: "budget", data: "budget", defaultContent: ""},
                     {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
