@@ -1012,6 +1012,7 @@ class RegistrationModel extends BaseModel
                 'rate_type'  => $rate_type,
                 'active'  => 'Active'
             ]);
+
         $user_id = DB::table("t_user")
             ->select("id")
             ->where("username", $userProfileName)
