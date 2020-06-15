@@ -175,7 +175,7 @@
                     </div>
                 </div>
                 <div class="row" style="margin-left: 0; margin-right: 0;position: relative">
-                    <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
+                    <table class="table table-striped table-hover" id="billing-table" style="width: 98%; margin: auto;">
                         <thead>
                         <tr>
                             <th class="">#</th>
@@ -215,14 +215,16 @@
                 "ajax": {
                     type: "POST",
                     url: "<?=url('/get/budget-setting');?>",
-                    // data: function (d) {
-                    //     let user_profile = $('#user_profile').val();
-                    //     let bill_id = $('#bill_id').val();
-                    //     let item_id = $('#item_id').val();
-                    //     d.user_profile = user_profile;
-                    //     d.bill_id = bill_id;
-                    //     d.item_id = item_id;
-                    // },
+                    data: function (d) {
+                        let _val = "{{csrf_token()}}";
+                        let user_profile = $('#user_profile').val();
+                        let bill_id = $('#bill_id').val();
+                        let item_id = $('#item_id').val();
+                        d.user_profile = user_profile;
+                        d.bill_id = bill_id;
+                        d.item_id = item_id;
+                        d._token = _val;
+                    },
                 },
                 processing: true,
                 serverSide: true,

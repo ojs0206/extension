@@ -50,7 +50,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/get/all-redirect',                          'Auth\LoginController@getAllRedirectURLInfo');
     Route::get('/get/all-billing',                          'Auth\LoginController@getAllBillingInfo');
     Route::get('/get/all-invoice',                          'Auth\LoginController@getAllInvoice');
-    Route::get('/get/budget-setting',                          'Auth\LoginController@getBudgetSetting');
+    Route::post('/get/budget-setting',                          'Auth\LoginController@getBudgetSetting');
     Route::get('/get/billing-rate-setting',                 'Auth\LoginController@getBillingRateSetting');
     Route::post('/get/invoice',                             'Auth\LoginController@getInvoice');
 
