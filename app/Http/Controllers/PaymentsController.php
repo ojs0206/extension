@@ -131,6 +131,18 @@ class PaymentsController extends Controller
 
     }
 
+    public function itemStatistic($id){
+//        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $registrationModel = new RegistrationModel();
+        return view('item_statistic', [
+            'type' => $type,
+            'admin' => $name,
+            'id' => $id
+        ]);
+    }
+
     public function getPaymentStatus()
     {
         /** Get the payment ID before session clear **/
