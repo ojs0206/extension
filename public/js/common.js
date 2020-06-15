@@ -277,7 +277,7 @@ function dtRender_count(data, type, row, meta)
 
 function dtRender_item(data, type, row, meta)
 {
-    return '<a>' + data + '</a>'
+    return '<a href="/item_id/statistics/' + data + '">' + data + '</a>'
 }
 
 function dtRender_rate_type(data, type, row, meta)

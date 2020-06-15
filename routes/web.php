@@ -50,6 +50,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/get/all-redirect',                          'Auth\LoginController@getAllRedirectURLInfo');
     Route::get('/get/all-billing',                          'Auth\LoginController@getAllBillingInfo');
     Route::get('/get/all-invoice',                          'Auth\LoginController@getAllInvoice');
+    Route::get('/get/budget-setting',                          'Auth\LoginController@getBudgetSetting');
     Route::get('/get/billing-rate-setting',                 'Auth\LoginController@getBillingRateSetting');
     Route::post('/get/invoice',                             'Auth\LoginController@getInvoice');
 
@@ -79,6 +80,8 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/invoice',                          'PaymentsController@invoice');
     Route::post('/payment/settings',                        'PaymentsController@updateSettings');
     Route::post('/payment/updateMembership',               'PaymentsController@processPayment');
+    Route::get('/item_id/statistics/{id}',               'PaymentsController@itemStatistic');
+
     Route::get('/payment/view',                             'BillController@view');
     Route::get('/payment/check_paypal/{id}',                          'BillController@check_paypal');
     Route::post('/payment/creditcard',                        'BillController@creditcard');

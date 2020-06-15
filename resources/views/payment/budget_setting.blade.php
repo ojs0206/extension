@@ -123,7 +123,77 @@
         </div>
         <div class="col-sm-10">
             <div class="" style="margin: auto !important;">
-
+                <div class="row" style="margin-left: 0; margin-right: 0;">
+                    <div class="col-sm-8">
+                        <h1>Budget Setting </h1>
+                    </div>
+                    <div class="col-sm-1 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>
+                    </div>
+                    <div class="col-sm-1 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
+                    </div>
+                    <div class="col-sm-1 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
+                    </div>
+                </div>
+                <div class="row" style="margin: 15px 0 0 0;">
+                    <div class="col-sm-12 col-md-9">
+                        <div class="row search_title">
+                            <div class="col-sm-2 col-sm-offset-1">
+                                <h5>User profile</h5>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Billing Profile ID</h5>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Item ID#</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin: 0 0 25px 0;">
+                    <div class="col-sm-12 col-md-9" style="background-color: #efeff0; padding-top: 5px; padding-bottom: 5px">
+                        <div class="row">
+                            <div class="col-sm-1" style="text-align: right">
+                                <h5 style="margin: 10px 0">Search</h5>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" id="user_profile" name="user_profile"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" id="bill_id" name="bill_id"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <input class="form-control" id="item_id" name="item_id"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3" style="padding: 5px">
+                        <button type="button" class="btn btn-wide btn-primary" onclick="filterData()">SEARCH</button>
+                        <button type="button" class="btn btn-wide btn-primary" onclick="initializeData()">CLEAR</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-left: 0; margin-right: 0;position: relative">
+                    <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
+                        <thead>
+                        <tr>
+                            <th class="">#</th>
+                            <th class="">User Profile</th>
+                            <th class="">Billing Profile ID</th>
+                            <th class="">Description</th>
+                            <th class="">Item ID#</th>
+                            <th class="">Billing Currency</th>
+                            <th class="">Billing Profile Budget</th>
+                            <th class="">Item ID# Budget</th>
+                            <th class="">Set Budget</th>
+                            <th class="">Edit/Detail</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -140,6 +210,128 @@
 
 @section('js4event')
     <script>
+        jQuery(document).ready(function() {
+            var usertable = $("#billing-table").DataTable({
+                "ajax": {
+                    type: "POST",
+                    url: "<?=url('/get/budget-setting');?>",
+                    // data: function (d) {
+                    //     let user_profile = $('#user_profile').val();
+                    //     let bill_id = $('#bill_id').val();
+                    //     let item_id = $('#item_id').val();
+                    //     d.user_profile = user_profile;
+                    //     d.bill_id = bill_id;
+                    //     d.item_id = item_id;
+                    // },
+                },
+                processing: true,
+                serverSide: true,
+                pageLength: 25,
+                lengthMenu: [5, 25, 50, 100],
+                language: {
+                    "search": "Filter Search: "
+                },
+                columns: [
+                    {name: "no", data: "no", defaultContent: "", orderable: false},
+                    {name: "username", data: "username", defaultContent: ""},
+                    {name: "billing_profile_id", data: "billing_profile_id", defaultContent: ""},
+                    {name: "hint", data: "hint", defaultContent: ""},
+                    {name: "item_id", data: "item_id", defaultContent: ""},
+                    {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
+                    {name: "budget", data: "budget", defaultContent: ""},
+                    {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
+                    {
+                        name: "tools",
+                        data: "no",
+                        defaultContent: "",
+                        render: dt_Render_rate,
+                        "className": "editCell center"
+                    }
+                ],
+                order: [[1, 'asc']]
+            });
 
+            usertable.on("draw.dt", function () {
+                $("a[type=delete-url]").off("click").on("click", function () {
+                    var url_id = $(this).attr('url-id');
+                    showConfirmMessage(null, "Delete Default Rate", "Are you sure you want to remove current rate", null, null, function () {
+                        console.log(url_id);
+                        $.ajax({
+                            type: 'post',
+                            url: '<?=url('/rate/delete')?>',
+                            data: {
+                                store_id: url_id
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.status == "ok") {
+                                    usertable.draw();
+                                } else if (response.status == "fail") {
+                                    toastr.error(response.msg);
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server connection error');
+                            }
+                        });
+                    });
+                });
+
+                $("a[type=deactive-url]").off("click").on("click", function () {
+                    var url_id = $(this).attr('url-id');
+                    showConfirmMessage(null, "Deactive Default Rate", "Are you sure you want to deactive current billing profile", null, null, function () {
+                        $.ajax({
+                            type: 'post',
+                            url: '<?=url('/rate/active')?>',
+                            data: {
+                                store_id: url_id,
+                                active: 'DeActive'
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.status == "ok") {
+                                    usertable.draw();
+                                } else if (response.status == "fail") {
+                                    toastr.error(response.msg);
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server connection error');
+                            }
+                        });
+                    });
+                });
+
+                $("a[type=active-url]").off("click").on("click", function () {
+                    event.preventDefault();
+                    var url_id = $(this).attr('url-id');
+                    showConfirmMessage(null, "Active Default Rate", "Are you sure you want to Active current billing profile", null, null, function () {
+                        $.ajax({
+                            type: 'post',
+                            url: '<?=url('/rate/active')?>',
+                            data: {
+                                store_id: url_id,
+                                active: 'Active'
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                if (response.status == "ok") {
+                                    usertable.draw();
+                                } else if (response.status == "fail") {
+                                    toastr.error(response.msg);
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server connection error');
+                            }
+                        });
+                    });
+                });
+
+                $("#id-refresh").off("click").on("click", function() {
+                    usertable.draw();
+                });
+            });
+        });
     </script>
 @endsection

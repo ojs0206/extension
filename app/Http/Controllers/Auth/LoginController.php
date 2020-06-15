@@ -869,6 +869,22 @@ class LoginController extends Controller
         return response()->json($result);
     }
 
+    public function getBudgetSetting(Request $request){
+        $params = $this->getDataTableParams($request);
+        $type = session() -> get(SESS_USERTYPE);
+        $id = session() -> get(SESS_UID);
+        $user_profile = $request->user_profile;
+        $bill_id = $request->bill_id;
+        $item_id = $request->item_id;
+
+        $registrationModel = new RegistrationModel();
+        $total = $registrationModel -> getBudgetSettingCount($id, $type, $params, $user_profile, $bill_id, $item_id);
+        $urls = $registrationModel -> getBudgetSetting($id, $type, $params, $user_profile, $bill_id, $item_id);
+        $result = $this->dataTableFormat($urls, $total);
+        return response()->json($result);
+
+    }
+
     public function getBillingRateSetting(Request $request) {
         $params = $this->getDataTableParams($request);
         $type = session() -> get(SESS_USERTYPE);
