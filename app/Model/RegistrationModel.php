@@ -729,6 +729,10 @@ class RegistrationModel extends BaseModel
         DB::table('t_rate')->where('id', '=', $store_id)->delete();
     }
 
+    public function deleteBudgetSetting($store_id) {
+        DB::table('t_click')->where('id', '=', $store_id)->delete();
+    }
+
     public function activeRedirectUrl($store_id, $active) {
         DB::select(
             "UPDATE `t_store_` SET `active` = '$active' WHERE id = '$store_id'"
@@ -744,6 +748,12 @@ class RegistrationModel extends BaseModel
     public function activeRate($store_id, $active) {
         DB::select(
             "UPDATE `t_rate` SET `active` = '$active' WHERE id = '$store_id'"
+        );
+    }
+
+    public function activeBudgetSetting($store_id, $active) {
+        DB::select(
+            "UPDATE `t_click` SET `active` = '$active' WHERE id = '$store_id'"
         );
     }
 

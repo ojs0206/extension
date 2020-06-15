@@ -483,8 +483,6 @@
         var urlName = "";
         var urlBudget = 0;
         function drawchart(data){
-            // window.onload = function () {
-
             // Get Left Budget and Days
             var monthData = '{ "monthlyDays" : [' +
                 '{"days": 31 , "name": "January"},' +
@@ -577,8 +575,6 @@
                 }]
             });
             spentChart.render();
-
-            // };
         }
         var data = [];
         var index = 0;
@@ -587,9 +583,9 @@
             var feed = {source: "{{$click_event->source}}", time: "{{$click_event->click_time}}", count: 0, id: index++, cut: "{{$click_event->click_cut}}", name: "{{$click_event->hint}}"};
             data.push(feed);
         }
-                @endforeach
+        @endforeach
         var budgetData = [];
-                @foreach($monthly as $url_data)
+        @foreach($monthly as $url_data)
         var per_data = {budget: "{{$url_data->budget}}", name: "{{$url_data->hint}}"};
         budgetData.push(per_data);
         @endforeach

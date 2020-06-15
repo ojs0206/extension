@@ -336,6 +336,21 @@ function dt_Render_billing(data, type, row, meta)
     return str;
 }
 
+function dt_Render_budget(data, type, row, meta){
+    // console.log(data)
+    if (data != 0) {
+        str = '<input type="radio" style="width: 15px;" checked>';
+    }
+    else {
+        str = '<input type="radio" style="width: 15px;">';
+    }
+    return str;
+}
+
+function dt_Render_item_budget(data, type, row, meta){
+    return '<input type="radio" style="width: 15px;">';
+}
+
 function dt_Render_rate(data, type, row, meta)
 {
     field_id = row.id;

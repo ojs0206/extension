@@ -53,18 +53,24 @@
             margin: auto;
             font-weight: 400;
         }
-        .search_title h5{
+
+        .search_title h5 {
             font-weight: bold;
         }
 
         @media screen and (max-height: 450px) {
-            .sidenav {padding-top: 15px;}
-            .sidenav a {font-size: 18px;}
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
         }
     </style>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             var height = document.getElementsByClassName('navbar')[0].clientHeight;
             console.log(height);
             var sidenav = document.getElementById('sidenav');
@@ -128,13 +134,16 @@
                         <h1>Budget Setting </h1>
                     </div>
                     <div class="col-sm-1 text-right">
-                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>
+                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i>
+                            Back</a>
                     </div>
                     <div class="col-sm-1 text-right">
-                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
+                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i>
+                            Refresh</a>
                     </div>
                     <div class="col-sm-1 text-right">
-                        <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
+                        <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i>
+                            Export</a>
                     </div>
                 </div>
                 <div class="row" style="margin: 15px 0 0 0;">
@@ -153,7 +162,8 @@
                     </div>
                 </div>
                 <div class="row" style="margin: 0 0 25px 0;">
-                    <div class="col-sm-12 col-md-9" style="background-color: #efeff0; padding-top: 5px; padding-bottom: 5px">
+                    <div class="col-sm-12 col-md-9"
+                         style="background-color: #efeff0; padding-top: 5px; padding-bottom: 5px">
                         <div class="row">
                             <div class="col-sm-1" style="text-align: right">
                                 <h5 style="margin: 10px 0">Search</h5>
@@ -204,14 +214,14 @@
     <script src="<?=asset('bower_components/DataTables/media/js/jquery.dataTables.min.js');?>"></script>
     <script src="<?=asset('bower_components/DataTables/media/js/dataTables.bootstrap.min.js');?>"></script>
     <script src="<?=asset('js/moment.js');?>"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="<?=asset('bower_components/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
 @endsection
-
 
 @section('js4event')
     <script>
         let usertable = null;
-        jQuery(document).ready(function() {
+        jQuery(document).ready(function () {
             usertable = $("#billing-table").DataTable({
                 "ajax": {
                     type: "POST",
@@ -241,9 +251,27 @@
                     {name: "hint", data: "hint", defaultContent: ""},
                     {name: "item_id", data: "item_id", defaultContent: ""},
                     {name: "currency", data: "currency", defaultContent: ""},
-                    {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
-                    {name: "budget", data: "budget", defaultContent: ""},
-                    {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
+                    {
+                        name: "monthly_threshold",
+                        data: "monthly_threshold",
+                        defaultContent: "",
+                        render: dt_Render_budget,
+                        "className": "editCell center"
+                    },
+                    {
+                        name: "budget",
+                        data: "budget",
+                        defaultContent: "",
+                        render: dt_Render_item_budget,
+                        "className": "editCell center"
+                    },
+                    {
+                        name: "monthly_threshold",
+                        data: "monthly_threshold",
+                        defaultContent: "",
+                        render: dt_Render_budget,
+                        "className": "editCell center"
+                    },
                     {
                         name: "tools",
                         data: "no",
@@ -258,11 +286,11 @@
             usertable.on("draw.dt", function () {
                 $("a[type=delete-url]").off("click").on("click", function () {
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Delete Default Rate", "Are you sure you want to remove current rate", null, null, function () {
+                    showConfirmMessage(null, "Delete Budget Setting", "Are you sure you want to remove current budget setting", null, null, function () {
                         console.log(url_id);
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/rate/delete')?>',
+                            url: '<?=url('/budget_setting/delete')?>',
                             data: {
                                 store_id: url_id
                             },
@@ -283,10 +311,11 @@
 
                 $("a[type=deactive-url]").off("click").on("click", function () {
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Deactive Default Rate", "Are you sure you want to deactive current billing profile", null, null, function () {
+                    showConfirmMessage(null, "Deactive Budget Setting", "Are you sure you want to deactive current budget setting", null, null, function () {
+                        console.log(url_id);
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/rate/active')?>',
+                            url: '<?=url('/budget_setting/active')?>',
                             data: {
                                 store_id: url_id,
                                 active: 'DeActive'
@@ -309,10 +338,11 @@
                 $("a[type=active-url]").off("click").on("click", function () {
                     event.preventDefault();
                     var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Active Default Rate", "Are you sure you want to Active current billing profile", null, null, function () {
+                    showConfirmMessage(null, "Active Budget Setting", "Are you sure you want to Active current budget setting", null, null, function () {
+                        console.log(url_id);
                         $.ajax({
                             type: 'post',
-                            url: '<?=url('/rate/active')?>',
+                            url: '<?=url('/budget_setting/active')?>',
                             data: {
                                 store_id: url_id,
                                 active: 'Active'
@@ -332,13 +362,15 @@
                     });
                 });
 
-                $("#id-refresh").off("click").on("click", function() {
+                $("#id-refresh").off("click").on("click", function () {
                     usertable.draw();
                 });
             });
         });
+
         function filterData() {
             usertable.ajax.reload();
         }
+
     </script>
 @endsection
