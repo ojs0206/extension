@@ -210,8 +210,9 @@
 
 @section('js4event')
     <script>
+        let usertable = null;
         jQuery(document).ready(function() {
-            var usertable = $("#billing-table").DataTable({
+            usertable = $("#billing-table").DataTable({
                 "ajax": {
                     type: "POST",
                     url: "<?=url('/get/budget-setting');?>",
@@ -336,5 +337,8 @@
                 });
             });
         });
+        function filterData() {
+            usertable.ajax.reload();
+        }
     </script>
 @endsection

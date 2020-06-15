@@ -506,20 +506,33 @@ class RegistrationModel extends BaseModel
 //        $item_id = $params->item_id;
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
-        $tmp = $this->clause('username', $params);;
+        $tmp = $this->clause('username', $params);
+        $where = "";
+//        if ($user_profile != null){
+//            $tmp = "t_user.username = '$user_profile'";
+//        }
+//        if($bill_id != null){
+//            $clause = "t_billing.billing_profile_id = '$bill_id'";
+//            $tmp = $this->prepareAnd($tmp,$clause);
+//        }
+//        if($item_id != null){
+//            $clause = "t_store_.item_id = '$item_id'";
+//            $tmp = $this->prepareAnd($tmp, $clause);
+//        }
+
         if ($user_profile != null){
-            $tmp = "t_user.username = '$user_profile'";
+            $where = "username like '%".$user_profile."%' ";
         }
         if($bill_id != null){
-            $clause = "t_billing.billing_profile_id = '$bill_id'";
-            $tmp = $this->prepareAnd($tmp,$clause);
+            $clause = "billing_profile_id like '%".$bill_id."%' ";
+            $where = $this->prepareAnd($where,$clause);
         }
         if($item_id != null){
-            $clause = "t_store_.item_id = '$item_id'";
-            $tmp = $this->prepareAnd($tmp, $clause);
+            $clause = "item_id like '%".$item_id."%' ";
+            $where = $this->prepareAnd($where,$clause);
         }
 
-        $where = $this->where($tmp);
+        $where = $this->where($where);
         $data = DB::select(
             "SELECT
             t_click.*, t_store_.*, t_user.username, t_rate.*, t_billing.billing_profile_id
