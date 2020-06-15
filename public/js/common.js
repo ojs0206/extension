@@ -231,6 +231,17 @@ function dtRender_Edit_button(data, type, row, meta)
     return str;
 }
 
+function dtRender_Edit_button_new(data, type, row, meta)
+{
+    let id = row.store_id;
+    field_id = row.id;
+    str = ['<button name="btnEditField" class="btn btn-primary edit-button" onclick="save_bill(',id,')" data-id="',field_id, '" data-no="', row.no, '">',
+        'Edit',
+        '</button>'].join('');
+
+    return str;
+}
+
 function dtRender_redirect(data, type, row, meta) {
     return '<span style="width: 250px;word-wrap:break-word; display:inline-block;">' + data + '</span>'
 }

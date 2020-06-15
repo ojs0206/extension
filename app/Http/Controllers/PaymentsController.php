@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 
+use App\BillingRate;
 use App\Model\RegistrationModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -324,15 +325,28 @@ class PaymentsController extends Controller
         ]);
     }
 
-    public function editBillingRateSetting() {
+    public function editBillingRateSetting(Request $request) {
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);
         $name = session() -> get(SESS_USERNAME);
-        $data = request('data');
-        Log::info($data);
-        $registrationModel = new RegistrationModel();
-//        $rate = $registrationModel -> getAllRateType();
+        $id = $request->id;
+        $rate_type = $request->rate_type;
+        $click_cut = $request->click_cut;
 
+        if($rate_type=="undefined" && $click_cut=="undefined")
+            return 1;
+        else{
+            $record = BillingRate::where('id',$id)->first();
+            if($rate_type!="undefined"){
+                $type = DB::table('t_rate')->where('rate_type',$rate_type)->first()->id;
+                $record->rate_type = $type;
+            }
+            if($click_cut!="undefined"){
+                $record->click_cut = $click_cut;
+            }
+            $record->save();
+        }
+        return 1;
     }
 
     public function budgetSetting() {

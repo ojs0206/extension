@@ -255,6 +255,7 @@
 @section('js4event')
 
     <script>
+        let textarea_id;
         jQuery(document).ready(function() {
             var usertable = $("#user-table").DataTable({
                 "ajax": {
@@ -280,9 +281,12 @@
                     // { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:""},
                     { name:"rate_per_click", 	    data: "rate_per_click",	 	        defaultContent:""},
                     { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
-                    { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button}
+                    { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button_new}
                 ],
-                order: [[1, 'asc']]
+                order: [[1, 'asc']],
+                fnCreatedRow: function (row, data, index){
+                    $(row).attr('id', data["store_id"]);
+                }
             });
 
 
@@ -380,7 +384,7 @@
             $('#user-table tbody').on('click', 'tr', function (){
                 let data = usertable.row( this ).data();
                 console.log(data);
-                let textarea_id = data.no;
+                textarea_id = data.no;
                 if($(".ratetype").is(":focus")){
                     $('#editModal').css('display', 'block');
                     $('#close_button').on('click', function(){
@@ -401,30 +405,55 @@
                 }
                 // console.log(this.$('button'));
 
-                $('button', $(this)).on('click', function(){
-                    let rate_type = $('.ratetype').eq(textarea_id - 1).val();
-                    let click_cut = $('.click_cut').eq(textarea_id - 1).val();
-                    data.rate_type = rate_type;
-                    data.click_cut = click_cut;
-                    $.ajax({
-                        type: 'post',
-                        url: '/billing_rate_setting/edit',
-                        data: {
-                            data: data,
-                        },
-                        dataType: "json",
-                        success: function (response) {
-
-                        },
-                        error: function () {
-                            toastr.error('Server connection error');
-                        }
-                    });
-                });
+                // $('button', $(this)).on('click', function(){
+                //     let rate_type = $('.ratetype').eq(textarea_id - 1).val();
+                //     let click_cut = $('.click_cut').eq(textarea_id - 1).val();
+                //
+                //     $.ajax({
+                //         type: 'post',
+                //         url: '/billing_rate_setting/edit',
+                //         data: {
+                //             data: data,
+                //         },
+                //         dataType: "json",
+                //         success: function (response) {
+                //
+                //         },
+                //         error: function () {
+                //             toastr.error('Server connection error');
+                //         }
+                //     });
+                // });
             });
 
         });
-
+        function save_bill(id) {
+            let rate_type = $('.ratetype').eq(textarea_id - 1).val();
+            let click_cut = $('.click_cut').eq(textarea_id - 1).val();
+            console.log("teste");
+            console.log(rate_type);
+            console.log(click_cut);
+            let formData = new FormData();
+            let _token = "<?php echo e(csrf_token()); ?>";
+            formData.append('_token',_token);
+            formData.append('rate_type',rate_type);
+            formData.append('click_cut',click_cut);
+            formData.append('id',id);
+            $.ajax({
+                type: 'post',
+                url: '/billing_rate_setting/edit',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if(response==1)
+                        toastr.success('Data Saved');
+                },
+                error: function () {
+                    toastr.error('Server connection error');
+                }
+            });
+        }
     </script>
 
 @endsection

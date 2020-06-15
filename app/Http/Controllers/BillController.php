@@ -57,13 +57,22 @@ class BillController extends Controller
         return view("payment/check_paypal",['email'=>$email]);
     }
 
+    public function calprice($rate_type_id, $frequency){
+        $total = DB::table('t_rate')->where('id',$rate_type_id)->first()->monthly_threshold;
+        $price = $total*intval($frequency)/30;
+        return $price;
+    }
+
     public function creditcard(Request $request){
-        $user_id = session()->get(SESS_UID);
+        $bill_frequency = $request->pay_frequency;
+        $rate_type = $request->pay_rate_type;
+        $username = $request->username;
+        $price = $this->calprice($rate_type,$bill_frequency);
+        $user_id = DB::table('t_user')->where('username',$username)->first()->id;
         if($user_id == null)
             abort(401,'Check you login status');
         $currencyid = $request->currency;
         $currency = ["AUD","USD","EUR","NZD","CNY","CAD","GBP","JPY"];
-        $price = 1;
         $cardEmail = $request->email;
 
         $stripe_token = $request->card_token;
@@ -243,11 +252,14 @@ class BillController extends Controller
     }
 
     public function paypal(Request $request){
-        $user_id = session()->get(SESS_UID);
+        $bill_frequency = $request->pay_frequency;
+        $rate_type = $request->pay_rate_type;
+        $username = $request->username;
+        $price = $this->calprice($rate_type,$bill_frequency);
+        $user_id = DB::table('t_user')->where('username',$username)->first()->id;
         if($user_id == null)
             abort(401,'Check you login status');
         //$price = $request->price;
-        $price = 1;
         $currencyid = $request->currency;
         $currency = ["AUD","USD","EUR","NZD","CNY","CAD","GBP","JPY"];
 

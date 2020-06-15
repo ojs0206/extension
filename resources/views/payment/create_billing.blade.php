@@ -276,8 +276,8 @@
                 <input type="hidden" value="" id="urlName" name="urlName">
                 <div class="row info">
                     <p class="billing-form-text">User Profile Name:</p>
-                    <select name="user_profile_name" class="billing-form" placeholder="" required>
-                        <option value="">Select User</option>
+                    <select id="user_profile_name" name="user_profile_name" class="billing-form" placeholder="" required>
+                        <option value="0">Select User</option>
                         @foreach($users as $user)
                             <option value="{{$user->username}}">{{$user->username}}</option>
                         @endforeach
@@ -291,7 +291,7 @@
                         <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
                     </div>
                     <select name="payment_method" id="payment_method" required>
-                        <option>Select Payment method</option>
+                        <option value="all">Select Payment method</option>
                         <option value="PayPal">PayPal</option>
                         <option value="VISA">VISA</option>
                         <option value="MasterCard">MasterCard</option>
@@ -322,7 +322,7 @@
                     <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
                     <p class="billing-form-text">Default Rate Type:</p>
                     <select id="rate_type" name ="rate_type" required>
-                        <option>Select Default Rate Type</option>
+                        <option value="0">Select Default Rate Type</option>
                     </select>
 
                     <div style="margin-top: 40px;">
@@ -358,6 +358,9 @@
                                 </select>
                             </div>
                         </div>
+                        <input type="hidden" name="username" class="username"/>
+                        <input type="hidden" name="pay_frequency" class="pay_frequency" />
+                        <input type="hidden" name="pay_rate_type" class="pay_rate_type" />
                         <div class="col-xs-12 margin-top-40 text-center">
                             <button type="button" class="btn btn-dark-orange btn-pay" onclick="connectPP()">PayPal</button>
                         </div>
@@ -419,6 +422,9 @@
                             <button type="button" class="btn btn-dark-orange btn-pay" id="btn_submit" onclick="checkValidStripe()">Pay</button>
                         </div>
                         <input type="hidden" name="card_token" id="card_token">
+                        <input type="hidden" name="username" class="username"/>
+                        <input type="hidden" name="pay_frequency" class="pay_frequency" />
+                        <input type="hidden" name="pay_rate_type" class="pay_rate_type" />
                     </div>
                 </form>
             </div>
@@ -796,13 +802,49 @@
 
         $('#payment_method').change( function () {
             var payment_method = $('#payment_method option:selected').text();
-            if (payment_method == 'PayPal') {
-                var paypal_modal = $('#paypal_payment');
-                paypal_modal.css('display', 'block');
-            }
-            else if (payment_method == 'VISA' || payment_method == 'MasterCard') {
-                var card_modal = $('#card_payment');
-                card_modal.css('display', 'block');
+            if(payment_method == 'PayPal' || payment_method == 'VISA' || payment_method == 'MasterCard'){
+                if($('#user_profile_name').val()==0){
+                    swal("Error","Please select User Name at first","error");
+                    $('#payment_method').val('all');
+                    return;
+                }
+                if($('#billing_frequency').val()==""){
+                    swal("Error","Please input Billing Frequency.","error");
+                    $('#payment_method').val('all');
+                    return;
+                }
+                if($('#rate_type').val()==0){
+                    swal("Error","Please select Rate Type.","error");
+                    $('#payment_method').val('all');
+                    return;
+                }
+                swal({
+                    title: "Are you sure?",
+                    text: "Before you connect payment method, please check if User Name and Billing Frequency and Rate Type are selected correctly. Your payment will be done instantly.",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No"
+                }, function(isConfirm) {
+                    if(isConfirm){
+                        let username = $('#user_profile_name').val();
+                        $('.username').val(username);
+                        let bill_fre = $('#billing_frequency').val();
+                        $('.pay_frequency').val(bill_fre);
+                        let rate_ty = $('#rate_type').val();
+                        $('.pay_rate_type').val(rate_ty);
+
+                        if (payment_method == 'PayPal') {
+                            var paypal_modal = $('#paypal_payment');
+                            paypal_modal.css('display', 'block');
+                        }
+                        else if (payment_method == 'VISA' || payment_method == 'MasterCard') {
+                            var card_modal = $('#card_payment');
+                            card_modal.css('display', 'block');
+                        }
+                    }
+                });
             }
         });
 

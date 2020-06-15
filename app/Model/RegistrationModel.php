@@ -8,6 +8,7 @@
 
 namespace App\Model;
 
+use App\Transaction;
 use DB;
 use Hash;
 use Illuminate\Support\Facades\Log;
@@ -508,7 +509,7 @@ class RegistrationModel extends BaseModel
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT
-            t_store_.*, t_transaction.currency, t_user.username, t_billing.billing_profile_id, t_rate.*
+            t_store_.*, t_transaction.currency, t_user.username, t_billing.billing_profile_id, t_rate.*,t_store_.id AS store_id
             FROM t_store_
             LEFT JOIN t_transaction ON t_store_.user_id = t_transaction.user_id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
@@ -976,6 +977,18 @@ class RegistrationModel extends BaseModel
                     ]);
             }
         }
+
+        //create record in transaction table
+        $total = DB::table("t_rate")->where('id',$rate_type)->first();
+        $price = ($total->monthly_threshold)*intval($billingFrequency)/30;
+        $transaction = new Transaction();
+        $transaction->user_id = $user_id[0];
+        $transaction->income = $price;
+        $transaction->income_data = date('Y-m-d H:i:s');
+        $transaction->current = $price;
+        $transaction->invoice = $this->createReceipt($user_id[0]);
+        $transaction->currency = $total->currency;
+        $transaction->save();
     }
 
     public function updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
@@ -1075,4 +1088,30 @@ class RegistrationModel extends BaseModel
         return array_key_exists($id, DB::table('t_store_')->select('item_id')->get());
     }
 
+    public function createReceipt($user_id){
+        $user = \Illuminate\Support\Facades\DB::table('t_user')->find($user_id);
+        $profile_name = $user->username;
+        $txt = strtoupper(substr($profile_name,0,3));
+        $txt = str_pad($txt,3,0,STR_PAD_RIGHT);
+        $transaction_record = Transaction::where('user_id',$user_id)->orderBy('income_date','DESC')->first();
+        if($transaction_record != null){
+            $invoice = $transaction_record->invoice;
+            $record = substr($invoice,0, 6);
+            $last_index = intval(substr($invoice,-2));
+            $last_index = str_pad($last_index+1, 2, '0', STR_PAD_LEFT);
+            return $record.date('dmY').$last_index;
+        }
+        else{
+            $history = Transaction::where('invoice','like','%'.$txt.'%')->orderBy('invoice','DESC')->orderBy('income_date','DESC')->first();
+            if($history == null){
+                $txt = $txt."001".date('dmY')."01";
+            }
+            else{
+                $se_txt = intval(substr($history->invoice, 3, 3));
+                $se_txt = str_pad($se_txt+1, 3, '0', STR_PAD_LEFT);
+                $txt = $txt.$se_txt.date('dmY')."01";
+            }
+            return $txt;
+        }
+    }
 }
