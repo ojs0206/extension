@@ -1,4 +1,4 @@
-# extension
+# Extension Admin -- Lee's East Team
 Extension Admin Backend Laravel Project
 
 Lee Ming - Senior Web App Developer
