@@ -60,7 +60,7 @@ class BillController extends Controller
     public function calprice($rate_type_id, $frequency){
         $total = DB::table('t_rate')->where('id',$rate_type_id)->first()->monthly_threshold;
         $price = $total*intval($frequency)/30;
-        return $price;
+        return intval($price);
     }
 
     public function creditcard(Request $request){
@@ -187,6 +187,16 @@ class BillController extends Controller
         $card_payment->currency = $currency[$currencyid];
         $card_payment->save();
 
+        //save card transaction history
+        $transaction = new Transaction();
+        $transaction->user_id = $user_id;
+        $transaction->income = $price;
+        $transaction->income_date = date('Y-m-d H:i:s');
+        $transaction->current = $price;
+        $transaction->currency = $currency[$currencyid];
+        $transaction->invoice = $this->createReceipt($user_id);
+        $transaction->save();
+
         return $cardType;
     }
 
@@ -294,6 +304,7 @@ class BillController extends Controller
             $item->amount = $price;
             $item->currency = $currency[$currencyid];
             $item->save();
+
             return redirect()->to($redirect_url);
         } catch (HttpException $ex) {
             echo $ex->statusCode;
@@ -317,6 +328,20 @@ class BillController extends Controller
                 $item->email_address = $email;
                 $item->paypal_description = json_encode($response);
                 $item->save();
+
+                $refer_id = $response->result->purchase_units[0]->reference_id;
+                $user_id = substr($refer_id,0,strpos($refer_id,"_"));
+                $price = $response->result->purchase_units[0]->payments->captures[0]->amount->value;
+                $currency = $response->result->purchase_units[0]->payments->captures[0]->amount->currency_code;
+                //save transaction history
+                $transaction = new Transaction();
+                $transaction->user_id = $user_id;
+                $transaction->income = $price;
+                $transaction->income_date = date('Y-m-d H:i:s');
+                $transaction->current = $price;
+                $transaction->currency = $currency;
+                $transaction->invoice = $this->createReceipt($user_id);
+                $transaction->save();
 
                 //return redirect()->to('payment/check_paypal');
                 return redirect()->to('/payment/check_paypal/'.$item->id);
