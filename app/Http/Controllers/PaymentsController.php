@@ -531,6 +531,25 @@ class PaymentsController extends Controller
         ]);
     }
 
+    public function activeBudgetSetting(){
+        $store_id = request('store_id');
+        $active = request('active');
+        $registrationModel = new RegistrationModel();
+        $registrationModel -> activeBudgetSetting($store_id, $active);
+        return response()->json([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function deleteBudgetSetting(){
+        $store_id = request('store_id');
+        $registrationModel = new RegistrationModel();
+        $registrationModel -> deleteBudgetSetting($store_id);
+        return response()->json([
+            'status' => 'ok'
+        ]);
+    }
+
     public function createDefaultRate() {
         $name = session() -> get(SESS_USERNAME);
         $id = session() -> get(SESS_UID);
