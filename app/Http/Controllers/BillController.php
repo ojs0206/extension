@@ -67,7 +67,13 @@ class BillController extends Controller
         $bill_frequency = $request->pay_frequency;
         $rate_type = $request->pay_rate_type;
         $username = $request->username;
-        $price = $this->calprice($rate_type,$bill_frequency);
+
+        //0 for create,1 for edit
+        $edit_role = $request->edit_role;
+        if($edit_role==1)
+            $price = 1;
+        else
+            $price = $this->calprice($rate_type,$bill_frequency);
         $user_id = DB::table('t_user')->where('username',$username)->first()->id;
         if($user_id == null)
             abort(401,'Check you login status');
@@ -187,15 +193,17 @@ class BillController extends Controller
         $card_payment->currency = $currency[$currencyid];
         $card_payment->save();
 
-        //save card transaction history
-        $transaction = new Transaction();
-        $transaction->user_id = $user_id;
-        $transaction->income = $price;
-        $transaction->income_date = date('Y-m-d H:i:s');
-        $transaction->current = $price;
-        $transaction->currency = $currency[$currencyid];
-        $transaction->invoice = $this->createReceipt($user_id);
-        $transaction->save();
+        //save card transaction history in case of create
+        if($edit_role==0){
+            $transaction = new Transaction();
+            $transaction->user_id = $user_id;
+            $transaction->income = $price;
+            $transaction->income_date = date('Y-m-d H:i:s');
+            $transaction->current = $price;
+            $transaction->currency = $currency[$currencyid];
+            $transaction->invoice = $this->createReceipt($user_id);
+            $transaction->save();
+        }
 
         return $cardType;
     }
@@ -265,7 +273,12 @@ class BillController extends Controller
         $bill_frequency = $request->pay_frequency;
         $rate_type = $request->pay_rate_type;
         $username = $request->username;
-        $price = $this->calprice($rate_type,$bill_frequency);
+        //0 for create,1 for edit
+        $edit_role = $request->edit_role;
+        if($edit_role==1)
+            $price = 1;
+        else
+            $price = $this->calprice($rate_type,$bill_frequency);
         $user_id = DB::table('t_user')->where('username',$username)->first()->id;
         if($user_id == null)
             abort(401,'Check you login status');
@@ -303,6 +316,7 @@ class BillController extends Controller
             $item->status = 'pending';
             $item->amount = $price;
             $item->currency = $currency[$currencyid];
+            $item->create_edit = $edit_role;
             $item->save();
 
             return redirect()->to($redirect_url);
@@ -333,15 +347,18 @@ class BillController extends Controller
                 $user_id = substr($refer_id,0,strpos($refer_id,"_"));
                 $price = $response->result->purchase_units[0]->payments->captures[0]->amount->value;
                 $currency = $response->result->purchase_units[0]->payments->captures[0]->amount->currency_code;
-                //save transaction history
-                $transaction = new Transaction();
-                $transaction->user_id = $user_id;
-                $transaction->income = $price;
-                $transaction->income_date = date('Y-m-d H:i:s');
-                $transaction->current = $price;
-                $transaction->currency = $currency;
-                $transaction->invoice = $this->createReceipt($user_id);
-                $transaction->save();
+
+                //save transaction history in case of create
+                if($item->create_edit==0){
+                    $transaction = new Transaction();
+                    $transaction->user_id = $user_id;
+                    $transaction->income = $price;
+                    $transaction->income_date = date('Y-m-d H:i:s');
+                    $transaction->current = $price;
+                    $transaction->currency = $currency;
+                    $transaction->invoice = $this->createReceipt($user_id);
+                    $transaction->save();
+                }
 
                 //return redirect()->to('payment/check_paypal');
                 return redirect()->to('/payment/check_paypal/'.$item->id);

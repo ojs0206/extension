@@ -53,10 +53,14 @@ function setOutcome(result) {
                     $('#card_payment').hide();
                     if(resp=="Visa"){
                         $('#payment_method').hide();
+                        $('#paypal_status').hide();
+                        $('#mastercard_status').hide();
                         $('#visa_status').show();
                     }
                     else if(resp=="MasterCard"){
                         $('#payment_method').hide();
+                        $('#paypal_status').hide();
+                        $('#visa_status').hide();
                         $('#mastercard_status').show();
                     }
                     else

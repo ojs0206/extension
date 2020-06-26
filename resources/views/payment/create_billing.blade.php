@@ -223,6 +223,7 @@
     <div class="" style="width: 40%; margin: auto;">
         @if ($info != NULL)
             <form action="<?=url('/update_billing')?>" method="post" id="newBillingProfile" name="newBillingProfile">
+                <input type="hidden" value="{{csrf_token()}}">
                 <input type="hidden" value="" id="urlName" name="urlName">
 
                 <div class="row info">
@@ -244,56 +245,8 @@
                     </div>
                     <select name="payment_method" id="payment_method" required>
                         <option>Select Payment method</option>
-                        <option value="paypal">Paypal</option>
-                        <option value="visa">VISA</option>
-                        <option value="mastercard">MasterCard</option>
-                    </select>
-
-                    <p class="billing-form-text">Country:</p>
-                    <select id="country" name ="country" required></select>
-                    <p class="billing-form-text">State:</p>
-                    <select name ="state" id ="state" required></select>
-                    <p class="billing-form-text">Primay Phone Number:</p>
-                    <input type="tel" id="phone" name="phone" class="" style="" placeholder="" required>
-
-                    <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
-                    <input type="email" id="bp_id" name="bp_id" class="billing-form" placeholder="" required>
-                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
-                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
-                    <p class="billing-form-text">Default Rate Type:</p>
-                    <select id="rate_type" name ="rate_type" required>
-                        <option>Select Default Rate Type</option>
-                    </select>
-
-                    <div style="margin-top: 40px;">
-                        <button onclick="window.history.back();">Back</button>
-                        <button type="submit">Submit</button>
-                    </div>
-                </div>
-            </form>
-        @else
-            <form action="<?=url('/new_billing')?>" method="post" id="newBillingProfile" name="newBillingProfile">
-                <input type="hidden" value="" id="urlName" name="urlName">
-                <div class="row info">
-                    <p class="billing-form-text">User Profile Name:</p>
-                    <select id="user_profile_name" name="user_profile_name" class="billing-form" placeholder="" required>
-                        <option value="0">Select User</option>
-                        @foreach($users as $user)
-                            <option value="{{$user->username}}">{{$user->username}}</option>
-                        @endforeach
-                    </select>
-                    <p class="billing-form-text">Primary Email Address:</p>
-                    <input type="email" id="primary_email_address" name="primary_email_address" class="billing-form" placeholder="" required>
-                    <div style="display: flex;">
-                        <p class="billing-form-text" style="margin-right: 50px;">Payment Method:</p>
-                        <img src="<?=asset('/assets/icon/paypal.png');?>" style="width: 20px; height: 100%;">
-                        <img src="<?=asset('/assets/icon/visa.png');?>" style="width: 20px; height: 100%;">
-                        <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
-                    </div>
-                    <select name="payment_method" id="payment_method" required>
-                        <option value="all">Select Payment method</option>
                         <option value="PayPal">PayPal</option>
-                        <option value="VISA">VISA</option>
+                        <option value="Visa">VISA</option>
                         <option value="MasterCard">MasterCard</option>
                     </select>
                     <div id="paypal_status" class="d-flex" style="display: none; margin-bottom: 20px">
@@ -313,7 +266,69 @@
                     <select id="country" name ="country" required></select>
                     <p class="billing-form-text">State:</p>
                     <select name ="state" id ="state" required></select>
-                    <p class="billing-form-text">Primay Phone Number:</p>
+                    <p class="billing-form-text">Primary Phone Number:</p>
+                    <input type="tel" id="phone" name="phone" class="" style="" placeholder="" required>
+
+                    <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
+                    <input type="email" id="bp_id" name="bp_id" class="billing-form" placeholder="" required>
+                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
+                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
+                    <p class="billing-form-text">Default Rate Type:</p>
+                    <select id="rate_type" name ="rate_type" required>
+                        <option>Select Default Rate Type</option>
+                    </select>
+                    <input type="hidden" name="fullphone" id="fullphone">
+
+                    <div style="margin-top: 40px;">
+                        <button onclick="window.history.back();">Back</button>
+                        <button type="button" onclick="saveBilling()">Submit</button>
+                    </div>
+                </div>
+            </form>
+        @else
+            <form action="<?=url('/new_billing')?>" method="post" id="newBillingProfile" name="newBillingProfile">
+                <input type="hidden" value="{{csrf_token()}}">
+                <input type="hidden" value="" id="urlName" name="urlName">
+                <div class="row info">
+                    <p class="billing-form-text">User Profile Name:</p>
+                    <select id="username" name="user_profile_name" class="billing-form" placeholder="" required>
+                        <option value="0">Select User</option>
+                        @foreach($users as $user)
+                            <option value="{{$user->username}}">{{$user->username}}</option>
+                        @endforeach
+                    </select>
+                    <p class="billing-form-text">Primary Email Address:</p>
+                    <input type="email" id="primary_email_address" name="primary_email_address" class="billing-form" placeholder="" required>
+                    <div style="display: flex;">
+                        <p class="billing-form-text" style="margin-right: 50px;">Payment Method:</p>
+                        <img src="<?=asset('/assets/icon/paypal.png');?>" style="width: 20px; height: 100%;">
+                        <img src="<?=asset('/assets/icon/visa.png');?>" style="width: 20px; height: 100%;">
+                        <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
+                    </div>
+                    <select name="payment_method" id="payment_method" required>
+                        <option value="all">Select Payment method</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Visa">VISA</option>
+                        <option value="MasterCard">MasterCard</option>
+                    </select>
+                    <div id="paypal_status" class="d-flex" style="display: none; margin-bottom: 20px">
+                        <img src="<?=asset('/assets/icon/paypal.png');?>" style="width: 20px; height: 100%;">
+                        <p id="pp_success" class="billing-form-text" style="color: blue; margin-left: 10px"></p>
+                    </div>
+                    <div id="visa_status" class="d-flex" style="display: none; margin-bottom: 20px">
+                        <img src="<?=asset('/assets/icon/visa.png');?>" style="width: 20px; height: 100%;">
+                        <p class="billing-form-text" style="color: blue; margin-left: 10px">VISA card was connected.</p>
+                    </div>
+                    <div id="mastercard_status" class="d-flex" style="display: none; margin-bottom: 20px">
+                        <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
+                        <p id="pp_success" class="billing-form-text" style="color: blue; margin-left: 10px">MasterCard was connected</p>
+                    </div>
+
+                    <p class="billing-form-text">Country:</p>
+                    <select id="country" name ="country" required></select>
+                    <p class="billing-form-text">State:</p>
+                    <select name ="state" id ="state" required></select>
+                    <p class="billing-form-text">Primary Phone Number:</p>
                     <input type="tel" id="phone" name="phone" class="" style="" placeholder="" required>
 
                     <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
@@ -324,10 +339,11 @@
                     <select id="rate_type" name ="rate_type" required>
                         <option value="0">Select Default Rate Type</option>
                     </select>
+                    <input type="hidden" name="fullphone" id="fullphone">
 
                     <div style="margin-top: 40px;">
                         <button onclick="window.history.back();">Back</button>
-                        <button type="submit">Submit</button>
+                        <<button type="button" onclick="saveBilling()">Submit</button>
                     </div>
                 </div>
             </form>
@@ -361,6 +377,7 @@
                         <input type="hidden" name="username" class="username"/>
                         <input type="hidden" name="pay_frequency" class="pay_frequency" />
                         <input type="hidden" name="pay_rate_type" class="pay_rate_type" />
+                        <input type="hidden" name="edit_role" class="edit_role" value="0" />
                         <div class="col-xs-12 margin-top-40 text-center">
                             <button type="button" class="btn btn-dark-orange btn-pay" onclick="connectPP()">PayPal</button>
                         </div>
@@ -425,6 +442,7 @@
                         <input type="hidden" name="username" class="username"/>
                         <input type="hidden" name="pay_frequency" class="pay_frequency" />
                         <input type="hidden" name="pay_rate_type" class="pay_rate_type" />
+                        <input type="hidden" name="edit_role" class="edit_role" value="0" />
                     </div>
                 </form>
             </div>
@@ -802,8 +820,9 @@
 
         $('#payment_method').change( function () {
             var payment_method = $('#payment_method option:selected').text();
+
             if(payment_method == 'PayPal' || payment_method == 'VISA' || payment_method == 'MasterCard'){
-                if($('#user_profile_name').val()==0){
+                if($('#username').val()==0){
                     swal("Error","Please select User Name at first","error");
                     $('#payment_method').val('all');
                     return;
@@ -828,7 +847,7 @@
                     cancelButtonText: "No"
                 }, function(isConfirm) {
                     if(isConfirm){
-                        let username = $('#user_profile_name').val();
+                        let username = $('#username').val();
                         $('.username').val(username);
                         let bill_fre = $('#billing_frequency').val();
                         $('.pay_frequency').val(bill_fre);
@@ -856,9 +875,18 @@
                 primary_email_address.value = "{{$infos->email}}";
                 var payment_method = document.getElementById('payment_method');
                 payment_method.value = "{{$infos->payment_method}}";
+                var pay_type = "{{$infos->payment_method}}";
+                if(pay_type=="PayPal"){
+                    $('#paypal_status').show();
+                    $('#pp_success').text("PayPal was connected.");
+                }
+                else if(pay_type=="Visa")
+                    $('#visa_status').show();
+                else if(pay_type=="MasterCard")
+                    $('#mastercard_status').show();
+                $('.edit_role').val(1);
                 var country = document.getElementById('country');
                 var country_index = get_country_index("{{$infos->country}}");
-                console.log(country_index);
                 country.value = '{{$infos->country}}';
                 populateStates("country", "state");
                 var state = document.getElementById('state');
@@ -875,8 +903,17 @@
                     var rate_type = document.getElementById('rate_type');
                     rate_type.value = "{{$infos->rate_type}}";
                 }, 2000)
+                //format modal info
+
             @endforeach
         @endif
+
+        function saveBilling() {
+            let number = iti.getNumber();
+            $('#fullphone').val(number);
+            let form = $('#newBillingProfile');
+            form.submit();
+        }
     </script>
 @endsection
 

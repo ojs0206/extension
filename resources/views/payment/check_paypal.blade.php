@@ -29,6 +29,8 @@
                 var parent = $(window.opener.document.body);
                 $(parent).find('#paypal_payment').hide();
                 $(parent).find('#payment_method').hide();
+                $(parent).find('#visa_status').hide();
+                $(parent).find('#mastercard_status').hide();
                 $(parent).find('#pp_success').text(email);
                 $(parent).find('#paypal_status').show();
                 window.close();

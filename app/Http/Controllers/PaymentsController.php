@@ -443,11 +443,12 @@ class PaymentsController extends Controller
         $billingFrequency = request('billing_frequency');
         $rateType = request('rate_type');
         $date = date("Y.m.d");
+        $fullphone = request('fullphone');
 
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-            $state, $phone, $bpId, $billingFrequency, $date, $rateType);
+            $state, $fullphone, $bpId, $billingFrequency, $date, $rateType);
 
         $status = 0;
 
@@ -468,11 +469,12 @@ class PaymentsController extends Controller
         $billingFrequency = request('billing_frequency');
         $rateType = request('rate_type');
         $date = date("Y.m.d");
+        $fullphone = request('fullphone');
 
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-            $state, $phone, $bpId, $billingFrequency, $date, $rateType);
+            $state, $fullphone, $bpId, $billingFrequency, $date, $rateType);
 
         $status = 0;
 

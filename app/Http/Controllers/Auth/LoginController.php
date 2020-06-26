@@ -789,9 +789,9 @@ class LoginController extends Controller
             "SELECT
             t_transaction.*, t_billing.*, t_user.username, t_rate.*
             FROM t_transaction
-            LEFT JOIN t_user ON t_transaction.user_id = t_user.id
-            LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
-            LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
+            INNER JOIN t_user ON t_transaction.user_id = t_user.id
+            INNER JOIN t_billing ON t_user.username = t_billing.profile_name
+            INNER JOIN t_rate ON t_billing.rate_type = t_rate.id
         ".$where);
 
         //get latest records for each user
