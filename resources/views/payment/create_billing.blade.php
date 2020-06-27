@@ -203,7 +203,7 @@
 
         /* The Close Button */
         .close {
-            color: #aaaaaa;
+            color: #000000;
             float: right;
             font-size: 28px;
             font-weight: bold;

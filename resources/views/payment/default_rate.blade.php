@@ -161,7 +161,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" style="color: black !important;" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">x</span>
                             </button>
                             <h4 class="modal-title" id="id-modal-title"></h4>
@@ -332,6 +332,13 @@
 
             $('#id-create').on("click", function (event) {
                 $('#create-modal').css('display', 'block');
+                $('.modal').modal({ keyboard: false,
+                    show: true
+                });
+                // Jquery draggable
+                $('.modal-dialog').draggable({
+                    handle: ".modal-header"
+                });
             });
 
             $('#cancel-modal').on("click", function (event) {
