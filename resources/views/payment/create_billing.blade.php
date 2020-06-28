@@ -277,7 +277,7 @@
                     <select id="rate_type" name ="rate_type" required>
                         <option>Select Default Rate Type</option>
                     </select>
-                    <input type="hidden" name="fullphone" id="fullphone">
+                    <input type="hidden" name="countryCode" id="countryCode">
 
                     <div style="margin-top: 40px;">
                         <button onclick="window.history.back();">Back</button>
@@ -339,7 +339,7 @@
                     <select id="rate_type" name ="rate_type" required>
                         <option value="0">Select Default Rate Type</option>
                     </select>
-                    <input type="hidden" name="fullphone" id="fullphone">
+                    <input type="hidden" name="countryCode" id="countryCode">
 
                     <div style="margin-top: 40px;">
                         <button onclick="window.history.back();">Back</button>
@@ -909,8 +909,10 @@
         @endif
 
         function saveBilling() {
-            let number = iti.getNumber();
-            $('#fullphone').val(number);
+            //let number = iti.getNumber();
+            let countryData = iti.getSelectedCountryData();
+            let countryCode = countryData.dialCode;
+            $('#countryCode').val(countryCode);
             let form = $('#newBillingProfile');
             form.submit();
         }

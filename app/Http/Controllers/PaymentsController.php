@@ -443,7 +443,8 @@ class PaymentsController extends Controller
         $billingFrequency = request('billing_frequency');
         $rateType = request('rate_type');
         $date = date("Y.m.d");
-        $fullphone = request('fullphone');
+        $countryCode = request('countryCode');
+        $fullphone = "+".$countryCode." ".$phone;
 
         $registrationModel = new RegistrationModel();
 
@@ -469,7 +470,8 @@ class PaymentsController extends Controller
         $billingFrequency = request('billing_frequency');
         $rateType = request('rate_type');
         $date = date("Y.m.d");
-        $fullphone = request('fullphone');
+        $countryCode = request('countryCode');
+        $fullphone = "+".$countryCode." ".$phone;
 
         $registrationModel = new RegistrationModel();
 
