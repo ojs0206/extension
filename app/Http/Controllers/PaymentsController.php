@@ -444,7 +444,10 @@ class PaymentsController extends Controller
         $rateType = request('rate_type');
         $date = date("Y.m.d");
         $countryCode = request('countryCode');
-        $fullphone = "+".$countryCode." ".$phone;
+        if(strpos($phone,"+") !== false)
+            $fullphone = $phone;
+        else
+            $fullphone = "+".$countryCode." ".$phone;
 
         $registrationModel = new RegistrationModel();
 
@@ -471,7 +474,10 @@ class PaymentsController extends Controller
         $rateType = request('rate_type');
         $date = date("Y.m.d");
         $countryCode = request('countryCode');
-        $fullphone = "+".$countryCode." ".$phone;
+        if(strpos($phone,"+") !== false)
+            $fullphone = $phone;
+        else
+            $fullphone = "+".$countryCode." ".$phone;
 
         $registrationModel = new RegistrationModel();
 
