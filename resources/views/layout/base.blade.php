@@ -54,6 +54,7 @@
     <link rel="shortcut icon" href="<?=asset('favicon.ico');?>" />
     @yield('styles')
     <script src="<?=asset('jquery-1.9.1.min.js');?>"></script>
+    <script src="https://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
 
     <style>
         html, body {

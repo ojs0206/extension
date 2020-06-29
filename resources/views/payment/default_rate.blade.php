@@ -160,7 +160,7 @@
                 {{csrf_field()}}
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header" style="cursor: move">
                             <button type="button" class="close" style="color: black !important;" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">x</span>
                             </button>
@@ -336,7 +336,7 @@
                     show: true
                 });
                 // Jquery draggable
-                $('.modal-dialog').draggable({
+                $('.modal-content').draggable({
                     handle: ".modal-header"
                 });
             });
