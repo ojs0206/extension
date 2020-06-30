@@ -861,7 +861,7 @@ class LoginController extends Controller
                 elseif ($item == 'Receipt')
                     $obj[$index] = $one->invoice;
                 elseif ($item == 'Statement')
-                    $obj[$index] = "<a href='#' style='text-decoration: underline !important;'>".date("F Y",strtotime($one->income_date))."</a>";
+                    $obj[$index] = "<a onclick='generatePDF(".$one->ID.")' style='text-decoration: underline !important;'>".date("F Y",strtotime($one->income_date))."</a>";
             }
             $result['data'][] = $obj;
             $num++;

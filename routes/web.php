@@ -78,6 +78,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/budget_setting',                   'PaymentsController@budgetSetting');
     Route::get('/payment/default_rate',                     'PaymentsController@defaultRate');
     Route::get('/payment/invoice',                          'PaymentsController@invoice');
+    Route::post('/payment/invoice/generatePDF',              'PaymentsController@invoice_pdf');
     Route::post('/payment/settings',                        'PaymentsController@updateSettings');
     Route::post('/payment/updateMembership',               'PaymentsController@processPayment');
     Route::get('/item_id/statistics/{id}',               'PaymentsController@itemStatistic');

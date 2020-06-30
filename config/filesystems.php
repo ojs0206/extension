@@ -63,7 +63,12 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
         'image_storage'                 => base_path('public/assets/images/'),
-
+        'pdf_storage' => [
+            'driver' => 'local',
+            'root'   => public_path() ,
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ]
     ],
 
 ];

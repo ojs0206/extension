@@ -373,7 +373,6 @@
 
         function payInvoice(id,pp) {
             if(pp==1){
-                console.log(id);
                 $('#transaction_id').val(id);
                 window.open('/pay_invoice', 'TheWindow', 'width=900,height=900');
                 document.getElementById('frm-invoice').submit();
@@ -413,6 +412,30 @@
                     }
                 });
             }
+        }
+
+        function generatePDF(id) {
+            let formData = new FormData();
+            let _val = "{{csrf_token()}}";
+            formData.append('_tocken',_val);
+            formData.append('id',id);
+            $.ajax({
+                url:'{{url("/payment/invoice/generatePDF")}}',
+                type:"POST",
+                data:formData,
+                processData:false,
+                contentType:false,
+                success:function (resp) {
+                    console.log(resp);
+                    if(resp.result){
+                        if(resp.url != null)
+                            window.open(resp.url,"_blank");
+                    }
+                    else{
+                        alert("Server Error");
+                    }
+                }
+            })
         }
     </script>
 @endsection

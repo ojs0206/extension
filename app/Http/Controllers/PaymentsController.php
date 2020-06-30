@@ -8,6 +8,7 @@ use App\BillingRate;
 use App\Model\RegistrationModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\PaymentExecution;
@@ -21,8 +22,11 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
+use Barryvdh\DomPDF\Facade as PDF;
 use DB;
 use Carbon;
+use DateInterval;
+use \DateTime;
 use Braintree_ClientToken;
 use Braintree_Configuration;
 use Braintree_Transaction;
@@ -392,6 +396,47 @@ class PaymentsController extends Controller
             'type' => $type,
             'admin' => $name,
         ]);
+    }
+
+    public function invoice_pdf(){
+        $id = request('id');
+        $where = " where t_transaction.ID = ".$id;
+        $result = DB::select(
+            "SELECT
+            t_transaction.*, t_billing.*, t_user.username, t_rate.*
+            FROM t_transaction
+            INNER JOIN t_user ON t_transaction.user_id = t_user.id
+            INNER JOIN t_billing ON t_user.username = t_billing.profile_name
+            INNER JOIN t_rate ON t_billing.rate_type = t_rate.id
+        ".$where);
+        $one = $result[0];
+
+        $compare = 1;
+        $cal = new DateTime($one->income_date);
+        $interval = new DateInterval('P'.$one->frequency.'D');
+        $cal->add($interval);
+        $now = new DateTime();
+        $compare = $cal>$now?1:0;
+        $status = $compare==0?'Unpaid':'Paid';
+
+        //pdf data
+        $data = array();
+        $data = ['user_profile'=>$one->profile_name,
+            'billing_id'=>$one->billing_profile_id,
+            'currency'=>$one->currency,
+            'invoice_month'=>date("F Y",strtotime($one->income_date)),
+            'invoice_value'=>$one->monthly_threshold,
+            'payment_method'=>$one->payment_method,
+            'payment_date'=>date("d.m.Y",strtotime($one->income_date)),
+            'status'=>$status,
+            'receipt'=>$one->invoice
+            ];
+
+        $filename = "invoice".date('Ymd_His').".pdf";
+        $pdf = PDF::loadView('invoice_pdf',compact('data'));
+        Storage::disk('pdf_storage')->put('pdf/'.$filename,$pdf->output());
+
+        return response()->json(['result'=>true,'url'=>asset("pdf/".$filename)]);
     }
 
     public function updateSettings() {
