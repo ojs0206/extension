@@ -426,7 +426,6 @@
                 processData:false,
                 contentType:false,
                 success:function (resp) {
-                    console.log(resp);
                     if(resp.result){
                         if(resp.url != null)
                             window.open(resp.url,"_blank");

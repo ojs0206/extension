@@ -411,12 +411,28 @@ class PaymentsController extends Controller
         ".$where);
         $one = $result[0];
 
+        $recent_records = DB::select(
+            "SELECT tt.ID
+            FROM t_transaction tt
+            INNER JOIN
+                (SELECT user_id, MAX(income_date) AS MaxDateTime
+                FROM t_transaction
+                GROUP BY user_id) groupedtt 
+            ON tt.user_id = groupedtt.user_id 
+            AND tt.income_date = groupedtt.MaxDateTime"
+        );
+        $pay_list = array();
+        foreach ($recent_records as $value)
+            array_push($pay_list, $value->ID);
+
         $compare = 1;
-        $cal = new DateTime($one->income_date);
-        $interval = new DateInterval('P'.$one->frequency.'D');
-        $cal->add($interval);
-        $now = new DateTime();
-        $compare = $cal>$now?1:0;
+        if(in_array($one->ID,$pay_list)){
+            $cal = new DateTime($one->income_date);
+            $interval = new DateInterval('P'.$one->frequency.'D');
+            $cal->add($interval);
+            $now = new DateTime();
+            $compare = $cal>$now?1:0;
+        }
         $status = $compare==0?'Unpaid':'Paid';
 
         //pdf data

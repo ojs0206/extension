@@ -280,7 +280,7 @@
                     <input type="hidden" name="countryCode" id="countryCode">
 
                     <div style="margin-top: 40px;">
-                        <button onclick="window.history.back();">Back</button>
+                        <button type="button" onclick="backBilling();">Back</button>
                         <button type="button" onclick="saveBilling()">Submit</button>
                     </div>
                 </div>
@@ -342,7 +342,7 @@
                     <input type="hidden" name="countryCode" id="countryCode">
 
                     <div style="margin-top: 40px;">
-                        <button onclick="window.history.back();">Back</button>
+                        <button type="button" onclick="backBilling();">Back</button>
                         <<button type="button" onclick="saveBilling()">Submit</button>
                     </div>
                 </div>
@@ -915,6 +915,10 @@
             $('#countryCode').val(countryCode);
             let form = $('#newBillingProfile');
             form.submit();
+        }
+
+        function backBilling() {
+            window.location.href = "/payment";
         }
     </script>
 @endsection

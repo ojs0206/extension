@@ -479,11 +479,16 @@ class BillController extends Controller
 
                 //send mail
                 $data = array('price'=>$price,'currency'=>$currency);
-                Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name,$email){
-                    $message->to($email, $profile_name)
-                        ->subject('Invoice paid');
-                    $message->from('dvpgridtest@gmail.com','Admin');
-                });
+
+                try{
+                    Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name,$email){
+                        $message->to($email, $profile_name)
+                            ->subject('Invoice paid');
+                        $message->from('dvpgridtest@gmail.com','Admin');
+                    });
+                }catch (\Exception $e){
+
+                }
 
                 return 1;
             }
@@ -518,11 +523,15 @@ class BillController extends Controller
                 $email = $billing->billing_profile_id;
                 $profile_name = $billing->profile_name;
                 $data = array('price'=>$price,'currency'=>$currency);
-                Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name,$email){
-                    $message->to($email, $profile_name)
-                        ->subject('Invoice paid');
-                    $message->from('dvpgridtest@gmail.com','Admin');
-                });
+                try{
+                    Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name,$email){
+                        $message->to($email, $profile_name)
+                            ->subject('Invoice paid');
+                        $message->from('dvpgridtest@gmail.com','Admin');
+                    });
+                }catch (\Exception $e){
+
+                }
 
                 return redirect()->to('/payment/check_success');
             }
