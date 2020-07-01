@@ -892,6 +892,20 @@ class RegistrationModel extends BaseModel
         return $user[0];
     }
 
+    public function getItemIdClicks($item_id){
+        $url_list = DB::table('t_store_')
+            ->select('id')
+            ->where('item_id', $item_id)
+            ->get();
+        Log::debug($url_list);
+        $sql_query = "SELECT `click_time` FROM `t_click` WHERE `store_id` = '$url_list[0]->id'";
+        foreach ($url_list as $url)
+        {
+            $sql_query .= "OR `store_id` = '$url->id'";
+        }
+        $clicks = DB::select($sql_query);
+        return $clicks;
+    }
 
     public function getClickCount($user_id) {
         $click_list = DB::table("t_store_")

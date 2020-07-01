@@ -249,7 +249,13 @@
                     {name: "username", data: "username", defaultContent: ""},
                     {name: "billing_profile_id", data: "billing_profile_id", defaultContent: ""},
                     {name: "hint", data: "hint", defaultContent: ""},
-                    {name: "item_id", data: "item_id", defaultContent: ""},
+                    {
+                        name: "item_id",
+                        data: "item_id",
+                        defaultContent: "",
+                        render: dtRender_item,
+                        "className": "editCell center"
+                    },
                     {name: "currency", data: "currency", defaultContent: ""},
                     {
                         name: "monthly_threshold",

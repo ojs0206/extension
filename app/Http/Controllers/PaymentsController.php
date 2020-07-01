@@ -30,6 +30,7 @@ use \DateTime;
 use Braintree_ClientToken;
 use Braintree_Configuration;
 use Braintree_Transaction;
+use function MongoDB\BSON\toJSON;
 
 class PaymentsController extends Controller
 {
@@ -141,10 +142,12 @@ class PaymentsController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $name = session() -> get(SESS_USERNAME);
         $registrationModel = new RegistrationModel();
+        $clicks = $registrationModel -> getItemIdClicks($id);
         return view('item_statistic', [
             'type' => $type,
             'admin' => $name,
-            'id' => $id
+            'id' => $id,
+            'clicks' => $clicks
         ]);
     }
 
