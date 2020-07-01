@@ -408,7 +408,7 @@
                         });
                     },
                     error: function () {
-                        console.log('error---');
+                        swal("Notice", "Server Error.", "error");
                     }
                 });
             }
