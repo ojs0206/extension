@@ -125,7 +125,7 @@
             <div class="" style="margin: auto !important;">
                 <div class="row" style="margin-left: 0; margin-right: 0;">
                     <div class="col-sm-8">
-                        <h1>Redirect Settings and Statistics </h1>
+                        <h1>Invoice and Payments </h1>
                     </div>
                     <div class="col-sm-1 text-right">
                         <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>

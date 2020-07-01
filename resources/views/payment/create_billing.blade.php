@@ -343,7 +343,7 @@
 
                     <div style="margin-top: 40px;">
                         <button type="button" onclick="backBilling();">Back</button>
-                        <<button type="button" onclick="saveBilling()">Submit</button>
+                        <button type="button" onclick="saveBilling()">Submit</button>
                     </div>
                 </div>
             </form>
