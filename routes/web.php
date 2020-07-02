@@ -118,6 +118,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/rate/delete',                          'PaymentsController@deleteDefaultRate');
     Route::post('/budget_setting/active',                          'PaymentsController@activeBudgetSetting');
     Route::post('/budget_setting/delete',                          'PaymentsController@deleteBudgetSetting');
+    Route::post('/budget_setting/savetype',                          'PaymentsController@saveBudgetType');
 
 
 });

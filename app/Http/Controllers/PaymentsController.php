@@ -379,6 +379,22 @@ class PaymentsController extends Controller
         ]);
     }
 
+    public function saveBudgetType(){
+        $store_id = request('store_id');
+        $type = request('type');
+        $is_set = false;
+        try{
+            DB::table("t_store_")->where("id", $store_id)
+                ->update([
+                    'budget_type'  => $type
+                ]);
+            $is_set = true;
+        } catch (\Exception $e){
+
+        }
+        return response()->json(['result'=>true,'is_set'=>$is_set]);
+    }
+
     public function defaultRate() {
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);

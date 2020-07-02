@@ -275,7 +275,7 @@
                         name: "monthly_threshold",
                         data: "monthly_threshold",
                         defaultContent: "",
-                        render: dt_Render_budget,
+                        render: dt_Render_set_budget,
                         "className": "editCell center"
                     },
                     {
@@ -372,10 +372,43 @@
                     usertable.draw();
                 });
             });
+
         });
 
         function filterData() {
             usertable.ajax.reload();
+        }
+
+        $(document).on('change','input[type=radio]',function(){
+            let name = $(this).prop('name');
+            let index = name.substr(name.indexOf("_")+1);
+            let value = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                url: '<?=url('/budget_setting/savetype')?>',
+                dataType: "json",
+                data: {
+                    store_id: index,
+                    type: value
+                },
+                success: function (resp) {
+                    if(resp.result){
+                        if(!resp.is_set)
+                            toastr.error('Cannot find record');
+                    }
+                    else{
+                        toastr.error('Server connection error');
+                    }
+                },
+                error: function () {
+                    toastr.error('Server connection error');
+                }
+            });
+        });
+
+        function check_radio(storeID,index) {
+            $('#set'+index).prop('checked',true);
         }
 
     </script>
