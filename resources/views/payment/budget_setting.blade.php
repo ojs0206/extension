@@ -293,7 +293,7 @@
                 $("a[type=delete-url]").off("click").on("click", function () {
                     var url_id = $(this).attr('url-id');
                     showConfirmMessage(null, "Delete Budget Setting", "Are you sure you want to remove current budget setting", null, null, function () {
-                        console.log($(this));
+                        console.log(url_id);
                         $.ajax({
                             type: 'post',
                             url: '<?=url('/budget_setting/delete')?>',
@@ -318,7 +318,7 @@
                 $("a[type=deactive-url]").off("click").on("click", function () {
                     var url_id = $(this).attr('url-id');
                     showConfirmMessage(null, "Deactive Budget Setting", "Are you sure you want to deactive current budget setting", null, null, function () {
-                        console.log($(this));
+                        console.log(url_id);
                         $.ajax({
                             type: 'post',
                             url: '<?=url('/budget_setting/active')?>',
@@ -345,7 +345,7 @@
                     event.preventDefault();
                     var url_id = $(this).attr('url-id');
                     showConfirmMessage(null, "Active Budget Setting", "Are you sure you want to Active current budget setting", null, null, function () {
-                        console.log($(this));
+                        console.log(url_id);
                         $.ajax({
                             type: 'post',
                             url: '<?=url('/budget_setting/active')?>',
@@ -407,7 +407,7 @@
             });
         });
 
-        function check_radio(storeID,index) {
+        function check_radio(storeID, index) {
             $('#set'+index).prop('checked',true);
         }
 

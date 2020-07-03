@@ -535,9 +535,8 @@ class RegistrationModel extends BaseModel
         $where = $this->where($where);
         $data = DB::select(
             "SELECT
-            t_click.*, t_store_.*, t_user.username, t_rate.*, t_billing.billing_profile_id
+            t_store_.*, t_user.username, t_rate.*, t_billing.billing_profile_id
             FROM t_store_
-            LEFT JOIN t_click ON t_click.store_id = t_store_.id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
@@ -563,7 +562,6 @@ class RegistrationModel extends BaseModel
         $data = DB::select(
             "SELECT COUNT(t_store_.id) AS total
             FROM t_store_
-            LEFT JOIN t_click ON t_click.store_id = t_store_.id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
