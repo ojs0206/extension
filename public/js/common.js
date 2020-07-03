@@ -337,22 +337,21 @@ function dt_Render_billing(data, type, row, meta)
 }
 
 function dt_Render_budget(data, type, row, meta){
-    console.log(row)
     if (row.budget_type == 0) {
-        str = '<input type="radio" style="width: 15px;" id="billing_profile'+row.no+'" name="radio_'+row.no+'" class="budget_radio" onclick="check_radio('+row.no+','+row.no+')" value="0" checked>';
+        str = '<input type="radio" style="width: 15px;" id="billing_profile'+row.no+'" name="radio_'+row.store_id+'" class="budget_radio" onclick="check_radio('+row.store_id+','+row.no+')" value="0" checked>';
     }
     else {
-        str = '<input type="radio" style="width: 15px;" id="billing_profile'+row.no+'" name="radio_'+row.no+'" class="budget_radio" onclick="check_radio('+row.no+','+row.no+')" value="0">';
+        str = '<input type="radio" style="width: 15px;" id="billing_profile'+row.no+'" name="radio_'+row.store_id+'" class="budget_radio" onclick="check_radio('+row.store_id+','+row.no+')" value="0">';
     }
     return str;
 }
 
 function dt_Render_item_budget(data, type, row, meta){
     if (row.budget_type == 1) {
-        str = '<input type="radio" style="width: 15px;" id="item'+row.no+'" name="radio_'+row.no+'" class="budget_radio" onclick="check_radio('+row.no+','+row.no+')" value="1" checked>';
+        str = '<input type="radio" style="width: 15px;" id="item'+row.no+'" name="radio_'+row.store_id+'" class="budget_radio" onclick="check_radio('+row.store_id+','+row.no+')" value="1" checked>';
     }
     else {
-        str = '<input type="radio" style="width: 15px;" id="item'+row.no+'" name="radio_'+row.no+'" class="budget_radio" onclick="check_radio('+row.no+','+row.no+')" value="1">';
+        str = '<input type="radio" style="width: 15px;" id="item'+row.no+'" name="radio_'+row.store_id+'" class="budget_radio" onclick="check_radio('+row.store_id+','+row.no+')" value="1">';
     }
     return str;
 }
@@ -367,7 +366,7 @@ function dt_Render_set_budget(data, type, row, meta){
 
 function dt_Render_rate(data, type, row, meta)
 {
-    field_id = row.id;
+    field_id = row.store_id;
     var activate = row.active;
     var title = "Deactivate";
     var className="fa fa-unlock fa fa-white";

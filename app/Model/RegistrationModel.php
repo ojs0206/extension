@@ -521,21 +521,21 @@ class RegistrationModel extends BaseModel
 //        }
 
         if ($user_profile != null){
-            $where = "username like '%".$user_profile."%' ";
+            $tmp = "username like '%".$user_profile."%' ";
         }
         if($bill_id != null){
             $clause = "billing_profile_id like '%".$bill_id."%' ";
-            $where = $this->prepareAnd($where,$clause);
+            $tmp = $this->prepareAnd($tmp,$clause);
         }
         if($item_id != null){
             $clause = "item_id like '%".$item_id."%' ";
-            $where = $this->prepareAnd($where,$clause);
+            $tmp = $this->prepareAnd($tmp,$clause);
         }
 
-        $where = $this->where($where);
+        $where = $this->where($tmp);
         $data = DB::select(
             "SELECT
-            t_store_.*, t_user.username, t_rate.*, t_billing.billing_profile_id
+            t_store_.*, t_store_.id as store_id, t_user.username, t_rate.*, t_billing.billing_profile_id
             FROM t_store_
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
@@ -545,7 +545,7 @@ class RegistrationModel extends BaseModel
     }
 
     public function getBudgetSettingCount($id, $type, $params, $user_profile, $bill_id, $item_id){
-        $tmp = $this->clause('username', $params);;
+        $tmp = $this->clause('username', $params);
         if ($user_profile != null){
             $tmp = "t_user.username = '$user_profile'";
         }
@@ -728,7 +728,7 @@ class RegistrationModel extends BaseModel
     }
 
     public function deleteBudgetSetting($store_id) {
-        DB::table('t_click')->where('id', '=', $store_id)->delete();
+        DB::table('t_store_')->where('id', '=', $store_id)->delete();
     }
 
     public function activeRedirectUrl($store_id, $active) {
@@ -751,7 +751,7 @@ class RegistrationModel extends BaseModel
 
     public function activeBudgetSetting($store_id, $active) {
         DB::select(
-            "UPDATE `t_click` SET `active` = '$active' WHERE id = '$store_id'"
+            "UPDATE `t_store_` SET `active` = '$active' WHERE id = '$store_id'"
         );
     }
 
