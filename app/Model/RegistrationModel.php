@@ -727,9 +727,9 @@ class RegistrationModel extends BaseModel
         DB::table('t_rate')->where('id', '=', $store_id)->delete();
     }
 
-    public function deleteBudgetSetting($store_id) {
-        DB::table('t_store_')->where('id', '=', $store_id)->delete();
-    }
+//    public function deleteBudgetSetting($store_id) {
+//        DB::table('t_store_')->where('id', '=', $store_id)->delete();
+//    }
 
     public function activeRedirectUrl($store_id, $active) {
         DB::select(
@@ -753,6 +753,9 @@ class RegistrationModel extends BaseModel
         DB::select(
             "UPDATE `t_store_` SET `active` = '$active' WHERE id = '$store_id'"
         );
+//        return DB::table('t_store_')
+//            ->where('id', $store_id)
+//            ->update('active', $active);
     }
 
     public function captureImage($user_id) {

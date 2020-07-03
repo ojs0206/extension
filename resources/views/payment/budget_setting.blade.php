@@ -290,30 +290,6 @@
             });
 
             usertable.on("draw.dt", function () {
-                $("a[type=delete-url]").off("click").on("click", function () {
-                    var url_id = $(this).attr('url-id');
-                    showConfirmMessage(null, "Delete Budget Setting", "Are you sure you want to remove current budget setting", null, null, function () {
-                        console.log(url_id);
-                        $.ajax({
-                            type: 'post',
-                            url: '<?=url('/budget_setting/delete')?>',
-                            data: {
-                                store_id: url_id
-                            },
-                            dataType: "json",
-                            success: function (response) {
-                                if (response.status == "ok") {
-                                    usertable.draw();
-                                } else if (response.status == "fail") {
-                                    toastr.error(response.msg);
-                                }
-                            },
-                            error: function () {
-                                toastr.error('Server connection error');
-                            }
-                        });
-                    });
-                });
 
                 $("a[type=deactive-url]").off("click").on("click", function () {
                     var url_id = $(this).attr('url-id');
@@ -329,7 +305,8 @@
                             dataType: "json",
                             success: function (response) {
                                 if (response.status == "ok") {
-                                    usertable.draw();
+                                    // usertable.draw();
+                                    filterData();
                                 } else if (response.status == "fail") {
                                     toastr.error(response.msg);
                                 }
@@ -356,7 +333,8 @@
                             dataType: "json",
                             success: function (response) {
                                 if (response.status == "ok") {
-                                    usertable.draw();
+                                    // usertable.draw();
+                                    filterData();
                                 } else if (response.status == "fail") {
                                     toastr.error(response.msg);
                                 }
@@ -370,6 +348,7 @@
 
                 $("#id-refresh").off("click").on("click", function () {
                     usertable.draw();
+                    filterData();
                 });
             });
 

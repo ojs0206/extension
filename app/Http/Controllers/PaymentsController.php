@@ -624,6 +624,8 @@ class PaymentsController extends Controller
     public function activeBudgetSetting(){
         $store_id = request('store_id');
         $active = request('active');
+        Log::debug($store_id);
+        Log::debug($active);
         $registrationModel = new RegistrationModel();
         $registrationModel -> activeBudgetSetting($store_id, $active);
         return response()->json([
