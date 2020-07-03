@@ -69,6 +69,24 @@
             .sidenav a {font-size: 18px;}
         }
 
+        table {
+            border: 1px solid black;
+            margin-top: 30px;
+        }
+
+        table th {
+            text-align: center;
+            font-size: 20px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+        table tr td {
+            text-align: center;
+            font-size: 15px;
+            padding: 7px;
+            border: 1px solid black;
+        }
+
     </style>
 @endsection
 
@@ -84,33 +102,38 @@
                     <div class="col-sm-8">
                         <h1>Item Statistic - {{$id}} </h1>
                     </div>
-                    <div class="col-sm-2 text-right">
-                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
-                    </div>
-                    <div class="col-sm-2 text-right">
-                        <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
-                    </div>
                 </div>
-                <div class="row" style="padding-left: 10%; padding-top: 10px;" id="summary">
+                <div class="row">
                     <div class="col-sm-1"></div>
-                    <div class="col-sm-4" style="border: 7px solid whitesmoke; padding-top: 1%; padding-bottom: 1%;">
-                        <div id="chartClicks" style="height: 300px; width: 100%;"></div>
-                    </div>
-                    <div class="col-sm-1"></div>
-                    <div class="col-sm-4" style="border: 7px solid whitesmoke; padding-top: 1%; padding-bottom: 1%;">
-                        <div id="chartSpent" style="height: 300px; width: 100%;"></div>
-                    </div>
-                </div>
-
-                <div class="row" style="padding-left: 10%; padding-top: 5%;" id="">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4" style="border: 7px solid whitesmoke; padding-top: 1%; padding-bottom: 1%;">
-                        <p style="padding-bottom: 10%;"><font size="5" color="black">Budget</font>
-                            <br><strong style="color: black; font-size: 3vw;">A$</strong><strong style="color: black; font-size: 3vw;" id="dailyBudget_1"></strong><font size="3" color="black">    daily average</font>
-                            <br><strong style="color: black; font-size: 3vw;">A$</strong><strong style="color: black; font-size: 3vw;" id="monthlyBudget"></strong><font size="3" color="black">    monthly maximum</font>
-                        </p>
-                        <hr>
-                        <button class="btn btn-primary" id="budgetEdit">Edit</button>
+                    <div class="col-sm-10">
+                        <p style="margin-top: 50px; font-size: 35px;">Redirect URL List and Statistics</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Description</th>
+                                    <th>Source URL</th>
+                                    <th>Rate Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <p style="display: none;">{{$count = 0}}</p>
+                            @foreach ($url_list as $url)
+                                <tr>
+                                    <td>{{++ $count}}</td>
+                                    <td><a href="<?=url('/payment/budget_setting');?>" style="color: blue;">{{$url -> hint}}</a></td>
+                                    <td style="text-align: left !important;">{{$url -> source}}</td>
+                                    <td>
+                                        @if ($url -> budget_type == 0)
+                                            {{$url -> rate_type}}
+                                        @else
+                                            Custom
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

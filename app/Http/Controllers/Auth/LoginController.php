@@ -176,6 +176,14 @@ class LoginController extends Controller
         ]);
     }
 
+    public function descriptionShow($hint){
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $registrationModel = new RegistrationModel();
+        $url_list = $registrationModel -> getDescriptionClicks($hint);
+    }
+
     public function showNewBillingSetup() {
         $name = session() -> get(SESS_USERNAME);
         $id = session() -> get(SESS_UID);

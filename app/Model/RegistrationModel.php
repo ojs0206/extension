@@ -536,8 +536,8 @@ class RegistrationModel extends BaseModel
         $data = DB::select(
             "SELECT
             t_click.*, t_store_.*, t_user.username, t_rate.*, t_billing.billing_profile_id
-            FROM t_click
-            LEFT JOIN t_store_ ON t_click.store_id = t_store_.id
+            FROM t_store_
+            LEFT JOIN t_click ON t_click.store_id = t_store_.id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
@@ -561,9 +561,9 @@ class RegistrationModel extends BaseModel
 
         $where = $this->where($tmp);
         $data = DB::select(
-            "SELECT COUNT(t_click.id) AS total
-            FROM t_click
-            LEFT JOIN t_store_ ON t_click.store_id = t_store_.id
+            "SELECT COUNT(t_store_.id) AS total
+            FROM t_store_
+            LEFT JOIN t_click ON t_click.store_id = t_store_.id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
@@ -894,17 +894,40 @@ class RegistrationModel extends BaseModel
 
     public function getItemIdClicks($item_id){
         $url_list = DB::table('t_store_')
-            ->select('id')
+            ->select('t_store_.hint', 't_store_.source', 't_store_.budget_type', 't_rate.rate_type')
+            ->leftJoin("t_rate", "t_rate.id", "t_store_.rate_type")
             ->where('item_id', $item_id)
             ->get();
+//        Log::debug($url_list);
+//        $url = $url_list[0]->id;
+//        $sql_query = "SELECT `click_time` FROM `t_click` WHERE `store_id` = '$url'";
+//        foreach ($url_list as $url)
+//        {
+//            $sql_query .= "OR `store_id` = '$url->id'";
+//        }
+//        $clicks = DB::select($sql_query);
+        return $url_list;
+    }
+
+    public function getDescriptionClicks($hint){
+        $url_list = DB::table('t_store_')
+            ->select('t_store_.hint', 't_store_.source', 't_store_.budget_type', 't_rate.rate_type')
+            ->leftJoin("t_rate", "t_rate.id", "t_store_.rate_type")
+            ->where('item_id', $hint)
+            ->get();
         Log::debug($url_list);
-        $sql_query = "SELECT `click_time` FROM `t_click` WHERE `store_id` = '$url_list[0]->id'";
+        $url = $url_list[0]->id;
+        $sql_query = "SELECT `click_time` FROM `t_click` WHERE `store_id` = '$url'";
         foreach ($url_list as $url)
         {
             $sql_query .= "OR `store_id` = '$url->id'";
         }
         $clicks = DB::select($sql_query);
-        return $clicks;
+        return $url_list;
+    }
+
+    public function getCurrentBudget($item_id){
+
     }
 
     public function getClickCount($user_id) {

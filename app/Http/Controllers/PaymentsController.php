@@ -142,12 +142,12 @@ class PaymentsController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $name = session() -> get(SESS_USERNAME);
         $registrationModel = new RegistrationModel();
-        $clicks = $registrationModel -> getItemIdClicks($id);
+        $url_list = $registrationModel -> getItemIdClicks($id);
         return view('item_statistic', [
             'type' => $type,
             'admin' => $name,
             'id' => $id,
-            'clicks' => $clicks
+            'url_list' => $url_list
         ]);
     }
 

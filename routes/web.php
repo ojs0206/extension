@@ -82,6 +82,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/payment/settings',                        'PaymentsController@updateSettings');
     Route::post('/payment/updateMembership',               'PaymentsController@processPayment');
     Route::get('/item_id/statistics/{id}',               'PaymentsController@itemStatistic');
+    Route::get('/description/statistics/{hint}',               'Auth\LoginController@descriptionShow');
 
     Route::get('/payment/view',                             'BillController@view');
     Route::get('/payment/check_paypal/{id}',                          'BillController@check_paypal');
