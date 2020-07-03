@@ -367,7 +367,7 @@ function dt_Render_set_budget(data, type, row, meta){
 function dt_Render_rate(data, type, row, meta)
 {
     console.log(row)
-    field_id = row.store_id;
+    field_id = row.id;
     var activate = row.active;
     var title = "Deactivate";
     var className="fa fa-unlock fa fa-white";

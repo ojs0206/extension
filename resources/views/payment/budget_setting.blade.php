@@ -305,8 +305,7 @@
                             dataType: "json",
                             success: function (response) {
                                 if (response.status == "ok") {
-                                    // usertable.draw();
-                                    filterData();
+                                    usertable.ajax.reload();
                                 } else if (response.status == "fail") {
                                     toastr.error(response.msg);
                                 }
@@ -333,8 +332,7 @@
                             dataType: "json",
                             success: function (response) {
                                 if (response.status == "ok") {
-                                    // usertable.draw();
-                                    filterData();
+                                    usertable.ajax.reload();
                                 } else if (response.status == "fail") {
                                     toastr.error(response.msg);
                                 }
@@ -347,8 +345,7 @@
                 });
 
                 $("#id-refresh").off("click").on("click", function () {
-                    usertable.draw();
-                    filterData();
+                    usertable.ajax.reload();
                 });
             });
 
