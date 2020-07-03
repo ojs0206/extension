@@ -634,6 +634,7 @@
                     console.log(urlName + "::" + urlBudget);
                 }
             }
+            console.log('select')
             console.log(select_data);
             drawchart(select_data);
 

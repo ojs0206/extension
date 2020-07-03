@@ -535,7 +535,7 @@ class RegistrationModel extends BaseModel
         $where = $this->where($tmp);
         $data = DB::select(
             "SELECT
-            t_store_.*, t_store_.id as store_id, t_user.username, t_rate.rate_type, t_billing.billing_profile_id
+            t_store_.*, t_store_.id as store_id, t_user.username, t_rate.rate_type, t_rate.currency, t_billing.billing_profile_id
             FROM t_store_
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
@@ -911,23 +911,44 @@ class RegistrationModel extends BaseModel
     }
 
     public function getDescriptionClicks($hint){
-        $url_list = DB::table('t_store_')
-            ->select('t_store_.hint', 't_store_.source', 't_store_.budget_type', 't_rate.rate_type')
-            ->leftJoin("t_rate", "t_rate.id", "t_store_.rate_type")
-            ->where('item_id', $hint)
+        $budget_type = DB::table('t_store_')
+            ->select('t_store_.budget_type', 't_store_.rate_type')
+            ->where('hint', $hint)
             ->get();
-        Log::debug($url_list);
-        $url = $url_list[0]->id;
-        $sql_query = "SELECT `click_time` FROM `t_click` WHERE `store_id` = '$url'";
-        foreach ($url_list as $url)
-        {
-            $sql_query .= "OR `store_id` = '$url->id'";
+        if ($budget_type[0] -> budget_type == 0) {
+            $budget_info = DB::table('t_rate')
+                ->select('currency', 'rate_per_click', 'monthly_threshold')
+                ->where('id', $budget_type[0] -> rate_type)
+                ->get();
         }
-        $clicks = DB::select($sql_query);
-        return $url_list;
+        else {
+            $budget_info = DB::table('t_store_')
+                ->select('t_store_.budget', 't_store_.click_cut', 't_rate.currency')
+                ->leftJoin('t_rate', 't_rate.id', 't_store_.rate_type')
+                ->where('hint', $hint)
+                ->get();
+        }
+        return $budget_info[0];
+
     }
 
-    public function getCurrentBudget($item_id){
+    public function getBudgetType($hint){
+        $budget_type = DB::table('t_store_')
+            ->select('t_store_.budget_type', 't_store_.rate_type')
+            ->where('hint', $hint)
+            ->get();
+        return $budget_type[0];
+    }
+
+    public function getDescriptionClickCount($hint){
+        $store_id = DB::table('t_store_')
+            ->select('id')
+            ->where('hint', $hint)
+            ->get();
+        return DB::table('t_click')
+            ->select('t_click.click_time')
+            ->where('store_id', $store_id[0] -> id)
+            ->get();
 
     }
 
@@ -1039,7 +1060,8 @@ class RegistrationModel extends BaseModel
         DB::table("t_store_")
             ->where("hint", $user_id)
             ->update([
-                'budget'   => $budget
+                'budget'   => $budget,
+                'budget_type' => 1
             ]);
     }
 

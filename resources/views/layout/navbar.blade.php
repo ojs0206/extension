@@ -19,16 +19,6 @@
                 <li><a href="<?=url('/count');?>"><span class="glyphicon glyphicon-signal"></span> Redirect Collection & Statistics</a></li>
                 <li id="payment-tag">
                     <a href="<?=url('/payment');?>"><span class="glyphicon glyphicon-usd"></span> Billing & Payments</a>
-                    <div class="payment-dropdown" id="payment-dropdown-menu">
-                        @if($type != 'Admin')
-                            <a href="<?=url('/payment/newBillingSetup');?>">New Billing Setup</a><br>
-                            <a href="<?=url('/payment/summary');?>">Summary</a><br>
-                            <a href="<?=url('/payment/transaction');?>">Transaction</a><br>
-                            <a href="<?=url('/payment/settings');?>">Settings</a>
-                        @else
-                            <a href="<?=url('/payment/graph');?>">Graphical Interface</a><br>
-                        @endif
-                    </div>
                 </li>
                 @if($type != 'User')
                     <li><a href="<?=url('/child');?>"><span class="glyphicon glyphicon-pencil"></span> Settings</a></li>

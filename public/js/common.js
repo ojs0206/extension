@@ -389,6 +389,33 @@ function dt_Render_rate(data, type, row, meta)
     return str;
 }
 
+function dt_Budget_Render_rate(data, type, row, meta)
+{
+    console.log(row)
+    field_id = row.id;
+    var activate = row.active;
+    var hint = row.hint;
+    var title = "Deactivate";
+    var className="fa fa-unlock fa fa-white";
+    var type = "deactive-url";
+    if(activate != 'Active') {
+        title = 'Activate';
+        className = "fa fa-lock fa fa-white";
+        type="active-url";
+    }
+
+    str = ['<div class="visible-md visible-lg hidden-sm hidden-xs"><a href="#" url-id="',field_id, '" type="', type, '" class="btn btn-transparent btn-xs tooltips"  data-toggle="tooltip" data-placement="top" title="',
+        title,
+        '"><i class="', className, '"></i></a>',
+        '<a href="#" url-id="', field_id, '" type="delete-url" class="btn btn-transparent btn-xs tooltips"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-times fa fa-white"></i></a>',
+        '<a href="/description/statistics/', hint ,'" url-id="', field_id, '" type="more-url" class="btn btn-transparent btn-xs tooltips"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="far fa-eye fa fa-white"></i></a>', '</div>',
+        '<div class="visible-xs visible-sm hidden-md hidden-lg"> <div class="btn-group dropdown "> <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" data-toggle="dropdown">',
+        '<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span></button><ul class="dropdown-menu pull-right dropdown-light" role="menu"><li><a href="#" url-id="', field_id,
+        '" type="', type, '" >', title, '</a></li><li> <a href="#" url-id="', field_id, '" type="delete-url" >Delete</a></li><li> <a href="#" url-id="\', field_id, \'" type="more-url" >More</a></li></ul></div>'].join('');
+
+    return str;
+}
+
 function dtRender_img(data, type, row, meta) {
     return '<img src="' + row.source + '" style="width:50px; height: 50px">';
 }

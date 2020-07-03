@@ -181,7 +181,17 @@ class LoginController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $name = session() -> get(SESS_USERNAME);
         $registrationModel = new RegistrationModel();
-        $url_list = $registrationModel -> getDescriptionClicks($hint);
+        $click_list = $registrationModel -> getDescriptionClicks($hint);
+        $count = $registrationModel ->getDescriptionClickCount($hint);
+        $budget_type = $registrationModel -> getBudgetType($hint);
+        return view('description', [
+            'admin' => $name,
+            'type' => $type,
+            'hint' => $hint,
+            'click' => $click_list,
+            'count' => $count,
+            'budget_type' => $budget_type
+        ]);
     }
 
     public function showNewBillingSetup() {
@@ -225,6 +235,8 @@ class LoginController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $budget = request('editBudget');
         $hint = request('urlName');
+        Log::debug('hello');
+        Log::debug($hint);
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> updateBudget($budget, $hint);
@@ -247,13 +259,9 @@ class LoginController extends Controller
         $admin_management = $registrationModel -> getAllRedirects();
         $month_amount = $registrationModel -> getMonthlyMaximum($id);
         Log::info("Success");
-        return view('payment/payment', [
-            'admin' => $name,
+        return view('payment/budget_setting', [
             'type' => $type,
-            'status' => $status,
-            'click' => $click_list,
-            'monthly' => $month_amount,
-            'control' => $admin_management
+            'admin' => $name,
         ]);
     }
 

@@ -282,7 +282,7 @@
                         name: "tools",
                         data: "no",
                         defaultContent: "",
-                        render: dt_Render_rate,
+                        render: dt_Budget_Render_rate,
                         "className": "editCell center"
                     }
                 ],
