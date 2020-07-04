@@ -321,7 +321,6 @@
                     event.preventDefault();
                     var url_id = $(this).attr('url-id');
                     showConfirmMessage(null, "Active Budget Setting", "Are you sure you want to Active current budget setting", null, null, function () {
-                        console.log(url_id);
                         $.ajax({
                             type: 'post',
                             url: '<?=url('/budget_setting/active')?>',

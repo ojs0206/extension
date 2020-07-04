@@ -1119,16 +1119,16 @@ class RegistrationModel extends BaseModel
         }
 
         //create record in transaction table
-        $total = DB::table("t_rate")->where('id',$rate_type)->first();
-        $price = ($total->monthly_threshold)*intval($billingFrequency)/30;
-        $transaction = new Transaction();
-        $transaction->user_id = $user_id[0]->id;
-        $transaction->income = $price;
-        $transaction->income_date = date('Y-m-d H:i:s');
-        $transaction->current = $price;
-        $transaction->invoice = $this->createReceipt($user_id[0]->id);
-        $transaction->currency = $total->currency;
-        $transaction->save();
+//        $total = DB::table("t_rate")->where('id',$rate_type)->first();
+//        $price = ($total->monthly_threshold)*intval($billingFrequency)/30;
+//        $transaction = new Transaction();
+//        $transaction->user_id = $user_id[0]->id;
+//        $transaction->income = $price;
+//        $transaction->income_date = date('Y-m-d H:i:s');
+//        $transaction->current = $price;
+//        $transaction->invoice = $this->createReceipt($user_id[0]->id);
+//        $transaction->currency = $total->currency;
+//        $transaction->save();
     }
 
     public function updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
