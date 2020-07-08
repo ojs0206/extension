@@ -24,13 +24,14 @@ class RegistrationModel extends BaseModel
         return $id;
     }
 
-    public function createNewUser($username, $password, $email, $type, $parent_id) {
+    public function createNewUser($username, $password, $email, $company, $type, $parent_id) {
         $id = DB::table('t_user')->insertGetId([
             'username'      => $username,
             'password'      => $password,
             'email'         => $email,
             'type'          => $type,
-            'parent_id'     => $parent_id
+            'parent_id'     => $parent_id,
+            'company'     => $company
         ]);
         return $id;
     }
@@ -854,7 +855,7 @@ class RegistrationModel extends BaseModel
         return $user;
     }
 
-    public function updateUser($user_id, $name, $password, $email, $type, $parent_id) {
+    public function updateUser($user_id, $name, $password, $email, $company, $type, $parent_id) {
         DB::table('t_user')
             ->where('id', $user_id)
             ->update([
@@ -862,6 +863,7 @@ class RegistrationModel extends BaseModel
                 'username'    => $name,
                 'password'    => $password,
                 'email'       => $email,
+                'company'       => $company,
                 'type'        => $type,
                 'parent_id'   => $parent_id
             ]);

@@ -192,6 +192,7 @@
                             <th class="">Invoice Value</th>
                             <th class="">Payment Method</th>
                             <th class="">Payment Date</th>
+                            <th class="">Payment Due Date</th>
                             <th class="">Pay</th>
                             <th class="">Receipt #</th>
                             <th class="">Statement</th>

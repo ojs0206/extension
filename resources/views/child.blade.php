@@ -95,11 +95,13 @@
                         <tr>
                             <th class="">NO</th>
                             <th class="">Name</th>
+                            <th>Company</th>
                             @if($type == 'Admin')
                                 <th class="">Manage User</th>
                             @endif
                             <th class="">Type</th>
                             <th>E-mail</th>
+                            <th>Account #</th>
                             @if($type != 'User')
                                 <th class="center">Edit</th>
                             @endif
@@ -114,6 +116,9 @@
                                 <td>
                                     <?=$user->username?>
                                 </td>
+                                <td>
+                                    <?=$user->company?>
+                                </td>
                                 @if($type == 'Admin')
                                     <td>
                                         <?=$user->parent_name?>
@@ -126,10 +131,13 @@
                                 <td>
                                     <?=$user->email?>
                                 </td>
+                                <td>
+                                    <?=$user->type?>
+                                </td>
                                 @if($type != 'User')
                                     <td class="center">
                                         <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                            <a href="#" user-id="<?=$user->id?>" user-name="<?=$user->username?>" user-password="<?=$user->password?>" user-email="<?=$user->email?> "user-type="<?=$user->type?>" type="edit-user" class="btn btn-transparent btn-xs tooltips"  data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil fa fa-white"></i></a>
+                                            <a href="#" user-id="<?=$user->id?>" user-name="<?=$user->username?>" user-password="<?=$user->password?>" user-email="<?=$user->email?>" user-company="<?=$user->company?>" user-type="<?=$user->type?>" type="edit-user" class="btn btn-transparent btn-xs tooltips"  data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil fa fa-white"></i></a>
                                         </div>
                                         <div class="visible-xs visible-sm hidden-md hidden-lg">
                                             <div class="btn-group dropdown ">
@@ -146,7 +154,7 @@
                                     </td>
                                 @endif
                                 <td>
-                                    <button class="btn btn-primary" id="test_button">Test</button>
+                                    <button class="btn btn-primary" id="test_button" onclick="sendEmail({{$user->id}})">Test</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -191,7 +199,10 @@
                             <label class="control-label" for="id-repeat"> E-mail: </label>
                             <input type="email" class="form-control" name="email" id = "id-email" required="true">
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label" for="id-company"> Company: </label>
+                            <input type="text" class="form-control" id="id-company" name="company"  required="true">
+                        </div>
                         <div class="row">
                             <div class="col-sm-12 ">
                                 <div class="form-group ">
@@ -231,8 +242,7 @@
 @section('js4event')
 
     <script>
-        var testBtn = document.getElementById("test_button");
-        testBtn.onclick = function () {
+        function sendEmail(id){
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -241,13 +251,19 @@
             $.ajax({
                 url:"{{url('/sendEmail')}}",
                 method:"POST",
-                data:{
-                },
-                success: function( data ) {
-                    alert("success");
+                data:{userid:id},
+                success: function( resp ) {
+                    if(resp.result){
+                        if(resp.success)
+                            toastr.success("Mail sent.");
+                        else
+                            toastr.error("Server Error");
+                    }
+                    else
+                        toastr.error("Connection Error")
                 }
             });
-        };
+        }
         jQuery(document).ready(function() {
             var select_user;
             var select_type;
@@ -257,6 +273,7 @@
                 var name = $(this).attr('user-name');
                 var pass = $(this).attr('user-password');
                 var email = $(this).attr('user-email');
+                var company = $(this).attr('user-company');
                 var type = $(this).attr('user-type');
                 select_user = user_id;
                 select_type = type;
@@ -267,6 +284,7 @@
                 $("#id-password").val(pass);
                 $("#id-repeat").val(pass);
                 $("#id-email").val(email);
+                $("#id-company").val(company);
                 $("#id-type").val(type);
                 {
                     $( "option" ).each(function( index ) {
@@ -295,6 +313,7 @@
                 var repeat_password = $("#id-repeat").val();
                 var email = $("#id-email").val();
                 var type = $("#id-type").val();
+                var company = $("#id-company").val();
                 console.log("ASVD" + type);
                 $("#id-select-type").val(type);
                 if(name === '') {
@@ -308,6 +327,11 @@
 
                 if (email === '') {
                     toastr.error("Required email");
+                    return;
+                }
+
+                if (company === '') {
+                    toastr.error("Required company");
                     return;
                 }
 

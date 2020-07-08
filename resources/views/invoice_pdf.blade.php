@@ -7,60 +7,169 @@
         .text-center{
             text-align: center;
         }
+        .text-left{
+            text-align: left;
+        }
+        .text-right{
+            text-align: right;
+        }
+        .text-bold{
+            font-weight: bold;
+        }
         .table tr{
             line-height: 40px;
         }
         .table tr td{
             font-size: 18px;
         }
+        .v-bottom{
+            vertical-align: bottom;
+        }
+        table {
+            border: 1px solid #ddd;
+            width: 100%;
+            margin-bottom: 10px;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        table>tbody>tr:nth-of-type(odd) {
+            background-color: white;
+        }
+        table>tbody>tr>td,table>thead>tr>th {
+            border: 1px dashed #ddd;
+            padding: 2px;
+            line-height: 1.4;
+            vertical-align: middle;
+        }
+        .invoice_table td{
+            line-height: 1.9;
+        }
+        .invoice_table th{
+            line-height: 1.5;
+        }
+        .pl-40{
+            padding-left: 40px;
+        }
     </style>
 </head>
 <body>
-<h1 class="text-center" style="border-bottom: 1px solid black">Invoice</h1>
-<table class="table" style="margin-left: 200px; width: 90%;border-collapse: collapse">
+<div class="">
+    <img src="{{asset("images/Adobe-reader.png")}}" style="float: right; width:100px">
+    <h1>Tax Invoice</h1>
+</div>
+<table style="border-collapse: collapse" cellspacing="0" width="100%">
+    <thead>
+    <tr >
+        <th class="text-left" style="font-size: 20px">Acount number:</th>
+        <th style="font-size: 24px">Tax Invoice Summary</th>
+        <th></th>
+    </tr>
+    </thead>
     <tbody>
     <tr>
-        <td style="">User profile:</td>
-        <td>{{$data['user_profile']}}</td>
+        <td style="font-size: 24px">123456789</td>
+        <td>Tax Invoice Number:</td>
+        <td class="text-right">SPGI-INV-AU-2020-600999</td>
     </tr>
     <tr>
-        <td style="">Billing Profile ID:</td>
-        <td>{{$data['billing_id']}}</td>
+        <td rowspan="2"></td>
+        <td>Tax Invoice Date:</td>
+        <td class="text-right">July 1, 2020</td>
     </tr>
     <tr>
-        <td style="">Invoice Month:</td>
-        <td>{{$data['invoice_month']}}</td>
+        <td>Invoice Month:  June 2020</td>
+        <td></td>
     </tr>
     <tr>
-        <td style="">Invoice Value:</td>
-        <td>{{$data['invoice_value']}}</td>
+        <td>Ronny Boustani<br>
+            ACME Pty Ltd</td>
+        <td class="v-bottom">TOTAL AMOUNT</td>
+        <td class="v-bottom text-right">AUD 49.83</td>
     </tr>
     <tr>
-        <td style="">Billing Currency:</td>
-        <td>{{$data['currency']}}</td>
+        <td>10 Test Street</td>
+        <td rowspan="2" class="v-bottom">TOTAL TAX</td>
+        <td rowspan="2" class="v-bottom text-right">AUD 4.53</td>
     </tr>
     <tr>
-        <td style="">Payment Method:</td>
-        <td>{{$data['payment_method']}}</td>
+        <td>Test Suburb</td>
     </tr>
     <tr>
-        <td style="">Payment Date:</td>
-        <td>{{$data['payment_date']}}</td>
+        <td>Test Suburb, NSW, 2000, AU</td>
+        <td></td>
+        <td rowspan="2" class="v-bottom text-right" style="font-size: 20px">Original For Recipien</td>
     </tr>
-    <tr style="border-bottom: 1px solid black">
-        <td style="">Receipt:</td>
-        <td>{{$data['receipt']}}</td>
+    <tr>
+        <td></td>
+        <td></td>
     </tr>
     </tbody>
 </table>
-<div class="" style="margin-left: 200px; border-bottom: 1px dashed black; width: 300px; margin-top: 20px; margin-bottom: 20px"></div>
-<table class="" style="margin-left: 200px; width: 70%;border-collapse: collapse">
+<p style="font-size: 22px">This Tax Invoice is for the billing period June 1 - June 30, 2020</p>
+<h3 style="margin-top: 10px; font-size: 22px">Tax Invoice Summary</h3>
+<table class="invoice_table" style="border-collapse: collapse" cellspacing="0" width="100%">
+    <thead>
+    <tr style="background-color: #8dccea">
+        <th class="text-left" style="font-size: 22px; width: 80%">SPG Service Charges</th>
+        <th class="text-right">AUD 49.83</th>
+    </tr>
+    </thead>
     <tbody>
     <tr>
-        <td style="color: red;font-size: 25px">Status:</td>
-        <td style="color: red;font-size: 25px">{{$data['status']}}</td>
+        <td class="pl-40">Charges (excl. GST)</td>
+        <td class="text-right">AUD 45.30</td>
+    </tr>
+    <tr>
+        <td class="pl-40">Credits/Discount</td>
+        <td class="text-right">AUD 0.00</td>
+    </tr>
+    <tr>
+        <td class="text-bold pl-40">Net Charges (After Credits/Discount, excl. GST)</td>
+        <td class="text-bold text-right">AUD 45.30</td>
+    </tr>
+    <tr>
+        <td class="text-bold pl-40">Total GST Amount at 10%</td>
+        <td class="text-bold text-right">AUD 4.53</td>
     </tr>
     </tbody>
 </table>
+<table class="invoice_table" style="border-collapse: collapse" cellspacing="0" width="100%">
+    <thead>
+    <tr style="background-color: #8dccea">
+        <th class="text-left" style="font-size: 22px; width: 80%">Detailed Usage for Account # 123456700000</th>
+        <th class="text-right">AUD 49.83</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr style="background-color: #e0e0e0">
+        <td class="text-bold">Item ID# ANR22304K5453       DescriptIon: abbb     User Profile: abb</td>
+        <td class="text-right">AUD 45.30</td>
+    </tr>
+    <tr>
+        <td class="pl-40">Charges (excl. GST)          Click Count: 700      Rate Per Click: $0.05</td>
+        <td class="text-right">AUD 0.00</td>
+    </tr>
+    <tr>
+        <td class="pl-40">Credits/Discount</td>
+        <td class="text-right">AUD 45.30</td>
+    </tr>
+    <tr>
+        <td class="text-bold pl-40">Net Charges (After Credits / Discount, excl. GST)</td>
+        <td class="text-right">AUD 4.53</td>
+    </tr>
+    <tr>
+        <td class="text-bold pl-40">Total GST Amount at 10%</td>
+        <td class="text-right">AUD 4.53</td>
+    </tr>
+    <tr>
+        <td class="pl-40">GST Amount</td>
+        <td class="text-right">AUD 45.30</td>
+    </tr>
+    </tbody>
+</table>
+<p class="text-center" style="color: #999999; font-size:12px;">SPG Services, Inc.,<br>
+    10 My Street, North<br>
+    Sydney, NSW 2000 Australia<br><br>
+    ABNXXXXXXXXX</p>
 </body>
 </html>

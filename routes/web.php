@@ -22,7 +22,7 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/sendEmail',                                    'Auth\LoginController@sendEmail');
+Route::post('/sendEmail',                                    'Auth\LoginController@sendEmail');
 Route::get('/test',  function () {
     return view('test');
 });

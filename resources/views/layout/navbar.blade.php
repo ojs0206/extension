@@ -21,7 +21,7 @@
                     <a href="<?=url('/payment');?>"><span class="glyphicon glyphicon-usd"></span> Billing & Payments</a>
                 </li>
                 @if($type != 'User')
-                    <li><a href="<?=url('/child');?>"><span class="glyphicon glyphicon-pencil"></span> Settings</a></li>
+                    <li><a href="<?=url('/child');?>"><span class="glyphicon glyphicon-pencil"></span> User Profiles</a></li>
                 @endif
                 <li><a href="<?=url('/sign-out');?>"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             </ul>

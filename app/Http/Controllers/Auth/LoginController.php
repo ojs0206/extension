@@ -508,7 +508,19 @@ class LoginController extends Controller
     }
 
     public function sendEmail(){
-        Mail::to("ronnyboustani@hotmail.com")->send(new MailSender("hi", "this is test email", "thanks"));
+        $userid = request('userid');
+        $user = $user = DB::table('t_user')
+            ->where('id', '=', $userid)
+            ->first();
+        $email = $user->email;
+        $success = false;
+        try{
+            Mail::to($email)->send(new MailSender("Hello", "This is test email", "thanks"));
+            $success = true;
+        }catch (\Exception $e){
+
+        }
+        return response()->json(["result"=>true,"success"=>$success]);
     }
 
     public function addUrl() {
@@ -826,13 +838,14 @@ class LoginController extends Controller
             array_push($pay_list, $one->ID);
 
         //make datatable data
-        $label = ['index','User Profile','Billing Profile ID','Billing Currency','Invoice Month','Invoice Value','Payment Method','Payment Date','Pay','Receipt','Statement'];
+        $label = ['index','User Profile','Billing Profile ID','Billing Currency','Invoice Month','Invoice Value','Payment Method','Payment Date','Payment Due Date','Pay','Receipt','Statement'];
         $result = array();
         $result['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : 1;
         $result['recordsTotal'] = count($data);
         $result['recordsFiltered'] = count($data);
         $result['data'] = array();
         $num = 1;
+        $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
         foreach ($data as $one){
             foreach ($label as $index => $item){
                 //check payment status
@@ -863,19 +876,27 @@ class LoginController extends Controller
                 elseif ($item == 'Invoice Month')
                     $obj[$index] = date("F Y",strtotime($one->income_date));
                 elseif ($item == 'Invoice Value')
-                    $obj[$index] = $one->monthly_threshold;
+                    $obj[$index] = $currency[$one->currency].number_format($one->monthly_threshold);
                 elseif ($item == 'Payment Method')
                     $obj[$index] = $one->payment_method;
                 elseif ($item == 'Payment Date')
                     $obj[$index] = date("d.m.Y",strtotime($one->income_date));
+                elseif ($item == 'Payment Due Date'){
+                    $date = date('Y-m-d', strtotime('+1 month', strtotime($one->income_date)));
+                    $obj[$index] = date("01/m/Y",strtotime($date));
+                }
                 elseif ($item == 'Pay'){
                     if($compare==0)
                         $obj[$index] = "<button type='button' class='btn btn-primary' onclick='payInvoice(".$one->ID.",".$pp.")'>PAY</button>";
                     else
                         $obj[$index] = "<button type='button' class='btn btn-primary'>PAID</button>";
                 }
-                elseif ($item == 'Receipt')
-                    $obj[$index] = $one->invoice;
+                elseif ($item == 'Receipt'){
+                    if($compare==0)
+                        $obj[$index] = "";
+                    else
+                        $obj[$index] = $one->invoice;
+                }
                 elseif ($item == 'Statement')
                     $obj[$index] = "<a onclick='generatePDF(".$one->ID.")' style='text-decoration: underline !important;'>".date("F Y",strtotime($one->income_date))."</a>";
             }
@@ -1022,6 +1043,7 @@ class LoginController extends Controller
         $name = request('username');
         $password = request('password');
         $email = request('email');
+        $company = request('company');
         $type = request('select_type');
         $registrationModel = new RegistrationModel();
 
@@ -1031,7 +1053,7 @@ class LoginController extends Controller
             $parent_id = 1;
         }
 
-        $registrationModel -> updateUser($user_id, $name, $password, $email, $type, $parent_id);
+        $registrationModel -> updateUser($user_id, $name, $password, $email, $company, $type, $parent_id);
 
         return response()->json([
             'status' => 'ok',
@@ -1044,6 +1066,7 @@ class LoginController extends Controller
         $password = request('password');
         $type = request('select_type');
         $email = request('email');
+        $company = request('company');
         $user_id = session() -> get(SESS_UID);
 
         $registrationModel = new RegistrationModel();
@@ -1056,7 +1079,7 @@ class LoginController extends Controller
             ]);
         }
 
-        $id = $registrationModel -> createNewUser($name, $password, $email, $type, $user_id);
+        $id = $registrationModel -> createNewUser($name, $password, $email, $company, $type, $user_id);
         return response()->json([
             'status' => 'ok',
             'msg' => 'Success.'
