@@ -276,10 +276,10 @@
                     { name:"hint", 	                data: "hint",	 	                defaultContent:""},
                     { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
                     { name:"currency", 	            data: "currency",	 	            defaultContent:""},
-                    { name:"monthly_threshold", 	data: "monthly_threshold",	 	    defaultContent:""},
+                    { name:"monthly_threshold", 	data: "monthly_threshold_symbol",	defaultContent:""},
                     { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:"",      render: dtRender_rate_type},
                     // { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:""},
-                    { name:"rate_per_click", 	    data: "rate_per_click",	 	        defaultContent:""},
+                    { name:"rate_per_click", 	    data: "rate_per_click_symbol",	 	defaultContent:""},
                     { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button_new}
                 ],
@@ -446,8 +446,10 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    if(response==1)
+                    if(response==1){
+                        location.reload();
                         toastr.success('Data Saved');
+                    }
                 },
                 error: function () {
                     toastr.error('Server connection error');

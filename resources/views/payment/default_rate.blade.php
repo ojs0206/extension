@@ -178,7 +178,7 @@
                                 <label class="control-label" for="id-name"> Country: </label>
                                 <input type="text" class="form-control" id="id-name" name="country"  required="true">
                                 <label class="control-label" for="id-name"> Currency: </label>
-                                <select class="form-control custom-select" name="currency">
+                                <select class="form-control custom-select" name="currency" id="sel-currency">
                                     <option value="AUD">AUD</option>
                                     <option value="USD">USD</option>
                                     <option value="EUR">EUR</option>
@@ -188,10 +188,10 @@
                                     <option value="GBP">GBP</option>
                                     <option value="JPY">JPY</option>
                                 </select>
-                                <label class="control-label" for="id-name"> Rate Per Click: </label>
-                                <input type="text" class="form-control" id="id-name" name="rateperclick"  required="true">
-                                <label class="control-label" for="id-name"> Monthly Threshold: </label>
-                                <input type="text" class="form-control" id="id-name" name="monthlythreshold"  required="true">
+                                <label class="control-label" for="id-per-click" style="display: flex"> Rate Per Click (<p class="curr">$</p>) : </label>
+                                <input type="number" class="form-control" id="id-per-click" name="rateperclick" placeholder="$0.00"  required="true">
+                                <label class="control-label" for="id-monthly" style="display: flex"> Monthly Threshold (<p class="curr">$</p>): </label>
+                                <input type="number" class="form-control" id="id-monthly" name="monthlythreshold" placeholder="$1000"  required="true">
                             </div>
 
                         </div>
@@ -230,8 +230,8 @@
                     {name: "description", data: "description", defaultContent: ""},
                     {name: "country", data: "country", defaultContent: ""},
                     {name: "currency", data: "currency", defaultContent: ""},
-                    {name: "rate_per_click", data: "rate_per_click", defaultContent: ""},
-                    {name: "monthly_threshold", data: "monthly_threshold", defaultContent: ""},
+                    {name: "rate_per_click", data: "rate_per_click_symbol", defaultContent: ""},
+                    {name: "monthly_threshold", data: "monthly_threshold_symbol", defaultContent: ""},
                     {
                         name: "tools",
                         data: "no",
@@ -348,6 +348,14 @@
             $('.close').on("click", function (event) {
                 $('#create-modal').css('display', 'none');
             });
+
+            $('#sel-currency').on("change",function () {
+                let val = $('#sel-currency').val();
+                let currency = {"AUD":"$","USD":"$","EUR":"€","NZD":"$","CNY":"¥","CAD":"$","GBP":"£","JPY":"¥"};
+                $('.curr').html(currency[val]);
+                $('#id-per-click').attr("placeholder", currency[val]+"0.00");
+                $('#id-monthly').attr("placeholder", currency[val]+"1000");
+            })
         });
     </script>
 @endsection

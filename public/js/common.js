@@ -236,7 +236,7 @@ function dtRender_Edit_button_new(data, type, row, meta)
     let id = row.store_id;
     field_id = row.id;
     str = ['<button name="btnEditField" class="btn btn-primary edit-button" onclick="save_bill(',id,')" data-id="',field_id, '" data-no="', row.no, '">',
-        'Edit',
+        'Save',
         '</button>'].join('');
 
     return str;
@@ -247,7 +247,11 @@ function dtRender_redirect(data, type, row, meta) {
 }
 
 function dtRender_click_rate(data, type, row, meta) {
-    return '<textarea style="width: 50%; margin: auto;" class = "click_cut">' + data + '</textarea>';
+    let currency = {"AUD":"$","USD":"$","EUR":"€","NZD":"$","CNY":"¥","CAD":"$","GBP":"£","JPY":"¥"};
+    let value = "";
+    if(parseFloat(data)>0)
+        value = currency[row.currency]+data;
+    return '<textarea style="width: 50%; margin: auto;" class = "click_cut">' + value + '</textarea>';
 }
 
 function dtRender_count(data, type, row, meta)

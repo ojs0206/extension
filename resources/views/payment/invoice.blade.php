@@ -186,7 +186,7 @@
                         <tr>
                             <th class="">#</th>
                             <th class="">User Profile</th>
-                            <th class="">Billing Profile ID</th>
+                            <th class="">Account #</th>
                             <th class="">Billing Currency</th>
                             <th class="">Invoice Month</th>
                             <th class="">Invoice Value</th>

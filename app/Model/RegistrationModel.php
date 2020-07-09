@@ -283,6 +283,12 @@ class RegistrationModel extends BaseModel
              FROM t_rate
             "
         );
+        $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
+        foreach ($urls as $url){
+            $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
+            $url->monthly_threshold_symbol = $currency[$url->currency].number_format($url->monthly_threshold);
+        }
+
         return $urls;
     }
 
@@ -587,8 +593,13 @@ class RegistrationModel extends BaseModel
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
         ".$where . $orderby . $limit
         );
-        return $urls;
+        $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
+        foreach ($urls as $url){
+            $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
+            $url->monthly_threshold_symbol = $currency[$url->currency].number_format($url->monthly_threshold);
+        }
 
+        return $urls;
     }
 
     public function getBillingRateSettingCount($id, $type, $params) {
@@ -673,9 +684,10 @@ class RegistrationModel extends BaseModel
 
     public function getAllManager() {
         $managers = DB::select(
-            "SELECT t_user.*, t_user_p.username as parent_name
+            "SELECT t_user.*, t_user_p.username as parent_name,t_billing.account_id
                 FROM t_user
                 LEFT JOIN (SELECT * FROM t_user) as t_user_p ON t_user.parent_id = t_user_p.id
+                LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
                 WHERE t_user.id <> 1
             "
         );
@@ -1084,6 +1096,20 @@ class RegistrationModel extends BaseModel
 
     public function createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
                      $state, $phone, $bpId, $billingFrequency, $date, $rate_type){
+        //check user role and assign account #
+        $user = DB::table('t_user')->where('username',$userProfileName)->first();
+        $type = $user->type;
+        if($type != "User")
+            $account_id = mt_rand(100000000000,999999999999);
+        else{
+            $parent = DB::table('t_user')->where('id',$user->parent_id)->first();
+            $parent_billing = DB::table('t_billing')->where('profile_name',$parent->username)->first();
+            if($parent_billing != null)
+                $account_id = $parent_billing->account_id;
+            else
+                $account_id = null;
+        }
+
         DB::table("t_billing")
             ->insertGetID([
                 'profile_name' => $userProfileName,
@@ -1096,7 +1122,8 @@ class RegistrationModel extends BaseModel
                 'billing_profile_id'   => $bpId,
                 'created_date'   => $date,
                 'rate_type'  => $rate_type,
-                'active'  => 'Active'
+                'active'  => 'Active',
+                'account_id' => $account_id
             ]);
 
         $user_id = DB::table("t_user")

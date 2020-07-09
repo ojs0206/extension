@@ -132,7 +132,7 @@
                                     <?=$user->email?>
                                 </td>
                                 <td>
-                                    <?=$user->type?>
+                                    <?=$user->account_id?>
                                 </td>
                                 @if($type != 'User')
                                     <td class="center">

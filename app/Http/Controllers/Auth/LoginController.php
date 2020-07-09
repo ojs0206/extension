@@ -838,7 +838,7 @@ class LoginController extends Controller
             array_push($pay_list, $one->ID);
 
         //make datatable data
-        $label = ['index','User Profile','Billing Profile ID','Billing Currency','Invoice Month','Invoice Value','Payment Method','Payment Date','Payment Due Date','Pay','Receipt','Statement'];
+        $label = ['index','User Profile','Account','Billing Currency','Invoice Month','Invoice Value','Payment Method','Payment Date','Payment Due Date','Pay','Receipt','Statement'];
         $result = array();
         $result['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : 1;
         $result['recordsTotal'] = count($data);
@@ -869,8 +869,8 @@ class LoginController extends Controller
                     $obj[$index] = $num;
                 elseif ($item == 'User Profile')
                     $obj[$index] = $one->profile_name;
-                elseif ($item == 'Billing Profile ID')
-                    $obj[$index] = $one->billing_profile_id;
+                elseif ($item == 'Account')
+                    $obj[$index] = $one->account_id;
                 elseif ($item == 'Billing Currency')
                     $obj[$index] = $one->currency;
                 elseif ($item == 'Invoice Month')

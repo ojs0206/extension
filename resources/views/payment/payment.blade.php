@@ -373,7 +373,7 @@
                         <tr>
                             <th class="">#</th>
                             <th class="">User Profile</th>
-                            <th class="">Billing Profile ID</th>
+                            <th class="">Account #</th>
                             <th >Primary Email Address</th>
                             <th class="">Country</th>
                             <th class="">Phone Number</th>
@@ -648,7 +648,7 @@
                 columns: [
                     { name:"no", 				    data: "no",	 				        defaultContent:"",      orderable: false},
                     { name:"profile_name", 	        data: "profile_name",	 		    defaultContent:""},
-                    { name:"billing_profile_id", 	data: "billing_profile_id",	 	    defaultContent:""},
+                    { name:"account_id", 	        data: "account_id",	 	            defaultContent:""},
                     { name:"email", 	            data: "email",	 		            defaultContent:""},
                     { name:"country", 	            data: "country",	 	            defaultContent:""},
                     { name:"phone", 	            data: "phone",	 	                defaultContent:""},
