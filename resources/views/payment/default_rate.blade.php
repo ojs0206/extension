@@ -169,15 +169,15 @@
                         <div class="modal-body">
 
                             <div class="form-group">
-                                <label class="control-label" for="id-name"> Rate Type: </label>
-                                <input type="text" class="form-control" id="id-name" name="ratetype"  required="true">
-                                <label class="control-label" for="id-name"> Rate Name: </label>
-                                <input type="text" class="form-control" id="id-name" name="ratename"  required="true">
-                                <label class="control-label" for="id-name"> Description: </label>
-                                <input type="text" class="form-control" id="id-name" name="description"  required="true">
-                                <label class="control-label" for="id-name"> Country: </label>
-                                <input type="text" class="form-control" id="id-name" name="country"  required="true">
-                                <label class="control-label" for="id-name"> Currency: </label>
+                                <label class="control-label" for="id-ratetype"> Rate Type: </label>
+                                <input type="text" class="form-control" id="id-ratetype" name="ratetype"  required="true">
+                                <label class="control-label" for="id-ratename"> Rate Name: </label>
+                                <input type="text" class="form-control" id="id-ratename" name="ratename"  required="true">
+                                <label class="control-label" for="id-description"> Description: </label>
+                                <input type="text" class="form-control" id="id-description" name="description"  required="true">
+                                <label class="control-label" for="id-country"> Country: </label>
+                                <input type="text" class="form-control" id="id-country" name="country"  required="true">
+                                <label class="control-label" for="sel-currency"> Currency: </label>
                                 <select class="form-control custom-select" name="currency" id="sel-currency">
                                     <option value="AUD">AUD</option>
                                     <option value="USD">USD</option>
@@ -189,9 +189,10 @@
                                     <option value="JPY">JPY</option>
                                 </select>
                                 <label class="control-label" for="id-per-click" style="display: flex"> Rate Per Click (<p class="curr">$</p>) : </label>
-                                <input type="number" class="form-control" id="id-per-click" name="rateperclick" placeholder="$0.00"  required="true">
+                                <input type="text" class="form-control" id="id-per-click" name="rateperclick" placeholder="$0.00"  required="true">
                                 <label class="control-label" for="id-monthly" style="display: flex"> Monthly Threshold (<p class="curr">$</p>): </label>
-                                <input type="number" class="form-control" id="id-monthly" name="monthlythreshold" placeholder="$1000"  required="true">
+                                <input type="text" class="form-control" id="id-monthly" name="monthlythreshold" placeholder="$1000"  required="true">
+                                <input type="hidden" id="id-rate" name="rate_id" value="0">
                             </div>
 
                         </div>
@@ -324,13 +325,54 @@
                     usertable.draw();
                 });
 
-                // $("a[type=more-url]").off("click").on("click", function() {
-                //     var url_id = $(this).attr('url-id');
-                //
-                // });
+                $("a[type=more-url]").off("click").on("click", function() {
+                    var url_id = $(this).attr('url-id');
+                    $.ajax({
+                        type: 'post',
+                        url: '<?=url('/rate/getone')?>',
+                        data: {
+                            rate_id: url_id,
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                           let data = response.result;
+                           $('#id-ratetype').val(data.rate_type);
+                           $('#id-ratename').val(data.rate_name);
+                           $('#id-description').val(data.description);
+                           $('#id-country').val(data.country);
+                           $('#sel-currency').val(data.currency);
+                           $('#id-per-click').val(data.rate_per_click);
+                           $('#id-monthly').val(data.monthly_threshold);
+                           $('#id-rate').val(data.id);
+                           $('#id-btn-submit').text("Save");
+                           let currency = {"AUD":"$","USD":"$","EUR":"€","NZD":"$","CNY":"¥","CAD":"$","GBP":"£","JPY":"¥"};
+                           $('.curr').html(currency[data.currency]);
+                           $('#create-modal').css('display', 'block');
+                            $('.modal').modal({ keyboard: false,
+                                show: true
+                            });
+                            $('.modal-content').draggable({
+                                handle: ".modal-header"
+                            });
+                        },
+                        error: function () {
+                            toastr.error('Server connection error');
+                        }
+                    });
+                });
             });
 
             $('#id-create').on("click", function (event) {
+                $('#id-ratetype').val("");
+                $('#id-ratename').val("");
+                $('#id-description').val("");
+                $('#id-country').val("");
+                $('#sel-currency').val("AUD");
+                $('#id-per-click').val("");
+                $('#id-monthly').val("");
+                $('#id-btn-submit').text("Create");
+                $('.curr').html("$");
+                $('#id-rate').val(0);
                 $('#create-modal').css('display', 'block');
                 $('.modal').modal({ keyboard: false,
                     show: true

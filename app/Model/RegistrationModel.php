@@ -1238,10 +1238,10 @@ class RegistrationModel extends BaseModel
         return $random_string;
     }
 
-    public function createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold){
+    public function createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold,$rate_id){
         $country = strtoupper($country);
-        DB::table("t_rate")
-            ->insertGetID([
+        if($rate_id>0){
+            DB::table("t_rate")->where('id',$rate_id)->update([
                 'rate_type' => $ratetype,
                 'rate_name'   => $ratename,
                 'description'   => $description,
@@ -1249,8 +1249,21 @@ class RegistrationModel extends BaseModel
                 'currency'   => $currency,
                 'rate_per_click'   => $rateperclick,
                 'monthly_threshold'   => $monthlythreshold,
-                'active'  => 'Active'
-            ]);
+                'active'  => 'Active']);
+        }
+        else{
+            DB::table("t_rate")
+                ->insertGetID([
+                    'rate_type' => $ratetype,
+                    'rate_name'   => $ratename,
+                    'description'   => $description,
+                    'country'   => $country,
+                    'currency'   => $currency,
+                    'rate_per_click'   => $rateperclick,
+                    'monthly_threshold'   => $monthlythreshold,
+                    'active'  => 'Active'
+                ]);
+        }
     }
 
     public function check_item_ID($id) {

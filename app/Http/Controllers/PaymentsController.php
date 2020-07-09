@@ -654,9 +654,10 @@ class PaymentsController extends Controller
         $currency = request('currency');
         $rateperclick = request('rateperclick');
         $monthlythreshold = request('monthlythreshold');
+        $rate_id = request('rate_id');
 
         $registrationModel = new RegistrationModel();
-        $registrationModel -> createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold);
+        $registrationModel -> createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold,$rate_id);
 
         return redirect('payment/default_rate');
     }

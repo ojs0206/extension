@@ -703,6 +703,13 @@ class LoginController extends Controller
         return response()->json($result);
     }
 
+    public function getOneRate(Request $request){
+        $id = request('rate_id');
+        $data = DB::table('t_rate')->where('id',$id)->first();
+
+        return response()->json(["result"=>$data]);
+    }
+
     public function getAllRateType(){
         $registrationModel = new RegistrationModel();
         $rate_type = $registrationModel -> getAllRateType();
