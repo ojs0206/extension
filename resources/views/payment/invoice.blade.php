@@ -429,7 +429,8 @@
                 success:function (resp) {
                     if(resp.result){
                         if(resp.url != null)
-                            window.open(resp.url,"_blank");
+                            console.log(resp.url)
+                            window.open(resp.url, "_blank");
                     }
                     else{
                         alert("Server Error");

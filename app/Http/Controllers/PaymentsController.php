@@ -468,6 +468,7 @@ class PaymentsController extends Controller
             ];
 
         $filename = "invoice".date('Ymd_His').".pdf";
+        set_time_limit(200);
         $pdf = PDF::loadView('invoice_pdf',compact('data'));
         Storage::disk('pdf_storage')->put('pdf/'.$filename,$pdf->output());
 
