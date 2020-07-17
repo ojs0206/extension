@@ -349,6 +349,10 @@ class RegistrationModel extends BaseModel
                 LEFT JOIN t_user ON t_store_.user_id = t_user.id
             ".$where . $orderby . $limit
             );
+            foreach ($urls as $url) {
+                $count_urls = DB::table('t_click')->select('id')->where('store_id', $url->id)->get();
+                $url->count = sizeof($count_urls);
+            }
             return $urls;
         }
         if($type == 'Manager') {
@@ -365,6 +369,10 @@ class RegistrationModel extends BaseModel
                 LEFT JOIN t_user ON t_store_.user_id = t_user.id
             ".$where . $orderby . $limit
             );
+            foreach ($urls as $url) {
+                $count_urls = DB::table('t_click')->select('id')->where('store_id', $url->id)->get();
+                $url->count = sizeof($count_urls);
+            }
             return $urls;
         }
         $clause1 = "t_user.id = '$id'";
@@ -378,6 +386,10 @@ class RegistrationModel extends BaseModel
                 LEFT JOIN t_user ON t_store_.user_id = t_user.id
             ".$where . $orderby . $limit
         );
+        foreach ($urls as $url) {
+            $count_urls = DB::table('t_click')->select('id')->where('store_id', $url->id)->get();
+            $url->count = sizeof($count_urls);
+        }
         return $urls;
     }
 
@@ -426,36 +438,6 @@ class RegistrationModel extends BaseModel
         $tmp = $this->clause('username', $params);
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
-//        if($type == 'Admin') {
-//            $where = $this->where($tmp);
-//            $urls = DB::select(
-//                "SELECT
-//                t_billing.*, t_user.username, t_store_.item_id
-//                FROM t_billing
-//                LEFT JOIN t_user ON t_billing.id = t_user.id
-//                LEFT JOIN t_store_ ON t_billing.id = t_store_.user_id
-//            ".$where . $orderby . $limit
-//            );
-//            return $urls;
-//        }
-//        if($type == 'Manager') {
-//            $clause1 = "t_user.id = '$id'";
-//            $clause2 = "t_user.parent_id = '$id'";
-//            $tmp1 = $this->prepareOr($clause1, $clause2);
-//            $tmp2 = $this->prepareAnd($tmp, $tmp1);
-//            $where = $this->where($tmp2);
-//            $urls = DB::select(
-//                "SELECT
-//                t_billing.*, t_user.username
-//                FROM t_billing
-//                LEFT JOIN t_user ON t_billing.id = t_user.id
-//                LEFT JOIN t_payment ON t_billing.id = t_payment.user_id
-//            ".$where . $orderby . $limit
-//            );
-//            return $urls;
-//        }
-//        $clause1 = "t_user.id = '$id'";
-//        $tmp2 = $this->prepareAnd($tmp, $clause1);
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT
@@ -470,32 +452,6 @@ class RegistrationModel extends BaseModel
 
     public function getAllBillingInfoCount($id, $type, $params) {
         $tmp = $this->clause('username', $params);
-//        if($type == 'Admin') {
-//            $where = $this->where($tmp);
-//            $urls = DB::select(
-//                "SELECT COUNT(t_billing.id) AS total
-//                FROM t_billing
-//                LEFT JOIN t_user ON t_billing.id = t_user.id
-//            ".$where
-//            );
-//            return $urls[0]->total;
-//        }
-//        if($type == 'Manager') {
-//            $clause1 = "t_user.id = '$id'";
-//            $clause2 = "t_user.parent_id = '$id'";
-//            $tmp1 = $this->prepareOr($clause1, $clause2);
-//            $tmp2 = $this->prepareAnd($tmp, $tmp1);
-//            $where = $this->where($tmp2);
-//            $urls = DB::select(
-//                "SELECT COUNT(t_billing.id) AS total
-//                FROM t_billing
-//                LEFT JOIN t_user ON t_billing.id = t_user.id
-//            ".$where
-//            );
-//            return $urls[0]->total;
-//        }
-//        $clause1 = "t_user.id = '$id'";
-//        $tmp2 = $this->prepareAnd($tmp, $clause1);
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT COUNT(t_billing.id) AS total
@@ -508,25 +464,10 @@ class RegistrationModel extends BaseModel
     }
 
     public function getBudgetSetting($id, $type, $params, $user_profile, $bill_id, $item_id){
-//        $user_profile = $params->user_profile;
-//        $bill_id = $params->bill_id;
-//        $item_id = $params->item_id;
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
         $tmp = $this->clause('username', $params);
         $where = "";
-//        if ($user_profile != null){
-//            $tmp = "t_user.username = '$user_profile'";
-//        }
-//        if($bill_id != null){
-//            $clause = "t_billing.billing_profile_id = '$bill_id'";
-//            $tmp = $this->prepareAnd($tmp,$clause);
-//        }
-//        if($item_id != null){
-//            $clause = "t_store_.item_id = '$item_id'";
-//            $tmp = $this->prepareAnd($tmp, $clause);
-//        }
-
         if ($user_profile != null){
             $tmp = "username like '%".$user_profile."%' ";
         }
@@ -578,16 +519,13 @@ class RegistrationModel extends BaseModel
 
     public function getBillingRateSetting($id, $type, $params) {
         $tmp = $this->clause('username', $params);
-        $clause = "t_user.username = t_billing.profile_name";
-        $tmp2 = $this->prepareAnd($tmp, $clause);
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT
-            t_store_.*, t_transaction.currency, t_user.username, t_billing.billing_profile_id, t_rate.*,t_store_.id AS store_id
+            t_store_.*, t_user.username, t_billing.billing_profile_id, t_rate.*, t_store_.id AS store_id
             FROM t_store_
-            LEFT JOIN t_transaction ON t_store_.user_id = t_transaction.user_id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
@@ -604,13 +542,10 @@ class RegistrationModel extends BaseModel
 
     public function getBillingRateSettingCount($id, $type, $params) {
         $tmp = $this->clause('username', $params);
-        $clause = "t_user.username = t_billing.profile_name";
-        $tmp2 = $this->prepareAnd($tmp, $clause);
         $where = $this->where($tmp);
         $urls = DB::select(
             "SELECT COUNT(t_store_.id) AS total
             FROM t_store_
-            LEFT JOIN t_transaction ON t_transaction.user_id = t_store_.user_id
             LEFT JOIN t_user ON t_store_.user_id = t_user.id
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id

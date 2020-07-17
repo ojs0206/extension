@@ -278,7 +278,6 @@
                     { name:"currency", 	            data: "currency",	 	            defaultContent:""},
                     { name:"monthly_threshold", 	data: "monthly_threshold_symbol",	defaultContent:""},
                     { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:"",      render: dtRender_rate_type},
-                    // { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:""},
                     { name:"rate_per_click", 	    data: "rate_per_click_symbol",	 	defaultContent:""},
                     { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button_new}

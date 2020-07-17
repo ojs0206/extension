@@ -109,6 +109,7 @@
                             <th class="url-width">Redirect URL</th>
                             <th class="">Description</th>
                             <th class="">Item ID#</th>
+                            <th class="">Count</th>
                             <th class="">Created Date <img src="<?=asset('images/sort.png');?>" style="width: 30%; height: 60%;"> </th>
                             <th class="center">Modify</th>
                         </tr>
@@ -156,6 +157,7 @@
                     { name:"redirect_url", 	        data: "redirect_url",	 	        defaultContent:"",      render: dtRender_redirect},
                     { name:"hint", 	                data: "hint",	 	                defaultContent:""},
                     { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
+                    { name:"count", 	            data: "count",	 	                defaultContent:""},
                     { name:"create_date", 	        data: "create_date",	 	        defaultContent:""},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_count,  "className" : "editCell center"}
                 ],

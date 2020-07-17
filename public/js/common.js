@@ -243,6 +243,7 @@ function dtRender_Edit_button_new(data, type, row, meta)
 }
 
 function dtRender_redirect(data, type, row, meta) {
+    console.log(row)
     return '<span style="width: 250px;word-wrap:break-word; display:inline-block;">' + data + '</span>'
 }
 
