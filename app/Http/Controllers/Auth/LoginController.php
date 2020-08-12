@@ -509,19 +509,18 @@ class LoginController extends Controller
 
     public function sendEmail(){
         $userid = request('userid');
-        $success = false;
+        $success = true;
         $user = DB::table('t_user')->find($userid);
 //        $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
         $email = $user -> email;
-        echo $email;
+        $email = "mail.stardev@gmail.com";
         $company_name = $user -> company;
         $data = array('price'=>'10','currency'=>'AUD $');
         try{
             Mail::send('invoice_mail_temp', $data, function ($message) use ($company_name, $email){
                 $message->to($email, $company_name)
                     ->subject('Test Email');
-                $message->from('dvpgridtest@gmail.com','Admin');
-                $success = true;
+                $message->from('mail.stardev@gmail.com','Admin');
             });
         }catch (\Exception $e){
 
