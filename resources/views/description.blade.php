@@ -224,9 +224,9 @@
                         <br><strong style="color: black; font-size: 2vw;">{{$click -> currency}}</strong><strong
                                 style="color: black; font-size: 2vw;" id="dailyBudget_1">
                             @if ($budget_type -> budget_type == 0)
-                                {{round((($click -> monthly_threshold) / 30), 1)}}
+                                ${{round((($click -> monthly_threshold) / 30), 1)}}
                             @else
-                                {{round((($click -> budget) / 30), 1)}}
+                                ${{round((($click -> budget) / 30), 1)}}
                             @endif
                         </strong><font size="3"
                                                                                                         color="black">
@@ -234,9 +234,9 @@
                         <br><strong style="color: black; font-size: 2vw;">{{$click -> currency}}</strong><strong
                                 style="color: black; font-size: 2vw;" id="monthlyBudget">
                             @if ($budget_type -> budget_type == 0)
-                                {{$click -> monthly_threshold}}
+                                ${{$click -> monthly_threshold}}
                             @else
-                                {{$click -> budget}}
+                                ${{$click -> budget}}
                             @endif
                         </strong><font size="3"
                                                                                                         color="black">
@@ -263,7 +263,7 @@
                                     <div class="col-sm-4"></div>
                                     <div class="col-sm-3" style="text-align: center;">
                                         <p><u style=""></u><strong
-                                                    style="font-size: 2vw">{{$click -> currency}}</strong> <strong
+                                                    style="font-size: 2vw">{{$click -> currency}}$</strong> <strong
                                                     id="dailyBudget" style="font-size: 2vw">
                                                 @if ($budget_type -> budget_type == 0)
                                                     {{round((($click -> monthly_threshold) / 30), 1)}}
@@ -279,7 +279,7 @@
                                 <div class="row" style="padding-bottom: 5%;">
                                     <div class="col-sm-4"></div>
                                     <div class="col-sm-4" style="padding-left: 5%;">
-                                        <p><strong>{{$click -> currency}}</strong> <strong id="currentBudget">
+                                        <p><strong>{{$click -> currency}}$</strong> <strong id="currentBudget">
                                                 @if ($budget_type -> budget_type == 0)
                                                     {{$click -> monthly_threshold}}
                                                 @else
@@ -445,7 +445,7 @@
                 animationEnabled: true,
                 theme: "light2",
                 title: {
-                    text: "Amount Spent:  " + currency + numberWithCommas(clickCut * data.length)
+                    text: "Amount Spent: $" + numberWithCommas(clickCut * data.length)
                 },
                 axisY: {
                     // title: "Spent",

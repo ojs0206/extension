@@ -39,7 +39,7 @@
                     <tr>
                         <th class="">NO</th>
                         <th class="">Source</th>
-                        <th class="">IP Address</th>
+{{--                        <th class="">IP Address</th>--}}
                         <th class="">Redirect</th>
                         <th class="">Click Date/Time</th>
 
@@ -57,9 +57,9 @@
                                 </span>
 
                             </td>
-                            <td>
-                                <?=$url->source_ip?>
-                            </td>
+{{--                            <td>--}}
+{{--                                <?=$url->source_ip?>--}}
+{{--                            </td>--}}
 
                             <td class="">
                                 <span style="width: 250px;word-wrap:break-word; display:inline-block;">

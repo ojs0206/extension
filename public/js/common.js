@@ -221,16 +221,6 @@ function dtRender_tools(data, type, row, meta)
     return str;
 }
 
-function dtRender_Edit_button(data, type, row, meta)
-{
-    field_id = row.id;
-    str = ['<button name="btnEditField" class="btn btn-primary edit-button" data-id="',field_id, '" data-no="', row.no, '">',
-        'Edit',
-        '</button>'].join('');
-
-    return str;
-}
-
 function dtRender_Edit_button_new(data, type, row, meta)
 {
     let id = row.store_id;
@@ -242,8 +232,23 @@ function dtRender_Edit_button_new(data, type, row, meta)
     return str;
 }
 
+function dtRender_Stat_button(data, type, row, meta)
+{
+    field_id = row.id;
+    var hint = row.hint;
+    // str = ['<button name="btnStatField" class="btn btn-primary edit-button" onclick="stats(',hint,')" data-id="',field_id, '" data-no="', row.no, '">',
+    //     'Stats',
+    //     '</button>'].join('');
+
+    str = [
+        '<a href="/description/statistics/', hint ,'" url-id="', field_id, '" type="more-url" class="btn btn-primary edit-button"  data-toggle="tooltip" data-placement="top" title="Edit">Stats</a>'
+        ].join('');
+
+
+    return str;
+}
+
 function dtRender_redirect(data, type, row, meta) {
-    console.log(row)
     return '<span style="width: 250px;word-wrap:break-word; display:inline-block;">' + data + '</span>'
 }
 
@@ -252,7 +257,7 @@ function dtRender_click_rate(data, type, row, meta) {
     let value = "";
     if(parseFloat(data)>0)
         value = currency[row.currency]+data;
-    return '<textarea style="width: 50%; margin: auto;" class = "click_cut">' + value + '</textarea>';
+    return '<textarea style="width: 120px; margin: auto;" class = "click_cut">' + value + '</textarea>';
 }
 
 function dtRender_count(data, type, row, meta)
@@ -287,33 +292,7 @@ function dtRender_item(data, type, row, meta)
 
 function dtRender_rate_type(data, type, row, meta)
 {
-    // var dataset = getRate();
-    //
-    // var str = '<select id="rate_type" name ="rate_type" required>\n' +
-    //     '                        <option>Default Rate Type</option>'
-    // function getRate() {
-    //     $.ajax({
-    //         type: "POST",
-    //         url: '/get/all-rate-type',
-    //         dataType: "json",
-    //         success: function (resp) {
-    //             console.log(resp.length);
-    //             for (var i = 0; i < resp.length; i ++){
-    //                 str += "<option value='" + resp[i].id + "'>" + resp[i].rate_type + "</option>";
-    //             }
-    //         },
-    //         error: function () {
-    //             console.log('error---')
-    //         }
-    //     });
-    // }
-    // setTimeout(function () {
-    //     str += '</select>';
-    //     console.log(str)
-    //     return str;
-    // }, 3000)
-    return '<textarea style="margin: auto" class="ratetype">' + data + '</textarea>';
-
+    return '<textarea style="width: 120px; margin: auto" class="ratetype">' + data + '</textarea>';
 }
 
 function dt_Render_billing(data, type, row, meta)
@@ -396,7 +375,6 @@ function dt_Render_rate(data, type, row, meta)
 
 function dt_Budget_Render_rate(data, type, row, meta)
 {
-    console.log(row)
     field_id = row.id;
     var activate = row.active;
     var hint = row.hint;

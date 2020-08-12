@@ -170,9 +170,19 @@
 
                             <div class="form-group">
                                 <label class="control-label" for="id-ratetype"> Rate Type: </label>
-                                <input type="text" class="form-control" id="id-ratetype" name="ratetype"  required="true">
+                                <input type="text" class="form-control" id="id-ratetype" name="ratetype" list="rate_type" required="true">
+                                <datalist id="rate_type">
+                                    @foreach ($rate as $per_rate)
+                                        <option value="{{$per_rate -> rate_type}}"></option>
+                                    @endforeach
+                                </datalist>
                                 <label class="control-label" for="id-ratename"> Rate Name: </label>
-                                <input type="text" class="form-control" id="id-ratename" name="ratename"  required="true">
+                                <input type="text" class="form-control" id="id-ratename" name="ratename" list="rate_name" required="true">
+                                <datalist id="rate_name">
+                                    @foreach ($rate as $per_rate)
+                                        <option value="{{$per_rate -> rate_name}}"></option>
+                                    @endforeach
+                                </datalist>
                                 <label class="control-label" for="id-description"> Description: </label>
                                 <input type="text" class="form-control" id="id-description" name="description"  required="true">
                                 <label class="control-label" for="id-country"> Country: </label>

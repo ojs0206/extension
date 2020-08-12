@@ -399,10 +399,13 @@ class PaymentsController extends Controller
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);
         $name = session() -> get(SESS_USERNAME);
-        $registrationModel = new RegistrationModel();
+
+        $rate = DB::table("t_rate")->select("rate_type", "rate_name")->get();
+
         return view('payment/default_rate', [
             'type' => $type,
             'admin' => $name,
+            'rate' => $rate
         ]);
     }
 

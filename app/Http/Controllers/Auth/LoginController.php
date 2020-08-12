@@ -509,17 +509,22 @@ class LoginController extends Controller
 
     public function sendEmail(){
         $userid = request('userid');
-        $user = $user = DB::table('t_user')
-            ->where('id', '=', $userid)
-            ->first();
-        $email = $user->email;
         $success = false;
+        $user = DB::table('t_user')->find($userid);
+        $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
+        $email = $billing->billing_profile_id;
+        $profile_name = $billing->profile_name;
+        $data = array('price'=>'10','currency'=>'AUD $');
         try{
-            Mail::to($email)->send(new MailSender("Hello", "This is test email", "thanks"));
-            $success = true;
+            Mail::send('invoice_mail_temp', $data, function ($message) use ($profile_name, $email){
+                $message->to($email, $profile_name)
+                    ->subject('Test Email');
+                $message->from('dvpgridtest@gmail.com','Admin');
+            });
         }catch (\Exception $e){
 
         }
+
         return response()->json(["result"=>true,"success"=>$success]);
     }
 
@@ -886,11 +891,19 @@ class LoginController extends Controller
                     $obj[$index] = $currency[$one->currency].number_format($one->monthly_threshold);
                 elseif ($item == 'Payment Method')
                     $obj[$index] = $one->payment_method;
-                elseif ($item == 'Payment Date')
-                    $obj[$index] = date("d.m.Y",strtotime($one->income_date));
+                elseif ($item == 'Payment Date'){
+                    if($compare==0)
+                        $obj[$index] = "";
+                    else
+                        $obj[$index] = date("d.m.Y",strtotime($one->income_date));
+                }
                 elseif ($item == 'Payment Due Date'){
-                    $date = date('Y-m-d', strtotime('+1 month', strtotime($one->income_date)));
-                    $obj[$index] = date("01/m/Y",strtotime($date));
+                    if($compare==0)
+                        $obj[$index] = "";
+                    else{
+                        $date = date('Y-m-d', strtotime('+1 month', strtotime($one->income_date)));
+                        $obj[$index] = date("01/m/Y",strtotime($date));
+                    }
                 }
                 elseif ($item == 'Pay'){
                     if($compare==0)

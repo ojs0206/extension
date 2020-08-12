@@ -125,7 +125,6 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var height = document.getElementsByClassName('navbar')[0].clientHeight;
-            console.log(height);
             var sidenav = document.getElementById('sidenav');
             sidenav.style.paddingTop = height + 5 + "px";
         });
@@ -208,7 +207,8 @@
                             <th class="">Default Rate Type</th>
                             <th class="">Default Rate per Clicks($)</th>
                             <th class="">Custom Rate per Clicks($)</th>
-                            <th class="center">Modify</th>
+                            <th class="center"></th>
+                            <th class="center"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -241,8 +241,6 @@
         </div>
     </div>
 </div>
-
-
 
 @endsection
 
@@ -280,7 +278,8 @@
                     { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:"",      render: dtRender_rate_type},
                     { name:"rate_per_click", 	    data: "rate_per_click_symbol",	 	defaultContent:""},
                     { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
-                    { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button_new}
+                    { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Edit_button_new},
+                    { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Stat_button}
                 ],
                 order: [[1, 'asc']],
                 fnCreatedRow: function (row, data, index){
@@ -375,10 +374,6 @@
                     });
                 });
             });
-            // $('#user-table tbody').on('click', 'tr', function () {
-            //     let data = usertable.row( this ).data();
-            //     console.log(data);
-            // } );
 
             $('#user-table tbody').on('click', 'tr', function (){
                 let data = usertable.row( this ).data();
@@ -402,36 +397,11 @@
                         $('.ratetype').eq(textarea_id - 1).val(changed_value.substr(1, changed_value.length - 2));
                     });
                 }
-                // console.log(this.$('button'));
-
-                // $('button', $(this)).on('click', function(){
-                //     let rate_type = $('.ratetype').eq(textarea_id - 1).val();
-                //     let click_cut = $('.click_cut').eq(textarea_id - 1).val();
-                //
-                //     $.ajax({
-                //         type: 'post',
-                //         url: '/billing_rate_setting/edit',
-                //         data: {
-                //             data: data,
-                //         },
-                //         dataType: "json",
-                //         success: function (response) {
-                //
-                //         },
-                //         error: function () {
-                //             toastr.error('Server connection error');
-                //         }
-                //     });
-                // });
             });
-
         });
         function save_bill(id) {
             let rate_type = $('.ratetype').eq(textarea_id - 1).val();
             let click_cut = $('.click_cut').eq(textarea_id - 1).val();
-            console.log("teste");
-            console.log(rate_type);
-            console.log(click_cut);
             let formData = new FormData();
             let _token = "<?php echo e(csrf_token()); ?>";
             formData.append('_token',_token);
@@ -445,7 +415,7 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    if(response==1){
+                    if(response == 1){
                         location.reload();
                         toastr.success('Data Saved');
                     }
@@ -454,6 +424,11 @@
                     toastr.error('Server connection error');
                 }
             });
+        }
+
+        function stats(hint){
+            console.log(hint)
+            window.location.href = '/description/statistics/' + str(hint);
         }
     </script>
 

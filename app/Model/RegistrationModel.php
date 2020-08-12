@@ -536,7 +536,6 @@ class RegistrationModel extends BaseModel
             $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
             $url->monthly_threshold_symbol = $currency[$url->currency].number_format($url->monthly_threshold);
         }
-
         return $urls;
     }
 
@@ -571,7 +570,6 @@ class RegistrationModel extends BaseModel
         ".$where . $orderby . $limit
         );
         return $urls;
-
     }
 
     public function getAllInvoiceCount($id, $type, $params) {
@@ -1175,7 +1173,7 @@ class RegistrationModel extends BaseModel
 
     public function createNewRate($ratetype, $ratename, $description, $country, $currency, $rateperclick, $monthlythreshold,$rate_id){
         $country = strtoupper($country);
-        if($rate_id>0){
+        if($rate_id > 0){
             DB::table("t_rate")->where('id',$rate_id)->update([
                 'rate_type' => $ratetype,
                 'rate_name'   => $ratename,

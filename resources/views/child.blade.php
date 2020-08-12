@@ -251,7 +251,7 @@
             $.ajax({
                 url:"{{url('/sendEmail')}}",
                 method:"POST",
-                data:{userid:id},
+                data:{'userid': id},
                 success: function( resp ) {
                     if(resp.result){
                         if(resp.success)

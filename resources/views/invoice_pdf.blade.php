@@ -67,29 +67,29 @@
     </thead>
     <tbody>
     <tr>
-        <td style="font-size: 24px">123456789</td>
+        <td style="font-size: 24px">{{$data['receipt']}}</td>
         <td>Tax Invoice Number:</td>
         <td class="text-right">SPGI-INV-AU-2020-600999</td>
     </tr>
     <tr>
         <td rowspan="2"></td>
         <td>Tax Invoice Date:</td>
-        <td class="text-right">July 1, 2020</td>
+        <td class="text-right">{{$data['payment_date']}}</td>
     </tr>
     <tr>
-        <td>Invoice Month:  June 2020</td>
+        <td>Invoice Month: {{$data['invoice_month']}}</td>
         <td></td>
     </tr>
     <tr>
-        <td>Ronny Boustani<br>
+        <td>{{$data['user_profile']}}<br>
             ACME Pty Ltd</td>
         <td class="v-bottom">TOTAL AMOUNT</td>
-        <td class="v-bottom text-right">AUD 49.83</td>
+        <td class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
         <td>10 Test Street</td>
         <td rowspan="2" class="v-bottom">TOTAL TAX</td>
-        <td rowspan="2" class="v-bottom text-right">AUD 4.53</td>
+        <td rowspan="2" class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
     </tr>
     <tr>
         <td>Test Suburb</td>
@@ -105,45 +105,45 @@
     </tr>
     </tbody>
 </table>
-<p style="font-size: 22px">This Tax Invoice is for the billing period June 1 - June 30, 2020</p>
+<p style="font-size: 22px">This Tax Invoice is for the billing period from {{$data['payment_date']}}</p>
 <h3 style="margin-top: 10px; font-size: 22px">Tax Invoice Summary</h3>
 <table class="invoice_table" style="border-collapse: collapse" cellspacing="0" width="100%">
     <thead>
     <tr style="background-color: #8dccea">
         <th class="text-left" style="font-size: 22px; width: 80%">SPG Service Charges</th>
-        <th class="text-right">AUD 49.83</th>
+        <th class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</th>
     </tr>
     </thead>
     <tbody>
     <tr>
         <td class="pl-40">Charges (excl. GST)</td>
-        <td class="text-right">AUD 45.30</td>
+        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
     </tr>
     <tr>
         <td class="pl-40">Credits/Discount</td>
-        <td class="text-right">AUD 0.00</td>
+        <td class="text-right">{{$data['currency']}} 0.00</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Net Charges (After Credits/Discount, excl. GST)</td>
-        <td class="text-bold text-right">AUD 45.30</td>
+        <td class="text-bold text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Total GST Amount at 10%</td>
-        <td class="text-bold text-right">AUD 4.53</td>
+        <td class="text-bold text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
     </tr>
     </tbody>
 </table>
 <table class="invoice_table" style="border-collapse: collapse" cellspacing="0" width="100%">
     <thead>
     <tr style="background-color: #8dccea">
-        <th class="text-left" style="font-size: 22px; width: 80%">Detailed Usage for Account # 123456700000</th>
-        <th class="text-right">AUD 49.83</th>
+        <th class="text-left" style="font-size: 22px; width: 80%">Detailed Usage for Account # {{$data['receipt']}}</th>
+        <th class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</th>
     </tr>
     </thead>
     <tbody>
     <tr style="background-color: #e0e0e0">
-        <td class="text-bold">Item ID# ANR22304K5453       DescriptIon: abbb     User Profile: abb</td>
-        <td class="text-right">AUD 45.30</td>
+        <td class="text-bold">Item ID# {{$data['receipt']}}       DescriptIon: {{$data['user_profile']}}     User Profile: {{$data['user_profile']}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
         <td class="pl-40">Charges (excl. GST)          Click Count: 700      Rate Per Click: $0.05</td>
@@ -151,19 +151,19 @@
     </tr>
     <tr>
         <td class="pl-40">Credits/Discount</td>
-        <td class="text-right">AUD 45.30</td>
+        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Net Charges (After Credits / Discount, excl. GST)</td>
-        <td class="text-right">AUD 4.53</td>
+        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Total GST Amount at 10%</td>
-        <td class="text-right">AUD 4.53</td>
+        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
     </tr>
     <tr>
         <td class="pl-40">GST Amount</td>
-        <td class="text-right">AUD 45.30</td>
+        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
     </tr>
     </tbody>
 </table>
