@@ -513,7 +513,6 @@ class LoginController extends Controller
         $user = DB::table('t_user')->find($userid);
 //        $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
         $email = $user -> email;
-        $email = "mail.stardev@gmail.com";
         $company_name = $user -> company;
         $data = array('price'=>'10','currency'=>'AUD $');
         try{
@@ -521,6 +520,7 @@ class LoginController extends Controller
                 $message->to($email, $company_name)
                     ->subject('Test Email');
                 $message->from('mail.stardev@gmail.com','Admin');
+                $success = true;
             });
         }catch (\Exception $e){
 
