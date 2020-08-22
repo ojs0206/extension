@@ -9,7 +9,7 @@
     <style>
         body {
             background: #dddddd !important;
-            height: 120vh !important;
+            height: 140vh !important;
         }
 
         .info {
@@ -235,6 +235,13 @@
                             <option value="{{$user->username}}">{{$user->username}}</option>
                         @endforeach
                     </select>
+                    <p class="billing-form-text">Default Rate Type:</p>
+                    <select id="rate_type" name ="rate_type" required>
+                        <option>Select Default Rate Type</option>
+                    </select>
+                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
+                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
+
                     <p class="billing-form-text">Primary Email Address:</p>
                     <input type="email" id="primary_email_address" name="primary_email_address" class="billing-form" placeholder="" required>
                     <div style="display: flex;">
@@ -262,21 +269,22 @@
                         <p id="pp_success" class="billing-form-text" style="color: blue; margin-left: 10px">MasterCard was connected</p>
                     </div>
 
+                    <p class="billing-form-text">Street Address:</p>
+                    <input type="text" name ="address" id ="address" required>
+                    <p class="billing-form-text">Suburb:</p>
+                    <input type="text" name ="suburb" id ="suburb" required>
                     <p class="billing-form-text">Country:</p>
                     <select id="country" name ="country" required></select>
                     <p class="billing-form-text">State:</p>
                     <select name ="state" id ="state" required></select>
+
                     <p class="billing-form-text">Primary Phone Number:</p>
                     <input type="tel" id="phone" name="phone" class="" style="" placeholder="" required>
 
                     <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
                     <input type="email" id="bp_id" name="bp_id" class="billing-form" placeholder="" required>
-                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
-                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
-                    <p class="billing-form-text">Default Rate Type:</p>
-                    <select id="rate_type" name ="rate_type" required>
-                        <option>Select Default Rate Type</option>
-                    </select>
+
+
                     <input type="hidden" name="countryCode" id="countryCode">
 
                     <div style="margin-top: 40px;">
@@ -297,6 +305,13 @@
                             <option value="{{$user->username}}">{{$user->username}}</option>
                         @endforeach
                     </select>
+                    <p class="billing-form-text">Default Rate Type:</p>
+                    <select id="rate_type" name ="rate_type" required>
+                        <option value="0">Select Default Rate Type</option>
+                    </select>
+                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
+                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
+
                     <p class="billing-form-text">Primary Email Address:</p>
                     <input type="email" id="primary_email_address" name="primary_email_address" class="billing-form" placeholder="" required>
                     <div style="display: flex;">
@@ -323,22 +338,22 @@
                         <img src="<?=asset('/assets/icon/mastercard.png');?>" style="width: 20px; height: 100%;">
                         <p id="pp_success" class="billing-form-text" style="color: blue; margin-left: 10px">MasterCard was connected</p>
                     </div>
-
+                    <p class="billing-form-text">Street Address:</p>
+                    <input type="text" name ="address" id ="address" required>
+                    <p class="billing-form-text">Suburb:</p>
+                    <input type="text" name ="suburb" id ="suburb" required>
                     <p class="billing-form-text">Country:</p>
                     <select id="country" name ="country" required></select>
                     <p class="billing-form-text">State:</p>
                     <select name ="state" id ="state" required></select>
+
                     <p class="billing-form-text">Primary Phone Number:</p>
                     <input type="tel" id="phone" name="phone" class="" style="" placeholder="" required>
 
                     <p class="billing-form-text" style="margin-top: 20px;">Billing Profile ID(email):</p>
                     <input type="email" id="bp_id" name="bp_id" class="billing-form" placeholder="" required>
-                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
-                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
-                    <p class="billing-form-text">Default Rate Type:</p>
-                    <select id="rate_type" name ="rate_type" required>
-                        <option value="0">Select Default Rate Type</option>
-                    </select>
+
+
                     <input type="hidden" name="countryCode" id="countryCode">
 
                     <div style="margin-top: 40px;">
@@ -873,6 +888,10 @@
                 username.value = "{{$infos->profile_name}}";
                 var primary_email_address = document.getElementById('primary_email_address');
                 primary_email_address.value = "{{$infos->email}}";
+                var suburb = document.getElementById('suburb');
+                suburb.value = "{{$infos->suburb}}"
+                var address = document.getElementById('address');
+                address.value = "{{$infos->address}}"
                 var payment_method = document.getElementById('payment_method');
                 payment_method.value = "{{$infos->payment_method}}";
                 var pay_type = "{{$infos->payment_method}}";

@@ -1028,7 +1028,7 @@ class RegistrationModel extends BaseModel
     }
 
     public function createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-                     $state, $phone, $bpId, $billingFrequency, $date, $rate_type){
+                     $state, $phone, $bpId, $billingFrequency, $date, $rate_type, $suburb, $address){
         //check user role and assign account #
         $user = DB::table('t_user')->where('username',$userProfileName)->first();
         $type = $user->type;
@@ -1052,6 +1052,8 @@ class RegistrationModel extends BaseModel
                 'state'   => $state,
                 'frequency'   => $billingFrequency,
                 'phone'   => $phone,
+                'suburb'  => $suburb,
+                'address'  => $address,
                 'billing_profile_id'   => $bpId,
                 'created_date'   => $date,
                 'rate_type'  => $rate_type,
@@ -1079,22 +1081,10 @@ class RegistrationModel extends BaseModel
                     ]);
             }
         }
-
-        //create record in transaction table
-//        $total = DB::table("t_rate")->where('id',$rate_type)->first();
-//        $price = ($total->monthly_threshold)*intval($billingFrequency)/30;
-//        $transaction = new Transaction();
-//        $transaction->user_id = $user_id[0]->id;
-//        $transaction->income = $price;
-//        $transaction->income_date = date('Y-m-d H:i:s');
-//        $transaction->current = $price;
-//        $transaction->invoice = $this->createReceipt($user_id[0]->id);
-//        $transaction->currency = $total->currency;
-//        $transaction->save();
     }
 
     public function updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-                                     $state, $phone, $bpId, $billingFrequency, $date, $rate_type){
+                                     $state, $phone, $bpId, $billingFrequency, $date, $rate_type, $suburb, $address){
         $user_list = DB::table("t_billing")
             ->select("profile_name")
             ->where("profile_name", $userProfileName)
@@ -1102,7 +1092,7 @@ class RegistrationModel extends BaseModel
 
         if (count($user_list) == 0) {
             $this -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-                $state, $phone, $bpId, $billingFrequency, $date, $rate_type);
+                $state, $phone, $bpId, $billingFrequency, $date, $rate_type, $suburb, $address);
         }
 
         else {
@@ -1114,6 +1104,8 @@ class RegistrationModel extends BaseModel
                     'country'  => $country,
                     'state'  => $state,
                     'phone'  => $phone,
+                    'suburb'  => $suburb,
+                    'address'  => $address,
                     'billing_profile_id'  => $bpId,
                     'frequency'  => $billingFrequency,
                     'rate_type'  => $rate_type,
@@ -1145,7 +1137,7 @@ class RegistrationModel extends BaseModel
 
     public function getBillingInfo($id) {
         return DB::table("t_billing")
-            ->select("profile_name", "email", "payment_method", "country", "state", "frequency", "phone", "billing_profile_id", "rate_type")
+            ->select("profile_name", "email", "payment_method", "country", "state", "frequency", "phone", "billing_profile_id", "rate_type", "suburb", "address")
             ->where("id", $id)
             ->get();
     }

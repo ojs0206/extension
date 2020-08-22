@@ -69,7 +69,7 @@
     <tr>
         <td style="font-size: 24px">{{$data['receipt']}}</td>
         <td>Tax Invoice Number:</td>
-        <td class="text-right">SPGI-INV-AU-2020-600999</td>
+        <td class="text-right">{{$data['invoice_number']}}</td>
     </tr>
     <tr>
         <td rowspan="2"></td>
@@ -82,20 +82,20 @@
     </tr>
     <tr>
         <td>{{$data['user_profile']}}<br>
-            ACME Pty Ltd</td>
+            {{$data['company']}}</td>
         <td class="v-bottom">TOTAL AMOUNT</td>
         <td class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
-        <td>10 Test Street</td>
+        <td>{{$data['street']}}</td>
         <td rowspan="2" class="v-bottom">TOTAL TAX</td>
         <td rowspan="2" class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
     </tr>
     <tr>
-        <td>Test Suburb</td>
+        <td>{{$data['suburb']}}</td>
     </tr>
     <tr>
-        <td>Test Suburb, NSW, 2000, AU</td>
+        <td>{{$data['suburb']}}, {{$data['street']}}, {{strval(date('Y'))}}, {{$data['country_code']}}</td>
         <td></td>
         <td rowspan="2" class="v-bottom text-right" style="font-size: 20px">Original For Recipien</td>
     </tr>
@@ -146,7 +146,7 @@
         <td class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
-        <td class="pl-40">Charges (excl. GST)          Click Count: 700      Rate Per Click: $0.05</td>
+        <td class="pl-40">Charges (excl. GST)          Click Count: 0      Rate Per Click: ${{$data['rate_per_click']}}</td>
         <td class="text-right">AUD 0.00</td>
     </tr>
     <tr>
@@ -167,9 +167,9 @@
     </tr>
     </tbody>
 </table>
-<p class="text-center" style="color: #999999; font-size:12px;">SPG Services, Inc.,<br>
-    10 My Street, North<br>
-    Sydney, NSW 2000 Australia<br><br>
-    ABNXXXXXXXXX</p>
+<p class="text-center" style="color: #999999; font-size:12px;">{{$data['company']}}<br>
+    {{$data['street']}}<br>
+    {{$data['state']}}, {{$data['street']}}, {{strval(date('Y'))}}, {{$data['country_code']}}<br><br>
+    {{$data['billing_id']}}</p>
 </body>
 </html>

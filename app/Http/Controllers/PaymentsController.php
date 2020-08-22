@@ -425,7 +425,7 @@ class PaymentsController extends Controller
         $where = " where t_transaction.ID = ".$id;
         $result = DB::select(
             "SELECT
-            t_transaction.*, t_billing.*, t_user.username, t_rate.*
+            t_transaction.*, t_billing.*, t_user.username, t_user.company, t_rate.*
             FROM t_transaction
             INNER JOIN t_user ON t_transaction.user_id = t_user.id
             INNER JOIN t_billing ON t_user.username = t_billing.profile_name
@@ -457,17 +457,30 @@ class PaymentsController extends Controller
         }
         $status = $compare==0?'Unpaid':'Paid';
 
+        $invoice_number = "INV - ";
+        $country_code = strtoupper(substr($one -> country, 0, 3));
+        $invoice_number .= $country_code;
+        $invoice_number .= " - ";
+        $invoice_number .= strval(date('Y'));
+        $invoice_number .= " - ";
+        $invoice_number .= strval(mt_rand(100000, 999999));
         //pdf data
         $data = array();
-        $data = ['user_profile'=>$one->profile_name,
-            'billing_id'=>$one->billing_profile_id,
-            'currency'=>$one->currency,
-            'invoice_month'=>date("F Y",strtotime($one->income_date)),
-            'invoice_value'=>$one->monthly_threshold,
-            'payment_method'=>$one->payment_method,
-            'payment_date'=>date("d.m.Y",strtotime($one->income_date)),
-            'status'=>$status,
-            'receipt'=>$one->invoice
+        $data = ['user_profile' => $one -> profile_name,
+            'billing_id' => $one -> billing_profile_id,
+            'country_code' => $country_code,
+            'currency' => $one -> currency,
+            'suburb' => $one -> suburb,
+            'address' => $one -> address,
+            'company' => $one -> company,
+            'rate_per_click' => $one -> rate_per_click,
+            'invoice_number' => $invoice_number,
+            'invoice_month' => date("F Y", strtotime($one -> income_date)),
+            'invoice_value' => $one -> monthly_threshold,
+            'payment_method' => $one -> payment_method,
+            'payment_date' => date("d.m.Y", strtotime($one -> income_date)),
+            'status' => $status,
+            'receipt' => $one -> invoice
             ];
 
         $filename = "invoice".date('Ymd_His').".pdf";
@@ -522,6 +535,8 @@ class PaymentsController extends Controller
         $paymentMethod = request('payment_method');
         $country = request('country');
         $state = request('state');
+        $suburb = request('suburb');
+        $address = request('address');
         $phone = request('phone');
         $bpId = request('bp_id');
         $billingFrequency = request('billing_frequency');
@@ -536,7 +551,7 @@ class PaymentsController extends Controller
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-            $state, $fullphone, $bpId, $billingFrequency, $date, $rateType);
+            $state, $fullphone, $bpId, $billingFrequency, $date, $rateType, $suburb, $address);
 
         $status = 0;
 
@@ -553,6 +568,8 @@ class PaymentsController extends Controller
         $country = request('country');
         $state = request('state');
         $phone = request('phone');
+        $suburb = request('suburb');
+        $address = request('address');
         $bpId = request('bp_id');
         $billingFrequency = request('billing_frequency');
         $rateType = request('rate_type');
@@ -566,7 +583,7 @@ class PaymentsController extends Controller
         $registrationModel = new RegistrationModel();
 
         $registrationModel -> updateBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-            $state, $fullphone, $bpId, $billingFrequency, $date, $rateType);
+            $state, $fullphone, $bpId, $billingFrequency, $date, $rateType, $suburb, $address);
 
         $status = 0;
 
@@ -578,26 +595,11 @@ class PaymentsController extends Controller
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);
         $info_id = request('url_id');
-//        $userProfileName = request('user_profile_name');
-//        $primaryEmailAddress = request('primary_email_address');
-//        $paymentMethod = request('payment_method');
-//        $country = request('country');
-//        $state = request('state');
-//        $phone = request('phone');
-//        $bpId = request('bp_id');
-//        $billingFrequency = request('billing_frequency');
-//
+
         $registrationModel = new RegistrationModel();
 
         $info = $registrationModel -> getBillingInfo($info_id);
         $user_list = $registrationModel -> getAllUserName();
-//
-//        $registrationModel -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
-//            $state, $phone, $bpId, $billingFrequency);
-//
-//        $status = 0;
-//
-//        return redirect('payment');
         return view("payment/create_billing", [
             'type' => $type,
             'admin' => $name,
