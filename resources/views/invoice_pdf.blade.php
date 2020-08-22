@@ -87,7 +87,7 @@
         <td class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
-        <td>{{$data['street']}}</td>
+        <td>{{$data['address']}}</td>
         <td rowspan="2" class="v-bottom">TOTAL TAX</td>
         <td rowspan="2" class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
     </tr>
@@ -95,7 +95,7 @@
         <td>{{$data['suburb']}}</td>
     </tr>
     <tr>
-        <td>{{$data['suburb']}}, {{$data['street']}}, {{strval(date('Y'))}}, {{$data['country_code']}}</td>
+        <td>{{$data['suburb']}}, {{$data['address']}}, {{strval(date('Y'))}}, {{$data['country_code']}}</td>
         <td></td>
         <td rowspan="2" class="v-bottom text-right" style="font-size: 20px">Original For Recipien</td>
     </tr>
@@ -168,8 +168,8 @@
     </tbody>
 </table>
 <p class="text-center" style="color: #999999; font-size:12px;">{{$data['company']}}<br>
-    {{$data['street']}}<br>
-    {{$data['state']}}, {{$data['street']}}, {{strval(date('Y'))}}, {{$data['country_code']}}<br><br>
-    {{$data['billing_id']}}</p>
+    {{$data['address']}}<br>
+    {{$data['state']}}, {{$data['address']}}, {{strval(date('Y'))}}, {{$data['country_code']}}<br><br>
+</p>
 </body>
 </html>

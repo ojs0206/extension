@@ -469,6 +469,7 @@ class PaymentsController extends Controller
         $data = ['user_profile' => $one -> profile_name,
             'billing_id' => $one -> billing_profile_id,
             'country_code' => $country_code,
+            'state' => $one -> state,
             'currency' => $one -> currency,
             'suburb' => $one -> suburb,
             'address' => $one -> address,
