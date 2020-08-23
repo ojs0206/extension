@@ -142,7 +142,7 @@
     </thead>
     <tbody>
     <tr style="background-color: #e0e0e0">
-        <td class="text-bold">Item ID# {{$data['receipt']}}       DescriptIon: {{$data['user_profile']}}     User Profile: {{$data['user_profile']}}</td>
+        <td class="text-bold">Item ID# {{$data['receipt']}}       Description: {{$data['user_profile']}}     User Profile: {{$data['user_profile']}}</td>
         <td class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
