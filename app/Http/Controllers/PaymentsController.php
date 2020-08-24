@@ -457,6 +457,14 @@ class PaymentsController extends Controller
         }
         $status = $compare==0?'Unpaid':'Paid';
 
+        $store_id = DB::table('t_store_') -> where('item_id', $one -> invoice) -> get();
+        if (count($store_id) > 0){
+            $clicks = DB::table('t_click') -> where('store_id', $store_id[0] -> item_id) -> get();
+            $click_count = count($clicks);
+        }
+        else {
+            $click_count = 0;
+        }
         $invoice_number = "INV - ";
         $country_code = strtoupper(substr($one -> country, 0, 3));
         $invoice_number .= $country_code;
@@ -474,6 +482,7 @@ class PaymentsController extends Controller
             'suburb' => $one -> suburb,
             'address' => $one -> address,
             'company' => $one -> company,
+            'click_count' => $click_count,
             'rate_per_click' => $one -> rate_per_click,
             'invoice_number' => $invoice_number,
             'invoice_month' => date("F Y", strtotime($one -> income_date)),

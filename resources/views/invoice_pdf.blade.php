@@ -146,8 +146,8 @@
         <td class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
     </tr>
     <tr>
-        <td class="pl-40">Charges (excl. GST)          Click Count: 0      Rate Per Click: ${{$data['rate_per_click']}}</td>
-        <td class="text-right">AUD 0.00</td>
+        <td class="pl-40">Charges (excl. GST)          Click Count: {{$data['click_count']}}      Rate Per Click: ${{$data['rate_per_click']}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click']}}</td>
     </tr>
     <tr>
         <td class="pl-40">Credits/Discount</td>
