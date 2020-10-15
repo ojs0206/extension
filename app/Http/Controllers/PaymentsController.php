@@ -484,7 +484,7 @@ class PaymentsController extends Controller
             'company' => $one -> company,
             'click_count' => $click_count,
             'rate_per_click' => $one -> rate_per_click,
-            'invoice_number' => $invoice_number,
+            'invoice_number' => $invoice_number, 
             'invoice_month' => date("F Y", strtotime($one -> income_date)),
             'invoice_value' => $one -> monthly_threshold,
             'payment_method' => $one -> payment_method,

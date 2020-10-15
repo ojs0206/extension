@@ -1112,26 +1112,26 @@ class RegistrationModel extends BaseModel
                     'created_date'  => $date
                 ]);
 
-            $user_id = DB::table("t_user")
-                ->select("id")
-                ->where("username", $userProfileName)
-                ->get();
-
-            foreach ($user_id as $user_id_each){
-                $item_id = DB::table("t_store_")
-                    ->select("item_id")
-                    ->where("user_id", $user_id_each->id)
-                    ->get();
-
-                foreach ($item_id as $item_id_each) {
-                    $item_auto_id = strtoupper(substr($country, 0, 2)).substr($item_id_each->item_id, 2, 11);
-                    DB::table("t_store_")
-                        ->where("user_id", $user_id_each->id)
-                        ->update([
-                            'item_id'  => $item_auto_id
-                        ]);
-                }
-            }
+//            $user_id = DB::table("t_user")
+//                ->select("id")
+//                ->where("username", $userProfileName)
+//                ->get();
+//
+//            foreach ($user_id as $user_id_each){
+//                $item_id = DB::table("t_store_")
+//                    ->select("item_id")
+//                    ->where("user_id", $user_id_each->id)
+//                    ->get();
+//
+//                foreach ($item_id as $item_id_each) {
+//                    $item_auto_id = strtoupper(substr($country, 0, 2)).substr($item_id_each->item_id, 2, 11);
+//                    DB::table("t_store_")
+//                        ->where("user_id", $user_id_each->id)
+//                        ->update([
+//                            'item_id'  => $item_auto_id
+//                        ]);
+//                }
+//            }
         }
     }
 

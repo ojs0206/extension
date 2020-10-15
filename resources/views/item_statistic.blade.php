@@ -121,7 +121,7 @@
                             @foreach ($url_list as $url)
                                 <tr>
                                     <td>{{++ $count}}</td>
-                                    <td><a href="<?=url('/payment/budget_setting');?>" style="color: blue;">{{$url -> hint}}</a></td>
+                                    <td><a href="<?=url('/payment/billing_rate_setting');?>" style="color: blue;">{{$url -> hint}}</a></td>
                                     <td style="text-align: left !important;">{{$url -> source}}</td>
                                     <td>
                                         @if ($url -> budget_type == 0)
