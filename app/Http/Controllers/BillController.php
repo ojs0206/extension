@@ -384,7 +384,25 @@ class BillController extends Controller
         $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
         $rate = DB::table('t_rate')->find($billing->rate_type);
 
-        $price = intval($rate->monthly_threshold/$billing->frequency);
+        $store = DB::table('t_store_') -> where('user_id', $user->id) -> get();
+
+        if (count($store) > 0){
+            $clicks = DB::table('t_click') -> where('store_id', $store[0] -> item_id) -> get();
+            $click_count = count($clicks);
+            $click_cut = $store[0]->click_cut;
+        }
+        else {
+            $click_count = 0;
+            $click_cut = 0;
+        }
+
+        $monthly_budget = intval($rate->monthly_threshold/$billing->frequency);
+        if ($click_count * $click_cut > $monthly_budget){
+            $price = $monthly_budget;
+        }
+        else{
+            $price = $click_count * $click_cut;
+        }
         $currency = $rate->currency;
         $email = $billing->billing_profile_id;
         $profile_name = $billing->profile_name;
