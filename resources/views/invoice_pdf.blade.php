@@ -84,12 +84,12 @@
         <td>{{$data['user_profile']}}<br>
             {{$data['company']}}</td>
         <td class="v-bottom">TOTAL AMOUNT</td>
-        <td class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
+        <td class="v-bottom text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click']}}</td>
     </tr>
     <tr>
         <td>{{$data['address']}}</td>
         <td rowspan="2" class="v-bottom">TOTAL TAX</td>
-        <td rowspan="2" class="v-bottom text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
+        <td rowspan="2" class="v-bottom text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.1}}</td>
     </tr>
     <tr>
         <td>{{$data['suburb']}}</td>
@@ -111,13 +111,13 @@
     <thead>
     <tr style="background-color: #8dccea">
         <th class="text-left" style="font-size: 22px; width: 80%">SPG Service Charges</th>
-        <th class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</th>
+        <th class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click']}}</th>
     </tr>
     </thead>
     <tbody>
     <tr>
         <td class="pl-40">Charges (excl. GST)</td>
-        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.9}}</td>
     </tr>
     <tr>
         <td class="pl-40">Credits/Discount</td>
@@ -125,11 +125,11 @@
     </tr>
     <tr>
         <td class="text-bold pl-40">Net Charges (After Credits/Discount, excl. GST)</td>
-        <td class="text-bold text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
+        <td class="text-bold text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.9}}</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Total GST Amount at 10%</td>
-        <td class="text-bold text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
+        <td class="text-bold text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.1}}</td>
     </tr>
     </tbody>
 </table>
@@ -137,13 +137,13 @@
     <thead>
     <tr style="background-color: #8dccea">
         <th class="text-left" style="font-size: 22px; width: 80%">Detailed Usage for Account # {{$data['receipt']}}</th>
-        <th class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</th>
+        <th class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.9}}</th>
     </tr>
     </thead>
     <tbody>
     <tr style="background-color: #e0e0e0">
         <td class="text-bold">Item ID# {{$data['receipt']}}       Description: {{$data['user_profile']}}     User Profile: {{$data['user_profile']}}</td>
-        <td class="text-right">{{$data['currency']}} {{$data['invoice_value']}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click']}}</td>
     </tr>
     <tr>
         <td class="pl-40">Charges (excl. GST)          Click Count: {{$data['click_count']}}      Rate Per Click: ${{$data['rate_per_click']}}</td>
@@ -151,19 +151,19 @@
     </tr>
     <tr>
         <td class="pl-40">Credits/Discount</td>
-        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.9}}</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Net Charges (After Credits / Discount, excl. GST)</td>
-        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.1}}</td>
     </tr>
     <tr>
         <td class="text-bold pl-40">Total GST Amount at 10%</td>
-        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.1}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.1}}</td>
     </tr>
     <tr>
         <td class="pl-40">GST Amount</td>
-        <td class="text-right">{{$data['currency']}} {{$data['invoice_value'] * 0.9}}</td>
+        <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.9}}</td>
     </tr>
     </tbody>
 </table>

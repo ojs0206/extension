@@ -396,6 +396,8 @@
         function save_bill(id) {
             let rate_type = $('.ratetype').eq(textarea_id - 1).val();
             let click_cut = $('.click_cut').eq(textarea_id - 1).val();
+            click_cut = click_cut.substring(1)
+            click_cut = parseFloat(click_cut)
             let formData = new FormData();
             let _token = "<?php echo e(csrf_token()); ?>";
             formData.append('_token',_token);
