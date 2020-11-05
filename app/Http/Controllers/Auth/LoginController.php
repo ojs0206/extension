@@ -889,7 +889,7 @@ class LoginController extends Controller
                 elseif ($item == 'Invoice Month')
                     $obj[$index] = date("F Y",strtotime($one->income_date));
                 elseif ($item == 'Invoice Value')
-                    $obj[$index] = $currency[$one->currency].number_format($one->monthly_threshold);
+                    $obj[$index] = $currency[$one->currency].number_format($one->income,2);
                 elseif ($item == 'Payment Method')
                     $obj[$index] = $one->payment_method;
                 elseif ($item == 'Payment Date'){

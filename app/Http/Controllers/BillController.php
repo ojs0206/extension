@@ -386,26 +386,27 @@ class BillController extends Controller
 
         $store = DB::table('t_store_') -> where('user_id', $user->id) -> get();
 
+        $price = 0;
         if (count($store) > 0){
-            $clicks = DB::table('t_click') -> where('store_id', $store[0] -> item_id) -> get();
-            $click_count = count($clicks);
-            $click_cut = $store[0]->click_cut;
-        }
-        else {
-            $click_count = 0;
-            $click_cut = 0;
+            foreach ($store as $store_id) {
+                $clicks = DB::table('t_click')->where('store_id', $store_id->id)->get();
+                $click_count = count($clicks);
+                $click_cut = $store_id->click_cut;
+                $price += $click_count * $click_cut;
+            }
         }
 
         $monthly_budget = intval($rate->monthly_threshold/$billing->frequency);
-        if ($click_count * $click_cut > $monthly_budget){
+
+        if ($price > $monthly_budget){
             $price = $monthly_budget;
         }
-        else{
-            $price = $click_count * $click_cut;
-        }
+
+
         $currency = $rate->currency;
         $email = $billing->billing_profile_id;
         $profile_name = $billing->profile_name;
+
 
         if($billing->payment_method=="PayPal"){
             $request = new OrdersCreateRequest();
