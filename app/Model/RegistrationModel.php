@@ -61,6 +61,8 @@ class RegistrationModel extends BaseModel
     }
 
     public function saveRedirect($points, $source, $hint, $url_id, $redirect_url, $cur, $user_id) {
+        $item_id = $this -> generateItemID();
+        $item_id = 'AUR' + $item_id;
         $id = DB::table('t_store_')->insertGetId([
             'points'                => $points,
             'source'                => $source,
@@ -68,7 +70,8 @@ class RegistrationModel extends BaseModel
             'url_id'                => $url_id,
             'user_id'               => $user_id,
             'redirect_url'          => $redirect_url,
-            'create_date'           => $cur
+            'create_date'           => $cur,
+            'item_id'               => $item_id
         ]);
     }
     public function getClasses($user) {

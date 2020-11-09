@@ -1027,7 +1027,6 @@ class LoginController extends Controller
         $registrationModel = new RegistrationModel();
         $id = $registrationModel -> getIdFromName($username);
         if($id > 0) {
-            Log::info("fasfa");
             $string = "Duplicated User";
             return response()->json($this->configFailArray($string));
         }
