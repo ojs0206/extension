@@ -62,7 +62,7 @@ class RegistrationModel extends BaseModel
 
     public function saveRedirect($points, $source, $hint, $url_id, $redirect_url, $cur, $user_id) {
         $item_id = $this -> generateItemID();
-        $item_id = 'AUR' + $item_id;
+        $item_id = 'AUR'.strval($item_id);
         $id = DB::table('t_store_')->insertGetId([
             'points'                => $points,
             'source'                => $source,
@@ -71,6 +71,7 @@ class RegistrationModel extends BaseModel
             'user_id'               => $user_id,
             'redirect_url'          => $redirect_url,
             'create_date'           => $cur,
+            'rate_type'             => 1,
             'item_id'               => $item_id
         ]);
     }
@@ -1195,7 +1196,7 @@ class RegistrationModel extends BaseModel
     }
 
     public function check_item_ID($id) {
-        return array_key_exists($id, DB::table('t_store_')->select('item_id')->get());
+        return property_exists(DB::table('t_store_')->select('item_id')->get(), $id);
     }
 
     public function createReceipt($user_id){

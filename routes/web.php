@@ -22,17 +22,18 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::post('/sendEmail',                                    'Auth\LoginController@sendEmail');
+
 Route::get('/test',  function () {
     return view('test');
 });
-Route::post('paypal', 'PaymentsController@payWithpaypal');
-Route::get('status', 'PaymentsController@getPaymentStatus');
+
 
 Route::get('/login',                                    'Auth\LoginController@showLoginPage');
 Route::post('/sign-in',                                 'Auth\LoginController@signIn');
+Route::post('/sendEmail',                                    'Auth\LoginController@sendEmail');
+Route::post('paypal',                                      'PaymentsController@payWithpaypal');
+Route::get('status',                                        'PaymentsController@getPaymentStatus');
 Route::get('/sign-in-extension',                       'Auth\LoginController@signInExtension');
-
 Route::post('/save/cell',                               'Auth\LoginController@saveCells');
 Route::post('/save/redirect',                           'Auth\LoginController@saveRedirect');
 Route::post('/click',                                    'Auth\LoginController@click');
@@ -40,10 +41,8 @@ Route::post('/click',                                    'Auth\LoginController@c
 Route::get('/get/cell-info',                           'Auth\LoginController@getCellInfo');
 Route::get('/get/check-url',                           'Auth\LoginController@checkURLRedirect');
 
-Route::post('/get/all-rate-type',                         'Auth\LoginController@getAllRateType');
-
-Route::group(['middleware' => ['authenticate']], function () {
-
+Route::group(['middleware' => ['authenticate', 'cors']], function () {
+    Route::post('/get/all-rate-type',                         'Auth\LoginController@getAllRateType');
     Route::get('/registration',                             'Auth\LoginController@showRegistrationPage');
     Route::get('/get/all-urls',                             'Auth\LoginController@getAllUrls');
     Route::get('/get/all-rate',                             'Auth\LoginController@getAllRates');
