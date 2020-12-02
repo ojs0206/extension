@@ -33,15 +33,18 @@ Route::post('/sign-in',                                 'Auth\LoginController@si
 Route::post('/sendEmail',                                    'Auth\LoginController@sendEmail');
 Route::post('paypal',                                      'PaymentsController@payWithpaypal');
 Route::get('status',                                        'PaymentsController@getPaymentStatus');
-Route::get('/sign-in-extension',                       'Auth\LoginController@signInExtension');
-Route::post('/save/cell',                               'Auth\LoginController@saveCells');
-Route::post('/save/redirect',                           'Auth\LoginController@saveRedirect');
-Route::post('/click',                                    'Auth\LoginController@click');
 
-Route::get('/get/cell-info',                           'Auth\LoginController@getCellInfo');
-Route::get('/get/check-url',                           'Auth\LoginController@checkURLRedirect');
+Route::group(['middleware' => ['cors']], function () {
+    Route::get('/sign-in-extension', 'Auth\LoginController@signInExtension');
+    Route::post('/save/cell', 'Auth\LoginController@saveCells');
+    Route::post('/save/redirect', 'Auth\LoginController@saveRedirect');
+    Route::post('/click', 'Auth\LoginController@click');
 
-Route::group(['middleware' => ['authenticate', 'cors']], function () {
+    Route::get('/get/cell-info', 'Auth\LoginController@getCellInfo');
+    Route::get('/get/check-url', 'Auth\LoginController@checkURLRedirect');
+});
+
+Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/get/all-rate-type',                         'Auth\LoginController@getAllRateType');
     Route::get('/registration',                             'Auth\LoginController@showRegistrationPage');
     Route::get('/get/all-urls',                             'Auth\LoginController@getAllUrls');
