@@ -193,8 +193,8 @@
         <div class="col-sm-2">
             <div id="sidenav" class="sidenav">
                 <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
-                    <a href="<?=url('/payment/graph');?>">
-                        <p style="font-size: 1.2vw;">Check All Settings</p>
+                    <a href="<?=url('/payment/billing_rate_setting');?>">
+                        <p style="font-size: 1.2vw;">Back to All Settings</p>
                     </a>
                 </div>
             </div>
@@ -234,9 +234,9 @@
                         <br><strong style="color: black; font-size: 2vw;">{{$click -> currency}}</strong><strong
                                 style="color: black; font-size: 2vw;" id="monthlyBudget">
                             @if ($budget_type -> budget_type == 0)
-                                ${{$click -> monthly_threshold}}
+                                ${{round($click -> monthly_threshold, 2)}}
                             @else
-                                ${{$click -> budget}}
+                                ${{round($click -> budget, 2)}}
                             @endif
                         </strong><font size="3"
                                                                                                         color="black">
@@ -266,9 +266,9 @@
                                                     style="font-size: 2vw">{{$click -> currency}}$</strong> <strong
                                                     id="dailyBudget" style="font-size: 2vw">
                                                 @if ($budget_type -> budget_type == 0)
-                                                    {{round((($click -> monthly_threshold) / 30), 1)}}
+                                                    {{round((($click -> monthly_threshold) / 30), 2)}}
                                                 @else
-                                                    {{($click -> budget) / 30}}
+                                                    {{round(($click -> budget) / 30, 2)}}
                                                 @endif</strong></p>
                                         <hr style="border: 1px blue;">
                                     </div>
@@ -281,9 +281,9 @@
                                     <div class="col-sm-4" style="padding-left: 5%;">
                                         <p><strong>{{$click -> currency}}$</strong> <strong id="currentBudget">
                                                 @if ($budget_type -> budget_type == 0)
-                                                    {{$click -> monthly_threshold}}
+                                                    {{round($click -> monthly_threshold, 2)}}
                                                 @else
-                                                    {{$click -> budget}}
+                                                    {{round($click -> budget, 2)}}
                                                 @endif
                                             </strong> monthly maximium</p>
                                     </div>
@@ -295,7 +295,7 @@
                                 </div>
                                 <div class="row" style="padding-left: 5%;">
                                     <p style="font-size: 1.5vw;"> For <span id="dayLeft"></span> days left in <span
-                                                id="monthName"></span>, you will spend a maximum of {{$click -> currency}}<span
+                                                id="monthName"></span>, you will spend a maximum of {{round($click -> currency, 2)}}<span
                                                 id="remainBudget"></span></p>
                                     <table style="width: 90%;">
                                         <tr>
