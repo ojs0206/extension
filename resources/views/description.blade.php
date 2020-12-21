@@ -445,7 +445,7 @@
                 animationEnabled: true,
                 theme: "light2",
                 title: {
-                    text: "Amount Spent: $" + numberWithCommas(clickCut * data.length)
+                    text: "Amount Spent: $" + (clickCut * data.length).toFixed(2)
                 },
                 axisY: {
                     // title: "Spent",
