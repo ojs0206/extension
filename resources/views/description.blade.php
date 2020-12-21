@@ -295,7 +295,7 @@
                                 </div>
                                 <div class="row" style="padding-left: 5%;">
                                     <p style="font-size: 1.5vw;"> For <span id="dayLeft"></span> days left in <span
-                                                id="monthName"></span>, you will spend a maximum of {{round($click -> currency, 1)}}<span
+                                                id="monthName"></span>, you will spend a maximum of <span
                                                 id="remainBudget"></span></p>
                                     <table style="width: 90%;">
                                         <tr>
@@ -403,7 +403,7 @@
             var currentMonthName = monthObject.monthlyDays[currentDate.getMonth()].name;
             document.getElementById('dayLeft').innerHTML = leftDaysCount;
             document.getElementById('monthName').innerHTML = currentMonthName;
-            document.getElementById('remainBudget').innerHTML = urlBudget - clickCut * clickCount;
+            document.getElementById('remainBudget').innerHTML = (urlBudget - clickCut * clickCount).toFixed(2);
             console.log(leftDaysCount + "::" + currentMonthName);
 
             var clickChart = new CanvasJS.Chart("chartClicks", {
@@ -531,8 +531,8 @@
 
         function updateValue(currentValue) {
             slider.value = currentValue;
-            document.getElementById('remainBudget').innerHTML = currentValue - clickCut * clickCount;
-            output.innerHTML = numberWithCommas(currentValue);
+            document.getElementById('remainBudget').innerHTML = (currentValue - clickCut * clickCount).toFixed(2);
+            output.innerHTML = currentValue.toFixed(2);
             output_daily.innerHTML = (currentValue / 30).toFixed(2);
         }
 
