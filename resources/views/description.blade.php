@@ -289,13 +289,13 @@
                                     </div>
                                 </div>
                                 <div class="slidecontainer" style="padding-bottom: 5%;">
-                                    <input type="range" min="1" max="10000" class="slider" id="editBudget"
+                                    <input type="range" min="100" max="10000" class="slider" id="editBudget"
                                            name="editBudget" onchange="updateValue(this.value);"
                                            style="width: 80%;"><label for="editBudget"></label>
                                 </div>
                                 <div class="row" style="padding-left: 5%;">
                                     <p style="font-size: 1.5vw;"> For <span id="dayLeft"></span> days left in <span
-                                                id="monthName"></span>, you will spend a maximum of {{round($click -> currency, 2)}}<span
+                                                id="monthName"></span>, you will spend a maximum of {{round($click -> currency, 1)}}<span
                                                 id="remainBudget"></span></p>
                                     <table style="width: 90%;">
                                         <tr>
