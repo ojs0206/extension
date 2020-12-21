@@ -539,6 +539,12 @@ class RegistrationModel extends BaseModel
         foreach ($urls as $url){
             $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
             $url->monthly_threshold_symbol = $currency[$url->currency].number_format($url->monthly_threshold);
+            if ($url->click_cut == 0){
+                $url->click_cut = $url->rate_per_click;
+                DB::table('t_store_')
+                    ->where('item_id', $url->item_id)
+                    ->update(['click_cut' => $url->rate_per_click]);
+            }
         }
         return $urls;
     }
@@ -1036,8 +1042,9 @@ class RegistrationModel extends BaseModel
         //check user role and assign account #
         $user = DB::table('t_user')->where('username',$userProfileName)->first();
         $type = $user->type;
+        $click_cut = DB::table('t_rate')->select('rate_per_click')->where('rate_type', $rate_type)->first();
         if($type != "User")
-            $account_id = mt_rand(100000000000,999999999999);
+            $account_id = intval(mt_rand(100000000000,999999999999));
         else{
             $parent = DB::table('t_user')->where('id',$user->parent_id)->first();
             $parent_billing = DB::table('t_billing')->where('profile_name',$parent->username)->first();
@@ -1059,6 +1066,7 @@ class RegistrationModel extends BaseModel
                 'suburb'  => $suburb,
                 'address'  => $address,
                 'billing_profile_id'   => $bpId,
+//                'click_cut' => $click_cut,
                 'created_date'   => $date,
                 'rate_type'  => $rate_type,
                 'active'  => 'Active',
@@ -1094,6 +1102,8 @@ class RegistrationModel extends BaseModel
             ->where("profile_name", $userProfileName)
             ->get();
 
+        $click_cut = DB::table('t_rate')->select('rate_per_click')->where('rate_type', $rate_type)->first();
+
         if (count($user_list) == 0) {
             $this -> createNewBilling($userProfileName, $primaryEmailAddress, $paymentMethod, $country,
                 $state, $phone, $bpId, $billingFrequency, $date, $rate_type, $suburb, $address);
@@ -1112,6 +1122,7 @@ class RegistrationModel extends BaseModel
                     'address'  => $address,
                     'billing_profile_id'  => $bpId,
                     'frequency'  => $billingFrequency,
+//                    'click_cut' => $click_cut,
                     'rate_type'  => $rate_type,
                     'created_date'  => $date
                 ]);

@@ -258,10 +258,12 @@ class LoginController extends Controller
         $click_list = $registrationModel -> getClickCount($id);
         $admin_management = $registrationModel -> getAllRedirects();
         $month_amount = $registrationModel -> getMonthlyMaximum($id);
+        $rate = $registrationModel -> getAllRateType();
         Log::info("Success");
-        return view('payment/budget_setting', [
+        return view('payment/billing_rate_setting', [
             'type' => $type,
             'admin' => $name,
+            'rate' => $rate
         ]);
     }
 

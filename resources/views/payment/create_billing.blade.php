@@ -239,8 +239,8 @@
                     <select id="rate_type" name ="rate_type" required>
                         <option>Select Default Rate Type</option>
                     </select>
-                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
-                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
+
+                    <input type="hidden" id="billing_frequency" name="billing_frequency" class="billing-form" value="30">
 
                     <p class="billing-form-text">Primary Email Address:</p>
                     <input type="email" id="primary_email_address" name="primary_email_address" class="billing-form" placeholder="" required>
@@ -309,9 +309,7 @@
                     <select id="rate_type" name ="rate_type" required>
                         <option value="0">Select Default Rate Type</option>
                     </select>
-                    <p class="billing-form-text" style="margin-top: 20px;">Billing Frequency:</p>
-                    <input type="number" id="billing_frequency" name="billing_frequency" class="billing-form" placeholder="Put number of Dates that you want to pay manually." required>
-
+                    <input type="hidden" id="billing_frequency" name="billing_frequency" class="billing-form" value="30">
                     <p class="billing-form-text">Primary Email Address:</p>
                     <input type="email" id="primary_email_address" name="primary_email_address" class="billing-form" placeholder="" required>
                     <div style="display: flex;">

@@ -59,8 +59,8 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/registration/CreateUser',                 'Auth\LoginController@createUser');
 
     Route::get('/home',                                     'Auth\LoginController@showHome');
-    Route::get('/payment',                                 'Auth\LoginController@showPayment');
-    Route::post('/payment',                                 'Auth\LoginController@saveBudget');
+    Route::get('/payment',                                  'Auth\LoginController@showPayment');
+    Route::post('/payment/billing_rate_setting',            'Auth\LoginController@saveBudget');
     Route::post('/new_billing',                             'PaymentsController@createNewBilling');
     Route::post('/update_billing',                          'PaymentsController@updateBilling');
     Route::get('/payment/graph',                            'Auth\LoginController@showAdminGraph');
