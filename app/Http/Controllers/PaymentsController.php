@@ -457,14 +457,16 @@ class PaymentsController extends Controller
         }
         $status = $compare==0?'Unpaid':'Paid';
 
-        $store_id = DB::table('t_store_') -> where('item_id', $one -> invoice) -> get();
+        $store_id = DB::table('t_store_') -> where('user_id', $one -> user_id) -> get();
+
+        $click_count = 0;
         if (count($store_id) > 0){
-            $clicks = DB::table('t_click') -> where('store_id', $store_id[0] -> item_id) -> get();
-            $click_count = count($clicks);
+            foreach ($store_id as $store){
+                $clicks = DB::table('t_click') -> where('store_id', $store -> id) -> get();
+                $click_count += count($clicks);
+            }
         }
-        else {
-            $click_count = 0;
-        }
+
         $invoice_number = "INV - ";
         $country_code = strtoupper(substr($one -> country, 0, 3));
         $invoice_number .= $country_code;
@@ -497,7 +499,6 @@ class PaymentsController extends Controller
         set_time_limit(200);
         $pdf = PDF::loadView('invoice_pdf',compact('data'));
         Storage::disk('pdf_storage')->put('pdf/'.$filename,$pdf->output());
-
         return response()->json(['result'=>true,'url'=>asset("pdf/".$filename)]);
     }
 

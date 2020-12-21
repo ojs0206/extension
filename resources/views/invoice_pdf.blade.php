@@ -56,6 +56,8 @@
 <div class="">
     <img src="{{asset("images/Adobe-reader.png")}}" style="float: right; width:100px">
     <h1>Tax Invoice</h1>
+
+{{--    {{$data}}--}}
 </div>
 <table style="border-collapse: collapse" cellspacing="0" width="100%">
     <thead>
