@@ -250,7 +250,7 @@
             <!-- The Modal -->
             <div id="editModal" class="modal">
                 <!-- Modal content -->
-                <form action="<?=url('/payment')?>" method="post" id="newBudgetSubmit" name="newBudgetSubmit">
+                <form action="<?=url('/payment/billing_rate_setting')?>" method="post" id="newBudgetSubmit" name="newBudgetSubmit">
                     <input type="hidden" value="{{$hint}}" id="urlName" name="urlName">
                     <div class="modal-content">
                         <span class="close">&times;</span>
