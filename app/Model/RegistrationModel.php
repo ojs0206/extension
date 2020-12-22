@@ -1169,7 +1169,7 @@ class RegistrationModel extends BaseModel
         $input_length = strlen($permitted_chars);
         $random_string = '';
         for($i = 0; $i < $strength; $i++) {
-            $random_character = $permitted_chars[mt_rand(0, $input_length - 1)];
+            $random_character = $permitted_chars[intval(mt_rand(0, $input_length - 1))];
             $random_string .= $random_character;
         }
         
