@@ -138,13 +138,13 @@
 <table class="invoice_table" style="border-collapse: collapse" cellspacing="0" width="100%">
     <thead>
     <tr style="background-color: #8dccea">
-        <th class="text-left" style="font-size: 22px; width: 80%">Detailed Usage for Account # {{$data['receipt']}}</th>
+        <th class="text-left" style="font-size: 22px; width: 80%">Detailed Usage for Account # {{$data['billing_id']}}</th>
         <th class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click'] * 0.9}}</th>
     </tr>
     </thead>
     <tbody>
     <tr style="background-color: #e0e0e0">
-        <td class="text-bold">Item ID# {{$data['receipt']}}       Description: {{$data['user_profile']}}     User Profile: {{$data['user_profile']}}</td>
+        <td class="text-bold">Item ID# {{$data['billing_id']}}       Description: {{$data['user_profile']}}     User Profile: {{$data['user_profile']}}</td>
         <td class="text-right">{{$data['currency']}} {{$data['click_count'] * $data['rate_per_click']}}</td>
     </tr>
     <tr>
