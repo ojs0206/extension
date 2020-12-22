@@ -1044,7 +1044,7 @@ class RegistrationModel extends BaseModel
         $type = $user->type;
         $click_cut = DB::table('t_rate')->select('rate_per_click')->where('rate_type', $rate_type)->first();
         if($type != "User")
-            $account_id = intval(mt_rand((int)100000000000, (int)999999999999));
+            $account_id = strval(mt_rand(100000, 999999)).strval(mt_rand(100000, 999999));
         else{
             $parent = DB::table('t_user')->where('id',$user->parent_id)->first();
             $parent_billing = DB::table('t_billing')->where('profile_name',$parent->username)->first();
