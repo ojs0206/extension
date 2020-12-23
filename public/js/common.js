@@ -252,6 +252,14 @@ function dtRender_redirect(data, type, row, meta) {
     return '<span style="width: 250px;word-wrap:break-word; display:inline-block;">' + data + '</span>'
 }
 
+function dtRender_budget(data, type, row, meta) {
+    let currency = {"AUD":"$","USD":"$","EUR":"€","NZD":"$","CNY":"¥","CAD":"$","GBP":"£","JPY":"¥"};
+    let value = "";
+    if(parseFloat(data)>0)
+        value = currency[row.currency]+data;
+    return '<textarea style="width: 120px; margin: auto;" class = "custom_budget">' + value + '</textarea>';
+}
+
 function dtRender_click_rate(data, type, row, meta) {
     let currency = {"AUD":"$","USD":"$","EUR":"€","NZD":"$","CNY":"¥","CAD":"$","GBP":"£","JPY":"¥"};
     let value = "";
@@ -259,6 +267,7 @@ function dtRender_click_rate(data, type, row, meta) {
         value = currency[row.currency]+data;
     return '<textarea style="width: 120px; margin: auto;" class = "click_cut">' + value + '</textarea>';
 }
+
 
 function dtRender_count(data, type, row, meta)
 {

@@ -224,9 +224,9 @@
                         <br><strong style="color: black; font-size: 2vw;">{{$click -> currency}}</strong><strong
                                 style="color: black; font-size: 2vw;" id="dailyBudget_1">
                             @if ($budget_type -> budget_type == 0)
-                                ${{round((($click -> monthly_threshold) / 30), 1)}}
+                                ${{round((($click -> monthly_threshold) / 30), 2)}}
                             @else
-                                ${{round((($click -> budget) / 30), 1)}}
+                                ${{round((($click -> budget) / 30), 2)}}
                             @endif
                         </strong><font size="3"
                                                                                                         color="black">
@@ -530,7 +530,7 @@
         slider.value = urlBudget;
 
         function updateValue(currentValue) {
-            slider.value = currentValue;
+            slider.value = currentValue.toFixed(2);
             document.getElementById('remainBudget').innerHTML = (currentValue - clickCut * clickCount).toFixed(2);
             output.innerHTML = currentValue.toFixed(2);
             output_daily.innerHTML = (currentValue / 30).toFixed(2);

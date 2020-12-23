@@ -538,7 +538,7 @@ class RegistrationModel extends BaseModel
         $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
         foreach ($urls as $url){
             $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
-            $url->monthly_threshold_symbol = $currency[$url->currency].number_format($url->monthly_threshold);
+            $url->budget_symbol = $currency[$url->currency].$url->budget;
             if ($url->click_cut == 0){
                 $url->click_cut = $url->rate_per_click;
                 DB::table('t_store_')

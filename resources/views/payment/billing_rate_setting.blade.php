@@ -268,7 +268,7 @@
                     { name:"hint", 	                data: "hint",	 	                defaultContent:""},
                     { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
                     { name:"currency", 	            data: "currency",	 	            defaultContent:""},
-                    { name:"monthly_threshold", 	data: "monthly_threshold_symbol",	defaultContent:""},
+                    { name:"budget", 	            data: "budget_symbol",	            defaultContent:""},
                     { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:"",      render: dtRender_rate_type},
                     { name:"rate_per_click", 	    data: "rate_per_click_symbol",	 	defaultContent:""},
                     { name:"click_cut", 	        data: "click_cut",	 	            defaultContent:"",       render:dtRender_click_rate},
@@ -280,8 +280,6 @@
                     $(row).attr('id', data["store_id"]);
                 }
             });
-
-
 
             usertable.on("draw.dt", function() {
                 $("a[type=delete-url]").off("click").on("click", function() {
@@ -395,12 +393,14 @@
         });
         function save_bill(id) {
             let rate_type = $('.ratetype').eq(textarea_id - 1).val();
+            let custom_budget = $('.custom_budget').eq(textarea_id - 1).val();
             let click_cut = $('.click_cut').eq(textarea_id - 1).val();
             click_cut = click_cut.substring(1)
             click_cut = parseFloat(click_cut)
             let formData = new FormData();
             let _token = "<?php echo e(csrf_token()); ?>";
             formData.append('_token',_token);
+            formData.append('custom_budget',custom_budget);
             formData.append('rate_type',rate_type);
             formData.append('click_cut',click_cut);
             formData.append('id',id);

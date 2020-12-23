@@ -351,11 +351,15 @@ class PaymentsController extends Controller
         $id = $request->id;
         $rate_type = $request->rate_type;
         $click_cut = $request->click_cut;
+        $custom_budget = $request -> custom_budget;
 
         if($rate_type=="undefined" && $click_cut=="undefined")
             return 1;
         else{
             $record = BillingRate::where('id',$id)->first();
+            if ($custom_budget != "undefined") {
+                $record->budget = $custom_budget;
+            }
             if($rate_type!="undefined"){
                 $type = DB::table('t_rate')->where('rate_type',$rate_type)->first()->id;
                 $record->rate_type = $type;
@@ -458,11 +462,13 @@ class PaymentsController extends Controller
         $status = $compare==0?'Unpaid':'Paid';
 
         $store_id = DB::table('t_store_') -> where('user_id', $one -> user_id) -> get();
+        $item_id = '';
 
         $click_count = 0;
         if (count($store_id) > 0){
             foreach ($store_id as $store){
                 $clicks = DB::table('t_click') -> where('store_id', $store -> id) -> get();
+                $item_id = $store -> item_id;
                 $click_count += count($clicks);
             }
         }
@@ -480,6 +486,7 @@ class PaymentsController extends Controller
             'billing_id' => $one -> billing_profile_id,
             'country_code' => $country_code,
             'state' => $one -> state,
+            'item_id' => $item_id,
             'currency' => $one -> currency,
             'suburb' => $one -> suburb,
             'address' => $one -> address,
