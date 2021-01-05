@@ -525,7 +525,10 @@ class LoginController extends Controller
                 $success = true;
             });
         }catch (\Exception $e){
-
+            echo $e->getMessage();
+            die;
+            Log::info($e->getMessage());
+            $success = false;
         }
 
         return response()->json(["result"=>true,"success"=>$success]);

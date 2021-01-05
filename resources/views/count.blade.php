@@ -164,7 +164,9 @@
                 order: [[1, 'asc']]
             });
 
-
+            // $('#search').on('change', function () {
+            //     usertable.column(6).search($(this).value).draw();
+            // })
 
             usertable.on("draw.dt", function() {
                 $("a[type=delete-url]").off("click").on("click", function() {

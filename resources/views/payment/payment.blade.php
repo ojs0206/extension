@@ -333,13 +333,13 @@
                 </div>
                 <div class="row" style="padding-left: 5%; display: flex">
                     <img src="<?=asset('/assets/icon/contact.png');?>">
-                    <a href="">
+                    <a href="<?=url('/payment/forex');?>">
                         <p>Forex Rates</p>
                     </a>
                 </div>
                 <div class="row" style="padding-left: 5%; display: flex">
                     <img src="<?=asset('/assets/icon/group.png');?>">
-                    <a href="">
+                    <a href="<?=url('/payment/forex');?>">
                         <p>Reporting</p>
                     </a>
                 </div>

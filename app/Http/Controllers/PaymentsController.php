@@ -424,6 +424,17 @@ class PaymentsController extends Controller
         ]);
     }
 
+    public function forex() {
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $registrationModel = new RegistrationModel();
+        return view('payment/forex', [
+            'type' => $type,
+            'admin' => $name,
+        ]);
+    }
+
     public function invoice_pdf(){
         $id = request('id');
         $where = " where t_transaction.ID = ".$id;
@@ -435,7 +446,7 @@ class PaymentsController extends Controller
             INNER JOIN t_billing ON t_user.username = t_billing.profile_name
             INNER JOIN t_rate ON t_billing.rate_type = t_rate.id
         ".$where);
-        $one = $result[0];
+        $one = end($result);
 
         $recent_records = DB::select(
             "SELECT tt.ID
@@ -462,14 +473,29 @@ class PaymentsController extends Controller
         $status = $compare==0?'Unpaid':'Paid';
 
         $store_id = DB::table('t_store_') -> where('user_id', $one -> user_id) -> get();
-        $item_id = '';
+
+        $click_list = array();
 
         $click_count = 0;
+        $total_click_cut = 0;
         if (count($store_id) > 0){
             foreach ($store_id as $store){
-                $clicks = DB::table('t_click') -> where('store_id', $store -> id) -> get();
+                $clicks = DB::table('t_click')
+                    -> select("t_click.*", "t_store_.click_cut", "t_store_.hint")
+                    -> leftJoin("t_store_", "t_store_.id", "t_click.store_id")
+                    -> where('store_id', $store -> id) -> get();
                 $item_id = $store -> item_id;
+                $click_cut = $store -> click_cut;
+                $description = $store -> hint;
                 $click_count += count($clicks);
+                $total_click_cut += $click_cut * count($clicks);
+                if (count($clicks) != 0) {
+                    array_push($click_list, array('item_id' => $item_id,
+                        'click_cut' => $click_cut,
+                        'description' => $description,
+                        'click_count' => count($clicks),
+                        'total_cut' => $click_cut * count($clicks)));
+                }
             }
         }
 
@@ -484,6 +510,7 @@ class PaymentsController extends Controller
         $data = array();
         $data = ['user_profile' => $one -> profile_name,
             'billing_id' => $one -> billing_profile_id,
+            'account_id' => $one -> account_id,
             'country_code' => $country_code,
             'state' => $one -> state,
             'item_id' => $item_id,
@@ -492,12 +519,14 @@ class PaymentsController extends Controller
             'address' => $one -> address,
             'company' => $one -> company,
             'click_count' => $click_count,
-            'rate_per_click' => $one -> rate_per_click,
+            'total_click_cut' => $total_click_cut,
+            'click_detail_list' => $click_list,
             'invoice_number' => $invoice_number, 
             'invoice_month' => date("F Y", strtotime($one -> income_date)),
             'invoice_value' => $one -> monthly_threshold,
             'payment_method' => $one -> payment_method,
             'payment_date' => date("d.m.Y", strtotime($one -> income_date)),
+            'finish_date' => date('t.m.Y', strtotime($one -> income_date)),
             'status' => $status,
             'receipt' => $one -> invoice
             ];
