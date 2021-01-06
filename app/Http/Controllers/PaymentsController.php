@@ -489,13 +489,13 @@ class PaymentsController extends Controller
                 $description = $store -> hint;
                 $click_count += count($clicks);
                 $total_click_cut += $click_cut * count($clicks);
-                if (count($clicks) != 0) {
-                    array_push($click_list, array('item_id' => $item_id,
-                        'click_cut' => $click_cut,
-                        'description' => $description,
-                        'click_count' => count($clicks),
-                        'total_cut' => $click_cut * count($clicks)));
-                }
+//                if (count($clicks) != 0) {
+                array_push($click_list, array('item_id' => $item_id,
+                    'click_cut' => $click_cut,
+                    'description' => $description,
+                    'click_count' => count($clicks),
+                    'total_cut' => $click_cut * count($clicks)));
+//                }
             }
         }
 
