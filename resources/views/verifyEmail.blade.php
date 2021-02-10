@@ -14,7 +14,7 @@
         <h5>Your email {{$email}} failed on verification. Please try it again. Thanks for your patience and cooperation!</h5>
         <a href="<?=url('/child');?>">Please go to user setting page</a>
     @endif
-    
+
 </div>
 </body>
 </html>

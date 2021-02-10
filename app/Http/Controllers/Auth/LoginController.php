@@ -524,7 +524,7 @@ class LoginController extends Controller
                     );
         DB::table('t_user')
             -> where('email', $email)
-            -> update('token', $verifyToken);
+            -> update(['token' => $verifyToken]);
         try{
             Mail::send('invoice_mail_temp', $data, function ($message) use ($company_name, $email){
                 $message->to($email, $company_name)
