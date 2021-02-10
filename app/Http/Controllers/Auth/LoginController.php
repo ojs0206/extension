@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Model\InvoicesExport;
 use App\Model\RegistrationModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Hash;
@@ -549,6 +550,10 @@ class LoginController extends Controller
         if ($user[0] -> token == $token)
         {
             $success = 1;
+            $date = Carbon::now();
+            DB::table('t_user')
+                -> where('email', $email)
+                -> update(['verification_date' => $date]);
         }
         else {
             $success = 0;
