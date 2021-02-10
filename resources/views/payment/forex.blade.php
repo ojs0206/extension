@@ -70,6 +70,40 @@
 @endsection
 
 @section('content')
+    @if($type != 'Admin')
+        <div class="row">
+            <div class="col-sm-2">
+                <div id="sidenav" class="sidenav">
+                    <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
+                        <img src="<?=asset('/assets/icon/home.png');?>">
+                        <a href="<?=url('/payment');?>">
+                            <p>Billing Profiles</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/payment_1.png');?>">
+                        <a href="<?=url('/payment/billing_rate_setting');?>">
+                            <p>Billing Rate Setting & Stats</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/redirect.png');?>">
+                        <a href="<?=url('/payment/invoice');?>">
+                            <p>Invoice & Payments</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/group.png');?>">
+                        <a href="<?=url('/payment/forex');?>">
+                            <p>Reporting</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10">
+            </div>
+        </div>
+    @else
     <div class="row">
         <div class="col-sm-2">
             <div id="sidenav" class="sidenav">
@@ -114,6 +148,7 @@
         <div class="col-sm-10">
         </div>
     </div>
+    @endif
 
 
 @endsection

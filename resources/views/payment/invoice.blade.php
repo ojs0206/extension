@@ -74,6 +74,129 @@
 @endsection
 
 @section('content')
+    @if($type != 'Admin')
+        <div class="row">
+            <div class="col-sm-2">
+                <div id="sidenav" class="sidenav">
+                    <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
+                        <img src="<?=asset('/assets/icon/home.png');?>">
+                        <a href="<?=url('/payment');?>">
+                            <p>Billing Profiles</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/payment_1.png');?>">
+                        <a href="<?=url('/payment/billing_rate_setting');?>">
+                            <p>Billing Rate Setting & Stats</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/redirect.png');?>">
+                        <a href="<?=url('/payment/invoice');?>">
+                            <p>Invoice & Payments</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/group.png');?>">
+                        <a href="<?=url('/payment/forex');?>">
+                            <p>Reporting</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10">
+                <div class="" style="margin: auto !important;">
+                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                        <div class="col-sm-8">
+                            <h1>Invoice and Payments </h1>
+                        </div>
+                        <div class="col-sm-1 text-right">
+                            <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>
+                        </div>
+                        <div class="col-sm-1 text-right">
+                            <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
+                        </div>
+                        <div class="col-sm-1 text-right">
+                            <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 15px 0 0 0;">
+                        <div class="col-sm-12 col-md-9">
+                            <div class="row search_title">
+                                <div class="col-sm-2 col-sm-offset-1">
+                                    <h5>User profile</h5>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h5>Billing Profile ID</h5>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h5>Invoice period</h5>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h5>Invoice #</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0 0 25px 0;">
+                        <div class="col-sm-12 col-md-9" style="background-color: #efeff0; padding-top: 5px; padding-bottom: 5px">
+                            <div class="row">
+                                <div class="col-sm-1" style="text-align: right">
+                                    <h5 style="margin: 10px 0">Search</h5>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control" id="user_profile" name="user_profile"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" id="bill_id" name="bill_id"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control date_ranger" type="text" id="period" name="period"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" id="invoice_name" name="invoice_name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3" style="padding: 5px">
+                            <button type="button" class="btn btn-wide btn-primary" onclick="filterData()">SEARCH</button>
+                            <button type="button" class="btn btn-wide btn-primary" onclick="initializeData()">CLEAR</button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 0; margin-right: 0;position: relative">
+                        <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
+                            <thead>
+                            <tr>
+                                <th class="">#</th>
+                                <th class="">User Profile</th>
+                                <th class="">Account #</th>
+                                <th class="">Billing Currency</th>
+                                <th class="">Invoice Month</th>
+                                <th class="">Invoice Value</th>
+                                <th class="">Payment Method</th>
+                                <th class="">Payment Date</th>
+                                <th class="">Payment Due Date</th>
+                                <th class="">Pay</th>
+                                <th class="">Receipt #</th>
+                                <th class="">Statement</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="" style="position: absolute;top:-16px;right: 0.5rem;width: 8rem;text-align: center">
+                            <p style="font-size: 10px;margin-bottom: 0">Adobe Reader is required to view these statements.</p>
+                            <img src="{{asset('/images/Adobe-reader.png')}}" style="width: 80px; height: 30px">
+                        </div>
+                    </div>
+                    <form action="/pay_invoice" method="post" id="frm-invoice" name="frm-invoice" target="TheWindow">
+                        {{csrf_field()}}
+                        <input type="hidden" name="transaction_id" id="transaction_id"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @else
     <div class="row">
         <div class="col-sm-2">
             <div id="sidenav" class="sidenav">
@@ -207,6 +330,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 
 @section('js4page')

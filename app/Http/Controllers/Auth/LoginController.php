@@ -516,7 +516,15 @@ class LoginController extends Controller
 //        $billing = DB::table('t_billing')->where('profile_name',$user->username)->first();
         $email = $user -> email;
         $company_name = $user -> company;
-        $data = array('price'=>'10','currency'=>'AUD $');
+        $verifyToken = str_random(25);
+        $data = array('token' => $verifyToken,
+                    'username' => $user -> username,
+                    'Company' => $user -> company,
+                    'email' => $email,
+                    );
+        DB::table('t_user')
+            -> where('email', $email)
+            -> update('token', $verifyToken);
         try{
             Mail::send('invoice_mail_temp', $data, function ($message) use ($company_name, $email){
                 $message->to($email, $company_name)
@@ -532,6 +540,23 @@ class LoginController extends Controller
         }
 
         return response()->json(["result"=>true,"success"=>$success]);
+    }
+
+    public function verifyEmail($email, $token){
+        $user = DB::table('t_user')
+            -> where('email', $email)
+            -> get();
+        if ($user[0] -> token == $token)
+        {
+            $success = 1;
+        }
+        else {
+            $success = 0;
+        }
+        return view('verifyEmail', [
+            'email' => $email,
+            'success' => $success
+        ]);
     }
 
     public function addUrl() {
@@ -780,8 +805,15 @@ class LoginController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $id = session() -> get(SESS_UID);
         $registrationModel = new RegistrationModel();
-        $total = $registrationModel -> getAllBillingInfoCount($id, $type, $params);
-        $urls = $registrationModel -> getAllBillingInfo($id, $type, $params);
+        if ($type == 'Admin'){
+            $total = $registrationModel -> getAllBillingInfoCount($id, $type, $params);
+            $urls = $registrationModel -> getAllBillingInfo($id, $type, $params);
+        }
+        else {
+            $user_list = $registrationModel -> getAllowUserList($id);
+            $total = $registrationModel -> getUserAllBillingInfoCount($id, $type, $params, $user_list);
+            $urls = $registrationModel -> getUserAllBillingInfo($id, $type, $params, $user_list);
+        }
         $result = $this->dataTableFormat($urls, $total);
         return response()->json($result);
     }
@@ -803,6 +835,8 @@ class LoginController extends Controller
         $invoice_name = $request->invoice_name;
         $start = $request->start;
         $end = $request->end;
+        $type = session() -> get(SESS_USERTYPE);
+        $id = session() -> get(SESS_UID);
 
         $registerModel = new RegistrationModel();
         $where = "";
@@ -831,14 +865,28 @@ class LoginController extends Controller
             $where = $registerModel->prepareAnd($where,$clause);
         }
         $where = $registerModel->where($where);
-        $data = DB::select(
-            "SELECT
-            t_transaction.*, t_billing.*, t_user.username, t_rate.*
-            FROM t_transaction
-            INNER JOIN t_user ON t_transaction.user_id = t_user.id
-            INNER JOIN t_billing ON t_user.username = t_billing.profile_name
-            INNER JOIN t_rate ON t_billing.rate_type = t_rate.id
-        ".$where);
+        if ($type == 'Admin') {
+            $data = DB::select(
+                "SELECT
+                t_transaction.*, t_billing.*, t_user.username, t_rate.*
+                FROM t_transaction
+                INNER JOIN t_user ON t_transaction.user_id = t_user.id
+                INNER JOIN t_billing ON t_user.username = t_billing.profile_name
+                INNER JOIN t_rate ON t_billing.rate_type = t_rate.id
+            ".$where);
+        }
+        else {
+            $user_list = $registerModel -> getAllowUserList($id);
+            $data = DB::select(
+                "SELECT
+                t_transaction.*, t_billing.*, t_user.username, t_rate.*
+                FROM t_transaction
+                INNER JOIN t_user ON t_transaction.user_id = t_user.id
+                INNER JOIN t_billing ON t_user.username = t_billing.profile_name
+                INNER JOIN t_rate ON t_billing.rate_type = t_rate.id
+                WHERE t_user.id IN ($user_list)
+            ");
+        }
 
         //get latest records for each user
         $recent_records = DB::select(
@@ -953,8 +1001,15 @@ class LoginController extends Controller
         $type = session() -> get(SESS_USERTYPE);
         $id = session() -> get(SESS_UID);
         $registrationModel = new RegistrationModel();
-        $total = $registrationModel -> getBillingRateSettingCount($id, $type, $params);
-        $urls = $registrationModel -> getBillingRateSetting($id, $type, $params);
+        if ($type == 'Admin'){
+            $total = $registrationModel -> getBillingRateSettingCount($id, $type, $params);
+            $urls = $registrationModel -> getBillingRateSetting($id, $type, $params);
+        }
+        else {
+            $user_list = $registrationModel -> getAllowUserList($id);
+            $total = $registrationModel -> getUserBillingRateSettingCount($id, $type, $params, $user_list);
+            $urls = $registrationModel -> getUserBillingRateSetting($id, $type, $params, $user_list);
+        }
         $result = $this->dataTableFormat($urls, $total);
         return response()->json($result);
     }
@@ -1054,7 +1109,7 @@ class LoginController extends Controller
         if($type == 'Admin') {
             $users = $registrationModel -> getAllManager();
         } else {
-            $users = $registrationModel -> getChildUsers($id);
+            $users = $registrationModel -> getUserProfile($id);
         }
         return view('child', [
             'users'  => $users,

@@ -20,8 +20,8 @@
         <div class="container-fluid container-fullw">
             <div class="row">
 
-                <div class="col-sm-8">
-                    <h1>Click List</h1>
+                <div class="col-sm-6">
+                    <h1>URL Count Statistics</h1>
                 </div>
                 <div class="col-sm-2 text-right">
                     <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
@@ -29,8 +29,9 @@
                 <div class="col-sm-2 text-right">
                     <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
                 </div>
-
-
+                <div class="col-sm-2 text-right">
+                    <a class="btn btn-wide btn-primary" href="#" id="id-back"><i class="fa fa-arrow-left"></i> Back</a>
+                </div>
             </div>
 
             <div class="row">
@@ -172,10 +173,10 @@
 
             $("#id-refresh").on("click", function (event) {
                 window.location.reload();
+            });
 
-
-
-
+            $("#id-back").on("click", function (event) {
+                window.history.back();
             });
         });
     </script>

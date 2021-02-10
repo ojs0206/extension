@@ -208,6 +208,11 @@ function dtRender_field_inuse(data, type, row, meta)
     return str;
 }
 
+function dtRender_urls(data, type, row, meta)
+{
+    return '<a href="' + data + '" target="_blank">' + data + '</a>'
+}
+
 function dtRender_tools(data, type, row, meta)
 {
     field_id = row.id;
@@ -241,7 +246,7 @@ function dtRender_Stat_button(data, type, row, meta)
     //     '</button>'].join('');
 
     str = [
-        '<a href="/description/statistics/', hint ,'" url-id="', field_id, '" type="more-url" class="btn btn-primary edit-button"  data-toggle="tooltip" data-placement="top" title="Edit">Stats</a>'
+        '<a href="/description/statistics/', hint ,'" url-id="', field_id, '" type="more-url" class="btn btn-primary edit-button"  data-toggle="tooltip" data-placement="top" title="Edit">Stats/Edit</a>'
         ].join('');
 
 
@@ -249,7 +254,7 @@ function dtRender_Stat_button(data, type, row, meta)
 }
 
 function dtRender_redirect(data, type, row, meta) {
-    return '<span style="width: 250px;word-wrap:break-word; display:inline-block;">' + data + '</span>'
+    return '<span style="width: 250px;word-wrap:break-word; display:inline-block;">' + '<a href="' + data + '" target="_blank">' + data + '</a>' + '</span>'
 }
 
 function dtRender_budget(data, type, row, meta) {
@@ -292,6 +297,12 @@ function dtRender_count(data, type, row, meta)
         '" type="', type, '" >', title, '</a></li><li> <a href="#" url-id="', field_id, '" type="delete-url" >Delete</a></li><li> <a href="#" url-id="\', field_id, \'" type="more-url" >Statistics</a></li></ul></div>'].join('');
 
     return str;
+}
+
+function dtRender_statistics(data, type, row, meta)
+{
+    field_id = row.id;
+    return '<a href="#" url-id="' + field_id + '" type="more-url" >' + data + '</a>'
 }
 
 function dtRender_item(data, type, row, meta)

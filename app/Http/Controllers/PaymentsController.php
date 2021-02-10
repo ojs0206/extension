@@ -521,7 +521,7 @@ class PaymentsController extends Controller
             'click_count' => $click_count,
             'total_click_cut' => $total_click_cut,
             'click_detail_list' => $click_list,
-            'invoice_number' => $invoice_number, 
+            'invoice_number' => $invoice_number,
             'invoice_month' => date("F Y", strtotime($one -> income_date)),
             'invoice_value' => $one -> monthly_threshold,
             'payment_method' => $one -> payment_method,
@@ -558,11 +558,12 @@ class PaymentsController extends Controller
 
 
     public function createBilling() {
+        $id = session() -> get(SESS_UID);
         $name = session() -> get(SESS_USERNAME);
         $type = session() -> get(SESS_USERTYPE);
 
         $registrationModel = new RegistrationModel();
-        $user_list = $registrationModel -> getAllUserName();
+        $user_list = $registrationModel -> getAllowUserNameList($id);
         $info = null;
 
         return view('payment/create_billing', [
@@ -646,7 +647,7 @@ class PaymentsController extends Controller
         $registrationModel = new RegistrationModel();
 
         $info = $registrationModel -> getBillingInfo($info_id);
-        $user_list = $registrationModel -> getAllUserName();
+        $user_list = $registrationModel -> getAllowUserNameList($id);
         return view("payment/create_billing", [
             'type' => $type,
             'admin' => $name,

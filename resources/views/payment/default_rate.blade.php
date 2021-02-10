@@ -70,6 +70,16 @@
 @endsection
 
 @section('content')
+    @if($type != 'Admin')
+        Your account is not allowed here.
+        <button onclick="goBack()">Go Back</button>
+
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
+    @else
     <div class="row">
         <div class="col-sm-2">
             <div id="sidenav" class="sidenav">
@@ -148,6 +158,7 @@
                 </div>
             </div>
         </div>
+    @endif
 
         <div class="modal fade in" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="Quiz" aria-hidden="true">
             <form method="post" enctype="multipart/form-data" id="id-user-form" action="/rate/create">

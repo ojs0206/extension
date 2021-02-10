@@ -102,10 +102,11 @@
                             <th class="">Type</th>
                             <th>E-mail</th>
                             <th>Account #</th>
+                            <th>Verification Date</th>
                             @if($type != 'User')
                                 <th class="center">Edit</th>
                             @endif
-                            <th>Test</th>
+                            <th>Test/Verify</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -134,6 +135,9 @@
                                 <td>
                                     <?=$user->account_id?>
                                 </td>
+                                <td>
+                                    <?=$user->verification_date?>
+                                </td>
                                 @if($type != 'User')
                                     <td class="center">
                                         <div class="visible-md visible-lg hidden-sm hidden-xs">
@@ -154,7 +158,7 @@
                                     </td>
                                 @endif
                                 <td>
-                                    <button class="btn btn-primary" id="test_button" onclick="sendEmail({{$user->id}})">Test</button>
+                                    <button class="btn btn-primary" id="test_button" onclick="sendEmail({{$user->id}})">Test/Verify</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -305,7 +309,7 @@
             });
 
             $("#id-btn-submit").on("click", function (event) {
-                console.log("Click SUbmit button");
+                console.log("Click Submit button");
                 event.preventDefault();
                 var url;
                 var name = $("#id-name").val();

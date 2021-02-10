@@ -102,6 +102,10 @@
                     <div class="col-sm-8">
                         <h1>Item Statistic - {{$id}} </h1>
                     </div>
+
+                    <div class="col-sm-2 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-back"><i class="fa fa-arrow-left"></i> Back</a>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-1"></div>
@@ -150,6 +154,10 @@
 
 @section('js4event')
     <script>
-
+        jQuery(document).ready(function() {
+            $("#id-back").on("click", function (event) {
+                window.history.back();
+            });
+        });
     </script>
 @endsection

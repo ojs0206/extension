@@ -209,7 +209,7 @@
                 },
                 columns: [
                     { name:"no", 				    data: "no",	 				        defaultContent:"",      orderable: false},
-                    { name:"url", 	                data: "url",	 		            defaultContent:""},
+                    { name:"url", 	                data: "url",	 		            defaultContent:"",      render: dtRender_urls,  "className" : "editURL" },
                     { name:"username", 	            data: "username",	 	            defaultContent:""},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_tools,  "className" : "editCell"}
                 ],

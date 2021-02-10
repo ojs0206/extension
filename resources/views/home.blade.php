@@ -162,7 +162,6 @@
     <input type="text" id="secondCellId" style="display:none"/>
 
 
-
 @endsection
 
 @section('js4page')

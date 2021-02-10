@@ -33,6 +33,7 @@ Route::post('/sign-in',                                 'Auth\LoginController@si
 Route::post('/sendEmail',                                    'Auth\LoginController@sendEmail');
 Route::post('paypal',                                      'PaymentsController@payWithpaypal');
 Route::get('status',                                        'PaymentsController@getPaymentStatus');
+Route::get('verify/{email}/{token}',                    'Auth\LoginController@verifyEmail');
 
 Route::group(['middleware' => ['cors']], function () {
     Route::get('/sign-in-extension', 'Auth\LoginController@signInExtension');

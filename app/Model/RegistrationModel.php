@@ -467,6 +467,37 @@ class RegistrationModel extends BaseModel
         return $urls[0]->total;
     }
 
+    public function getUserAllBillingInfo($id, $type, $params, $user_list) {
+        $tmp = $this->clause('username', $params);
+        $limit = $this->limit($params);
+        $orderby = $this->orderby($params);
+        $where = $this->where($tmp);
+        $urls = DB::select(
+            "SELECT
+                t_billing.*, t_rate.rate_type
+                FROM t_billing
+                LEFT JOIN t_user ON t_billing.profile_name = t_user.username
+                LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
+                WHERE t_user.id IN ($user_list)               
+            ".$where . $orderby . $limit
+        );
+        return $urls;
+    }
+
+    public function getUserAllBillingInfoCount($id, $type, $params, $user_list) {
+        $tmp = $this->clause('username', $params);
+        $where = $this->where($tmp);
+        $urls = DB::select(
+            "SELECT COUNT(t_billing.id) AS total
+                FROM t_billing
+                LEFT JOIN t_user ON t_billing.profile_name = t_user.username
+                LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
+                WHERE t_user.id IN ($user_list)                
+            "
+        );
+        return $urls[0]->total;
+    }
+
     public function getBudgetSetting($id, $type, $params, $user_profile, $bill_id, $item_id){
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
@@ -495,6 +526,7 @@ class RegistrationModel extends BaseModel
         ".$where);
         return $data;
     }
+
 
     public function getBudgetSettingCount($id, $type, $params, $user_profile, $bill_id, $item_id){
         $tmp = $this->clause('username', $params);
@@ -559,6 +591,74 @@ class RegistrationModel extends BaseModel
             LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
             LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
         ".$where
+        );
+        return $urls[0]->total;
+    }
+
+    public function getAllowUserList($id) {
+        $users = DB::table('t_user') -> select('id')
+            -> where('id', $id)
+            -> orwhere('parent_id', $id)
+            -> get();
+//            -> keyBy('id');
+        $ids = array();
+        foreach($users as $user) {
+            array_push($ids, $user->id);
+        }
+//        $ids[] = $users['id'];
+        $ids = implode(',', $ids);
+        return $ids;
+    }
+
+    public function getAllowUserNameList($id) {
+        $users = DB::table('t_user') -> select('username')
+            -> where('id', $id)
+            -> orwhere('parent_id', $id)
+            -> get();
+        return $users;
+    }
+
+    public function getUserBillingRateSetting($id, $type, $params, $user_list) {
+        $tmp = $this->clause('username', $params);
+        $limit = $this->limit($params);
+        $orderby = $this->orderby($params);
+
+        $where = $this->where($tmp);
+        $urls = DB::select(
+            "SELECT
+            t_store_.*, t_user.username, t_user.id, t_billing.billing_profile_id, t_rate.*, t_store_.id AS store_id
+            FROM t_store_
+            LEFT JOIN t_user ON t_store_.user_id = t_user.id
+            LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+            LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
+            WHERE t_user.id IN ($user_list)
+        ".$where . $orderby . $limit
+        );
+        $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
+        foreach ($urls as $url){
+            $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
+            $url->budget_symbol = $currency[$url->currency].$url->budget;
+            if ($url->click_cut == 0){
+                $url->click_cut = $url->rate_per_click;
+                DB::table('t_store_')
+                    ->where('item_id', $url->item_id)
+                    ->update(['click_cut' => $url->rate_per_click]);
+            }
+        }
+        return $urls;
+    }
+
+    public function getUserBillingRateSettingCount($id, $type, $params, $user_list) {
+        $tmp = $this->clause('username', $params);
+        $where = $this->where($tmp);
+        $urls = DB::select(
+            "SELECT COUNT(t_store_.id) AS total
+            FROM t_store_
+            LEFT JOIN t_user ON t_store_.user_id = t_user.id
+            LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+            LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
+            WHERE t_user.id IN ($user_list)
+        "
         );
         return $urls[0]->total;
     }
@@ -632,6 +732,19 @@ class RegistrationModel extends BaseModel
                 LEFT JOIN (SELECT * FROM t_user) as t_user_p ON t_user.parent_id = t_user_p.id
                 LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
                 WHERE t_user.id <> 1
+            "
+        );
+        return $managers;
+    }
+
+    public function getUserProfile($id) {
+        $user_list = $this->getAllowUserList($id);
+        $managers = DB::select(
+            "SELECT t_user.*, t_user_p.username as parent_name,t_billing.account_id
+                FROM t_user
+                LEFT JOIN (SELECT * FROM t_user) as t_user_p ON t_user.parent_id = t_user_p.id
+                LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+                WHERE t_user.id in ($user_list)
             "
         );
         return $managers;

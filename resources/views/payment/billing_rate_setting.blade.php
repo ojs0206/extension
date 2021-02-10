@@ -132,63 +132,52 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-sm-2">
-        <div id="sidenav" class="sidenav">
-            <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
-                <img src="<?=asset('/assets/icon/home.png');?>">
-                <a href="<?=url('/payment');?>">
-                    <p>Billing Profiles</p>
-                </a>
-            </div>
-            <div class="row" style="padding-left: 5%; display: flex">
-                <img src="<?=asset('/assets/icon/payment.png');?>">
-                <a href="<?=url('/payment/default_rate');?>">
-                    <p>Default Rates</p>
-                </a>
-            </div>
-            <div class="row" style="padding-left: 5%; display: flex">
-                <img src="<?=asset('/assets/icon/payment_1.png');?>">
-                <a href="<?=url('/payment/billing_rate_setting');?>">
-                    <p>Billing Rate Setting & Stats</p>
-                </a>
-            </div>
-            <div class="row" style="padding-left: 5%; display: flex">
-                <img src="<?=asset('/assets/icon/redirect.png');?>">
-                <a href="<?=url('/payment/invoice');?>">
-                    <p>Invoice & Payments</p>
-                </a>
-            </div>
-            <div class="row" style="padding-left: 5%; display: flex">
-                <img src="<?=asset('/assets/icon/contact.png');?>">
-                <a href="<?=url('/payment/forex');?>">
-                    <p>Forex Rates</p>
-                </a>
-            </div>
-            <div class="row" style="padding-left: 5%; display: flex">
-                <img src="<?=asset('/assets/icon/group.png');?>">
-                <a href="<?=url('/payment/forex');?>">
-                    <p>Reporting</p>
-                </a>
+    @if($type != 'Admin')
+    <div class="row">
+        <div class="col-sm-2">
+            <div id="sidenav" class="sidenav">
+                <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
+                    <img src="<?=asset('/assets/icon/home.png');?>">
+                    <a href="<?=url('/payment');?>">
+                        <p>Billing Profiles</p>
+                    </a>
+                </div>
+                <div class="row" style="padding-left: 5%; display: flex">
+                    <img src="<?=asset('/assets/icon/payment_1.png');?>">
+                    <a href="<?=url('/payment/billing_rate_setting');?>">
+                        <p>Billing Rate Setting & Stats</p>
+                    </a>
+                </div>
+                <div class="row" style="padding-left: 5%; display: flex">
+                    <img src="<?=asset('/assets/icon/redirect.png');?>">
+                    <a href="<?=url('/payment/invoice');?>">
+                        <p>Invoice & Payments</p>
+                    </a>
+                </div>
+                <div class="row" style="padding-left: 5%; display: flex">
+                    <img src="<?=asset('/assets/icon/group.png');?>">
+                    <a href="<?=url('/payment/forex');?>">
+                        <p>Reporting</p>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-10">
-        <div class="" style="margin: auto !important;">
-            <div class="row" style="margin-left: 0; margin-right: 0;">
-                <div class="col-sm-8">
-                    <h1>Billing Rate Setting & Stats </h1>
+        <div class="col-sm-10">
+            <div class="" style="margin: auto !important;">
+                <div class="row" style="margin-left: 0; margin-right: 0;">
+                    <div class="col-sm-8">
+                        <h1>Billing Rate Setting & Stats </h1>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
+                    </div>
                 </div>
-                <div class="col-sm-2 text-right">
-                    <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
-                </div>
-                <div class="col-sm-2 text-right">
-                    <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
-                </div>
-            </div>
-            <div class="row" style="margin-left: 0; margin-right: 0;">
-                <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
-                    <thead>
+                <div class="row" style="margin-left: 0; margin-right: 0;">
+                    <table class="table table-striped table-hover" id="non-admin-table" style="width: 98%; margin: auto;">
+                        <thead>
                         <tr>
                             <th class="">#</th>
                             <th class="">User Profile</th>
@@ -199,19 +188,100 @@
                             <th class="">Billing Currency</th>
                             <th class="">Budget</th>
                             <th class="">Default Rate Type</th>
-                            <th class="">Default Rate per Clicks($)</th>
-                            <th class="">Custom Rate per Clicks($)</th>
-                            <th class="center"></th>
+                            <th class="">Rate per Clicks($)</th>
                             <th class="center"></th>
                         </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    @else
+        <div class="row">
+            <div class="col-sm-2">
+                <div id="sidenav" class="sidenav">
+                    <div class="row" style="padding-left: 5%; padding-top: 8%; display: flex">
+                        <img src="<?=asset('/assets/icon/home.png');?>">
+                        <a href="<?=url('/payment');?>">
+                            <p>Billing Profiles</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/payment.png');?>">
+                        <a href="<?=url('/payment/default_rate');?>">
+                            <p>Default Rates</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/payment_1.png');?>">
+                        <a href="<?=url('/payment/billing_rate_setting');?>">
+                            <p>Billing Rate Setting & Stats</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/redirect.png');?>">
+                        <a href="<?=url('/payment/invoice');?>">
+                            <p>Invoice & Payments</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/contact.png');?>">
+                        <a href="<?=url('/payment/forex');?>">
+                            <p>Forex Rates</p>
+                        </a>
+                    </div>
+                    <div class="row" style="padding-left: 5%; display: flex">
+                        <img src="<?=asset('/assets/icon/group.png');?>">
+                        <a href="<?=url('/payment/forex');?>">
+                            <p>Reporting</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10">
+                <div class="" style="margin: auto !important;">
+                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                        <div class="col-sm-8">
+                            <h1>Billing Rate Setting & Stats </h1>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                        <table class="table table-striped table-hover" id="user-table" style="width: 98%; margin: auto;">
+                            <thead>
+                            <tr>
+                                <th class="">#</th>
+                                <th class="">User Profile</th>
+                                <th class="">Billing Profile ID</th>
+                                <th class="url-width">Source URL</th>
+                                <th class="">Description</th>
+                                <th class="">Item ID#</th>
+                                <th class="">Billing Currency</th>
+                                <th class="">Budget</th>
+                                <th class="">Default Rate Type</th>
+                                <th class="">Default Rate per Clicks($)</th>
+                                <th class="">Custom Rate per Clicks($)</th>
+                                <th class="center"></th>
+                                <th class="center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
 
 <div id="editModal" class="modal">
     <!-- Modal content -->
@@ -368,6 +438,147 @@
             });
 
             $('#user-table tbody').on('click', 'tr', function (){
+                let data = usertable.row( this ).data();
+                console.log(data);
+                textarea_id = data.no;
+                if($(".ratetype").is(":focus")){
+                    $('#editModal').css('display', 'block');
+                    $('#close_button').on('click', function(){
+                        $('#editModal').css('display', 'none');
+                    });
+
+                    $('#cancel_button').on('click', function(){
+                        $('#editModal').css('display', 'none');
+                    });
+
+                    let changed_value;
+                    $('#ok_button').on('click', function(){
+                        $('#editModal').css('display', 'none');
+                        changed_value = $('#rate_type').val();
+                        console.log(changed_value);
+                        $('.ratetype').eq(textarea_id - 1).val(changed_value.substr(1, changed_value.length - 2));
+                    });
+                }
+            });
+
+
+            var non_admin_table = $("#non-admin-table").DataTable({
+                "ajax": {
+                    url: "<?=url('/get/billing-rate-setting');?>",
+                },
+                processing: true,
+                serverSide: true,
+                pageLength: 25,
+                lengthMenu: [5, 25, 50, 100],
+                language: {
+                    "search": "Filter Search: "
+                },
+                columns: [
+                    { name:"no", 				    data: "no",	 				        defaultContent:"",      orderable: false},
+                    { name:"username", 	            data: "username",	 		        defaultContent:""},
+                    { name:"billing_profile_id", 	data: "billing_profile_id",	 		defaultContent:""},
+                    { name:"source", 	            data: "source",	 	                defaultContent:"",      render: dtRender_redirect},
+                    { name:"hint", 	                data: "hint",	 	                defaultContent:""},
+                    { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
+                    { name:"currency", 	            data: "currency",	 	            defaultContent:""},
+                    { name:"budget", 	            data: "budget_symbol",	            defaultContent:""},
+                    { name:"rate_type", 	        data: "rate_type",	 	            defaultContent:""},
+                    { name:"rate_per_click", 	    data: "rate_per_click_symbol",	 	defaultContent:""},
+                    { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_Stat_button}
+                ],
+                order: [[1, 'asc']],
+                fnCreatedRow: function (row, data, index){
+                    $(row).attr('id', data["store_id"]);
+                }
+            });
+
+            non_admin_table.on("draw.dt", function() {
+                $("a[type=delete-url]").off("click").on("click", function() {
+                    var url_id = $(this).attr('url-id');
+                    showConfirmMessage(null, "Delete Redirect Url", "Are you sure you want to remove current redirect url", null, null, function() {
+                        console.log(url_id);
+                        $.ajax({
+                            type: 'post',
+                            url: '<?=url('/redirect/delete')?>',
+                            data: {
+                                store_id: url_id
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                console.log(response);
+
+                                if(response.status == "ok") {
+                                    usertable.draw();
+                                } else if(response.status == "fail") {
+                                    toastr.error(response.msg);
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server connection error');
+                            }
+                        });
+                    });
+                });
+
+                $("a[type=deactive-url]").off("click").on("click", function() {
+                    var url_id = $(this).attr('url-id');
+                    showConfirmMessage(null, "Deactive Redirect Url", "Are you sure you want to deactive current redirect url", null, null, function() {
+                        console.log(url_id);
+                        $.ajax({
+                            type: 'post',
+                            url: '<?=url('/redirect/active')?>',
+                            data: {
+                                store_id: url_id,
+                                active: 'DeActive'
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                console.log(response);
+
+                                if(response.status == "ok") {
+                                    usertable.draw();
+                                } else if(response.status == "fail") {
+                                    toastr.error(response.msg);
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server connection error');
+                            }
+                        });
+                    });
+                });
+
+                $("a[type=active-url]").off("click").on("click", function() {
+                    event.preventDefault();
+                    var url_id = $(this).attr('url-id');
+                    showConfirmMessage(null, "Active Redirect Url", "Are you sure you want to Active current redirect url", null, null, function() {
+                        console.log(url_id);
+                        $.ajax({
+                            type: 'post',
+                            url: '<?=url('/redirect/active')?>',
+                            data: {
+                                store_id: url_id,
+                                active: 'Active'
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                console.log(response);
+
+                                if(response.status == "ok") {
+                                    usertable.draw();
+                                } else if(response.status == "fail") {
+                                    toastr.error(response.msg);
+                                }
+                            },
+                            error: function () {
+                                toastr.error('Server connection error');
+                            }
+                        });
+                    });
+                });
+            });
+
+            $('#non-admin-table tbody').on('click', 'tr', function (){
                 let data = usertable.row( this ).data();
                 console.log(data);
                 textarea_id = data.no;

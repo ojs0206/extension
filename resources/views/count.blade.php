@@ -157,7 +157,7 @@
                     { name:"redirect_url", 	        data: "redirect_url",	 	        defaultContent:"",      render: dtRender_redirect},
                     { name:"hint", 	                data: "hint",	 	                defaultContent:""},
                     { name:"item_id", 	            data: "item_id",	 	            defaultContent:"",       render: dtRender_item},
-                    { name:"count", 	            data: "count",	 	                defaultContent:""},
+                    { name:"count", 	            data: "count",	 	                defaultContent:"",      render: dtRender_statistics},
                     { name:"create_date", 	        data: "create_date",	 	        defaultContent:""},
                     { name:"tools", 			    data: "no",	 		                defaultContent:"",      render: dtRender_count,  "className" : "editCell center"}
                 ],

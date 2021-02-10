@@ -316,6 +316,7 @@ class BillController extends Controller
             $item->status = 'pending';
             $item->amount = $price;
             $item->currency = $currency[$currencyid];
+
             $item->create_edit = $edit_role;
             $item->save();
 
