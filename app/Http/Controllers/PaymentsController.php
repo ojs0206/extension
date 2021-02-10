@@ -563,7 +563,7 @@ class PaymentsController extends Controller
         $type = session() -> get(SESS_USERTYPE);
 
         $registrationModel = new RegistrationModel();
-        $user_list = $registrationModel -> getAllowUserNameList($id);
+        $user_list = $registrationModel -> getTokenUserList($id);
         $info = null;
 
         return view('payment/create_billing', [
@@ -647,7 +647,7 @@ class PaymentsController extends Controller
         $registrationModel = new RegistrationModel();
 
         $info = $registrationModel -> getBillingInfo($info_id);
-        $user_list = $registrationModel -> getAllowUserNameList($id);
+        $user_list = $registrationModel -> getTokenUserList($id);
         return view("payment/create_billing", [
             'type' => $type,
             'admin' => $name,

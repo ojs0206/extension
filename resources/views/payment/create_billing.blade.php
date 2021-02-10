@@ -299,12 +299,23 @@
                 <input type="hidden" value="" id="urlName" name="urlName">
                 <div class="row info">
                     <p class="billing-form-text">User Profile Name:</p>
-                    <select id="username" name="user_profile_name" class="billing-form" placeholder="" required>
+                    <select id="username" name="user_profile_name" class="billing-form" required>
                         <option value="0">Select User</option>
                         @foreach($users as $user)
                             <option value="{{$user->username}}">{{$user->username}}</option>
                         @endforeach
                     </select>
+                    <script>
+                        $('#username').on('change', function (e) {
+                            var optionSelected = $("option:selected", this);
+                            var valueSelected = this.value;
+                            @foreach($users as $user)
+                            if (valueSelected == "{{$user->username}}") {
+                                $('#primary_email_address').val("{{$user -> email}}");
+                            }
+                            @endforeach
+                        });
+                    </script>
                     <p class="billing-form-text">Default Rate Type:</p>
                     <select id="rate_type" name ="rate_type" required>
                         <option value="0">Select Default Rate Type</option>

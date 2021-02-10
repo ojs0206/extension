@@ -618,6 +618,15 @@ class RegistrationModel extends BaseModel
         return $users;
     }
 
+    public function getTokenUserList($id) {
+        $users = DB::table('t_user') -> select('username', 'email')
+            -> where('id', $id)
+            -> orwhere('parent_id', $id)
+            -> whereNotNull('verification_date')
+            -> get();
+        return $users;
+    }
+
     public function getUserBillingRateSetting($id, $type, $params, $user_list) {
         $tmp = $this->clause('username', $params);
         $limit = $this->limit($params);
