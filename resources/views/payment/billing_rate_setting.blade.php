@@ -435,6 +435,10 @@
                         });
                     });
                 });
+
+                $("#id-export").off("click").on("click", function() {
+                    window.location = "<?=url('payment/billing_rate_setting/report')?>";
+                });
             });
 
             $('#user-table tbody').on('click', 'tr', function (){
@@ -490,6 +494,7 @@
                 fnCreatedRow: function (row, data, index){
                     $(row).attr('id', data["store_id"]);
                 }
+
             });
 
             non_admin_table.on("draw.dt", function() {
@@ -518,6 +523,10 @@
                             }
                         });
                     });
+                });
+
+                $("#id-export").off("click").on("click", function() {
+                    window.location = "<?=url('payment/billing_rate_setting/report')?>";
                 });
 
                 $("a[type=deactive-url]").off("click").on("click", function() {

@@ -113,11 +113,9 @@
                         <div class="col-sm-1 text-right">
                             <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>
                         </div>
+                        <div class="col-sm-1"> </div>
                         <div class="col-sm-1 text-right">
                             <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
-                        </div>
-                        <div class="col-sm-1 text-right">
-                            <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
                         </div>
                     </div>
                     <div class="row" style="margin: 15px 0 0 0;">
@@ -247,11 +245,9 @@
                     <div class="col-sm-1 text-right">
                         <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-arrow-left"></i> Back</a>
                     </div>
+                    <div class="col-sm-1"> </div>
                     <div class="col-sm-1 text-right">
                         <a class="btn btn-wide btn-primary" href="#" id="id-refresh"><i class="fa fa-refresh"></i> Refresh</a>
-                    </div>
-                    <div class="col-sm-1 text-right">
-                        <a class="btn btn-wide btn-primary" href="#" id="id-export"><i class="fa fa-save"></i> Export</a>
                     </div>
                 </div>
                 <div class="row" style="margin: 15px 0 0 0;">

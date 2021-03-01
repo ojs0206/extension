@@ -66,6 +66,7 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::post('/update_billing',                          'PaymentsController@updateBilling');
     Route::get('/payment/graph',                            'Auth\LoginController@showAdminGraph');
     Route::post('/payment/save',                             'Auth\LoginController@saveCut');
+    Route::get('/payment/report',                             'Auth\LoginController@exportPaymentCollection');
     Route::get('/payment/paypal',                           'PaymentsController@showPayment');
     Route::get('/payment/newBillingSetup',                 'Auth\LoginController@showNewBillingSetup');
     Route::get('/payment/getClientToken',                  'PaymentsController@getClientToken');
@@ -77,9 +78,11 @@ Route::group(['middleware' => ['authenticate']], function () {
     Route::get('/payment/method',                           'PaymentsController@showMethod');
     Route::get('/payment/settings',                         'PaymentsController@showSettings');
     Route::get('/payment/billing_rate_setting',             'PaymentsController@billingRateSetting');
+    Route::get('/payment/billing_rate_setting/report',      'PaymentsController@billingRateSettingReport');
     Route::post('/billing_rate_setting/edit',             'PaymentsController@editBillingRateSetting');
     Route::get('/payment/budget_setting',                   'PaymentsController@budgetSetting');
     Route::get('/payment/default_rate',                     'PaymentsController@defaultRate');
+    Route::get('/payment/default_rate/report',               'PaymentsController@defaultRateReport');
     Route::get('/payment/invoice',                          'PaymentsController@invoice');
     Route::get('/payment/forex',                            'PaymentsController@forex');
     Route::post('/payment/invoice/generatePDF',              'PaymentsController@invoice_pdf');

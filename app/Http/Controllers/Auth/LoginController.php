@@ -823,6 +823,32 @@ class LoginController extends Controller
         return response()->json($result);
     }
 
+    public function exportPaymentCollection() {
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $registrationModel = new RegistrationModel();
+        $urls = $registrationModel -> getExportBillingInfo($id, $type);
+        $curtime = time();
+        $filename = $curtime."_collection.xlsx";
+        $arr = array();
+        $arr[0] = array(
+            'NO', 'Profile Name', 'Account ID', 'Email', 'Country', 'Phone', 'Payment Method', 'Rate Type'
+        );
+        for($i = 0; $i < count($urls); $i ++) {
+            $arr[$i + 1] = array(
+                $i + 1, $urls[$i] -> profile_name, $urls[$i] -> account_id, $urls[$i] -> country, $urls[$i] -> email,
+                $urls[$i] -> phone, $urls[$i] -> payment_method, $urls[$i] -> rate_type
+            );
+        }
+        Log::info($filename);
+        return Excel::download(new InvoicesExport($arr), $filename);
+//        return response()->json([
+//            'status' => 'ok',
+//            'msg' => 'Success.'
+//        ]);
+
+    }
+
     public function getAllInvoice(Request $request) {
         $params = $this->getDataTableParams($request);
         $type = session() -> get(SESS_USERTYPE);
@@ -1060,7 +1086,7 @@ class LoginController extends Controller
         $name = session() -> get(SESS_USERNAME);
         $store_id = request('store_id');
         $registrationModel = new RegistrationModel();
-        $urls =  $registrationModel -> getClickDetail($store_id);
+        $urls =  $registrationModel -> getClickDetail($store_id, $id, $type);
         $curtime = time();
         $filename = $curtime."_click.xlsx";
         $arr = array();

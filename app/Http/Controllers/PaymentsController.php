@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 
 
 use App\BillingRate;
+use App\Model\InvoicesExport;
 use App\Model\RegistrationModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
 use PayPal\Api\PaymentExecution;
@@ -344,6 +346,31 @@ class PaymentsController extends Controller
         ]);
     }
 
+    public function billingRateSettingReport() {
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $registrationModel = new RegistrationModel();
+        $urls = $registrationModel -> getExportBillingRateSettingInfo($id, $type);
+
+        $curtime = time();
+        $filename = $curtime."_collection.xlsx";
+        $arr = array();
+        $arr[0] = array(
+            'NO', 'User Profile', 'Billing Profile ID', 'Source URL', 'Description', 'Item ID', 'Billing Currency',
+            'Budget', 'Default Rate Type', 'Rate Per Click'
+        );
+        for($i = 0; $i < count($urls); $i ++) {
+            $arr[$i + 1] = array(
+                $i + 1, $urls[$i] -> username, $urls[$i] -> billing_profile_id, $urls[$i] -> source, $urls[$i] -> hint,
+                $urls[$i] -> item_id, $urls[$i] -> currency, $urls[$i] -> budget, $urls[$i] -> rate_type,
+                $urls[$i] -> rate_per_click
+            );
+        }
+        Log::info($filename);
+        return Excel::download(new InvoicesExport($arr), $filename);
+    }
+
     public function editBillingRateSetting(Request $request) {
         $id = session() -> get(SESS_UID);
         $type = session() -> get(SESS_USERTYPE);
@@ -411,6 +438,29 @@ class PaymentsController extends Controller
             'admin' => $name,
             'rate' => $rate
         ]);
+    }
+
+    public function defaultRateReport() {
+        $id = session() -> get(SESS_UID);
+        $type = session() -> get(SESS_USERTYPE);
+        $name = session() -> get(SESS_USERNAME);
+        $registrationModel = new RegistrationModel();
+        $urls = $registrationModel -> getExportRateInfo($id, $type);
+
+        $curtime = time();
+        $filename = $curtime."_collection.xlsx";
+        $arr = array();
+        $arr[0] = array(
+            'NO', 'Rate Type', 'Rate Name', 'Description', 'Country', 'Currency', 'Rate per Click', 'Monthly Threshold'
+        );
+        for($i = 0; $i < count($urls); $i ++) {
+            $arr[$i + 1] = array(
+                $i + 1, $urls[$i] -> rate_type, $urls[$i] -> rate_name, $urls[$i] -> description, $urls[$i] -> country,
+                $urls[$i] -> currency, $urls[$i] -> rate_per_click, $urls[$i] -> monthly_threshold
+            );
+        }
+        Log::info($filename);
+        return Excel::download(new InvoicesExport($arr), $filename);
     }
 
     public function invoice() {

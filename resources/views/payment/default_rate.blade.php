@@ -340,6 +340,10 @@
                     usertable.draw();
                 });
 
+                $("#id-export").off("click").on("click", function() {
+                    window.location = "<?=url('/payment/default_rate/report')?>";
+                });
+
                 $("a[type=more-url]").off("click").on("click", function() {
                     var url_id = $(this).attr('url-id');
                     $.ajax({

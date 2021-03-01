@@ -254,33 +254,26 @@ class RegistrationModel extends BaseModel
         $tmp = $this->prepareOr($clause1, $clause2);
         $limit = $this->limit($params);
         $orderby = $this->orderby($params);
-//        if($type == 'Admin') {
-//            $where = $this->where($tmp);
-//            $urls = DB::select(
-//                "SELECT
-//                    t_rate.*
-//                 FROM t_rate
-//                ".$where . $orderby . $limit
-//            );
-//
-//            return $urls;
-//        } else if($type == 'Manager') {
-//            $clause1 = "t_user.id = '$id'";
-//            $clause2 = "t_user.parent_id = '$id'";
-//            $tmp1 = $this->prepareOr($clause1, $clause2);
-//            $tmp2 = $this->prepareAnd($tmp, $tmp1);
-//            $where = $this->where($tmp2);
-//            $urls = DB::select(
-//                "SELECT
-//                    t_rate.*
-//                 FROM t_rate
-//                ".$where . $orderby . $limit
-//            );
-//            return $urls;
-//        }
         $clause1 = "t_user.id = '$id'";
         $tmp2 = $this->prepareAnd($tmp, $clause1);
         $where = $this->where($tmp2);
+        $urls = DB::select(
+            "SELECT
+                t_rate.*
+             FROM t_rate
+            "
+        );
+        $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
+        foreach ($urls as $url){
+            $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
+            $url->monthly_threshold_symbol = $currency[$url->currency].number_format($url->monthly_threshold);
+        }
+
+        return $urls;
+    }
+
+    public function getExportRateInfo($id, $type) {
+        $clause1 = "t_user.id = '$id'";
         $urls = DB::select(
             "SELECT
                 t_rate.*
@@ -454,6 +447,32 @@ class RegistrationModel extends BaseModel
         return $urls;
     }
 
+    public function getExportBillingInfo($id, $type) {
+        if ($type == 'Admin'){
+            $urls = DB::select(
+                "SELECT
+                t_billing.*, t_rate.rate_type
+                FROM t_billing
+                LEFT JOIN t_user ON t_billing.profile_name = t_user.username
+                LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
+            "
+            );
+        }
+        else {
+            $user_list = $this -> getAllowUserList($id);
+            $urls = DB::select(
+                "SELECT
+                t_billing.*, t_rate.rate_type
+                FROM t_billing
+                LEFT JOIN t_user ON t_billing.profile_name = t_user.username
+                LEFT JOIN t_rate ON t_billing.rate_type = t_rate.id
+                WHERE t_user.id IN ($user_list)               
+            "
+            );
+        }
+        return $urls;
+    }
+
     public function getAllBillingInfoCount($id, $type, $params) {
         $tmp = $this->clause('username', $params);
         $where = $this->where($tmp);
@@ -593,6 +612,45 @@ class RegistrationModel extends BaseModel
         ".$where
         );
         return $urls[0]->total;
+    }
+
+    public function getExportBillingRateSettingInfo($id, $type) {
+        if ($type == 'Admin'){
+            $urls = DB::select(
+                "SELECT
+                    t_store_.*, t_user.username, t_billing.billing_profile_id, t_rate.*, t_store_.id AS store_id
+                    FROM t_store_
+                    LEFT JOIN t_user ON t_store_.user_id = t_user.id
+                    LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+                    LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
+                "
+            );
+        }
+        else {
+            $user_list = $this -> getAllowUserList($id);
+            $urls = DB::select(
+                "SELECT
+                    t_store_.*, t_user.username, t_user.id, t_billing.billing_profile_id, t_rate.*, t_store_.id AS store_id
+                    FROM t_store_
+                    LEFT JOIN t_user ON t_store_.user_id = t_user.id
+                    LEFT JOIN t_billing ON t_user.username = t_billing.profile_name
+                    LEFT JOIN t_rate ON t_store_.rate_type = t_rate.id
+                    WHERE t_user.id IN ($user_list)
+                "
+            );
+        }
+        $currency = array("AUD"=>"$","USD"=>"$","EUR"=>"€","NZD"=>"$","CNY"=>"¥","CAD"=>"$","GBP"=>"£","JPY"=>"¥");
+        foreach ($urls as $url){
+            $url->rate_per_click_symbol = $currency[$url->currency].$url->rate_per_click;
+            $url->budget_symbol = $currency[$url->currency].$url->budget;
+            if ($url->click_cut == 0){
+                $url->click_cut = $url->rate_per_click;
+                DB::table('t_store_')
+                    ->where('item_id', $url->item_id)
+                    ->update(['click_cut' => $url->rate_per_click]);
+            }
+        }
+        return $urls;
     }
 
     public function getAllowUserList($id) {
